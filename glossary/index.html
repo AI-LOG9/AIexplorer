@@ -1,151 +1,178 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>경제 용어 해석기</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .hidden {
-            display: none;
-        }
-        .tab-active {
-            border-bottom: 3px solid #4F46E5;
-            color: #4F46E5;
-        }
-        @media print {
-            body {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            .no-print {
-                display: none;
-            }
-        }
-        .term-chip {
-            transition: all 0.3s ease;
-        }
-        .term-chip:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .search-animation {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경제 용어 해석기 - 쉽게 이해하는 경제 용어 사전</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-kr@3.3.1/index.min.css">
+  <style>
+    html {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+      background-color: #f8fafc;
+    }
+    .tab-active {
+      border-bottom: 3px solid #6366f1;
+      color: #4f46e5 !important;
+      background-color: #edf2ff;
+    }
+    .term-chip {
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(80,80,120,0.04);
+    }
+    .term-chip:hover, .term-chip.active {
+      background: #6366f1;
+      color: #fff !important;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 4px 14px 0 rgba(99,102,241,0.14);
+    }
+    ::selection {
+      background: #c7d2fe;
+      color: #312e81;
+    }
+    .search-focus {
+      box-shadow: 0 0 0 3px #a5b4fc;
+    }
+    .fade-in {
+      animation: fadeIn 0.6s;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    .glass-bg {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 7px 36px 0 rgba(100,100,160,0.09);
+    }
+    .icon-circle {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg,#b6cdfc 35%,#ddd6fe 100%);
+      font-size: 1.45rem;
+      color: #4f46e5;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-2">경제 용어 해석기</h1>
-            <p class="text-gray-600">경제 초보자도 쉽게 이해할 수 있는 경제 용어 설명</p>
-        </header>
+<body class="min-h-screen text-gray-900">
+  <main class="container mx-auto px-3 py-7 max-w-4xl flex flex-col gap-8 bg-transparent">
+    <!-- 헤더영역 -->
+    <header class="flex flex-col gap-1 items-center mb-3">
+      <div class="flex items-center gap-3">
+        <span class="icon-circle shadow-lg"><i class="fa-solid fa-book-open-reader"></i></span>
+        <h1 class="text-center text-3xl sm:text-4xl font-bold text-indigo-700 tracking-tight leading-tight drop-shadow-sm">
+          경제 용어 해석기
+        </h1>
+      </div>
+      <p class="text-base text-gray-600 mb-2 max-w-md text-center">초급부터 고급까지, 경제 용어를 한 번에 쉽게 이해하세요!</p>
+    </header>
 
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <div class="flex flex-col md:flex-row md:items-center gap-4">
-                <div class="relative flex-grow">
-                    <input type="text" id="search-input" placeholder="경제 용어 입력 (예: 인플레이션, 금리인상)"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button id="clear-button" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 hidden">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <button id="search-button" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center">
-                    <i class="fas fa-search mr-2"></i>
-                    <span>검색</span>
-                </button>
-            </div>
-
-            <div class="mt-4">
-                <p class="text-sm text-gray-500 mb-2">인기 검색어:</p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="term-chip px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200">인플레이션</span>
-                    <span class="term-chip px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200">금리인상</span>
-                    <span class="term-chip px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200">양적완화</span>
-                    <span class="term-chip px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200">GDP</span>
-                    <span class="term-chip px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200">경기불황</span>
-                </div>
-            </div>
+    <!-- 검색 영역 -->
+    <section class="glass-bg rounded-2xl p-6 mb-1 flex flex-col shadow fade-in">
+      <div class="flex flex-col md:flex-row gap-2 md:items-center">
+        <div class="relative flex-grow w-full md:max-w-xl">
+          <input type="text" id="search-input"
+            class="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 transition search-focus"
+            placeholder="경제 용어 검색 - 예: 인플레이션, 스테이블코인, 부동산 PF 등" autocomplete="off" />
+          <button id="clear-button"
+            class="absolute right-3 top-2.5 text-gray-400 hover:text-red-500 transition duration-200 p-1"
+            style="display:none;">
+            <i class="fas fa-times-circle fa-lg"></i>
+          </button>
         </div>
-
-        <div id="results-container" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
-            <h2 id="term-title" class="text-2xl font-bold text-indigo-700 mb-4">경제 용어</h2>
-
-            <div class="flex border-b border-gray-200 mb-6">
-                <button id="tab-basic" class="tab-active px-4 py-2 font-medium text-sm">초급 설명</button>
-                <button id="tab-intermediate" class="px-4 py-2 font-medium text-sm text-gray-500">중급 설명</button>
-                <button id="tab-advanced" class="px-4 py-2 font-medium text-sm text-gray-500">고급 설명</button>
-                <button id="tab-example" class="px-4 py-2 font-medium text-sm text-gray-500">실생활 예시</button>
-            </div>
-
-            <div id="tab-basic-content" class="mb-6">
-                <p id="basic-explanation" class="text-gray-700 leading-relaxed"></p>
-            </div>
-
-            <div id="tab-intermediate-content" class="mb-6 hidden">
-                <p id="intermediate-explanation" class="text-gray-700 leading-relaxed"></p>
-            </div>
-
-            <div id="tab-advanced-content" class="mb-6 hidden">
-                <p id="advanced-explanation" class="text-gray-700 leading-relaxed"></p>
-            </div>
-
-            <div id="tab-example-content" class="mb-6 hidden">
-                <p id="example-explanation" class="text-gray-700 leading-relaxed"></p>
-            </div>
-
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">관련 용어</h3>
-                <div id="related-terms" class="flex flex-wrap gap-2"></div>
-            </div>
+        <button id="search-button"
+          class="flex items-center gap-2 px-6 py-3 bg-gradient-to-tr from-indigo-600 to-blue-500 hover:from-indigo-700
+           text-white font-semibold rounded-xl shadow transition duration-200 hover:shadow-lg text-lg">
+          <i class="fas fa-search"></i><span class="hidden sm:inline">검색</span>
+        </button>
+      </div>
+      <!-- 인기 검색어 -->
+      <div class="mt-3">
+        <div class="text-sm text-gray-500 mb-1 flex items-center gap-1">
+          <i class="fa-regular fa-fire text-orange-400"></i> 인기 검색어:
         </div>
-
-        <div id="no-results" class="bg-white rounded-lg shadow-md p-6 mb-8 text-center hidden">
-            <i class="fas fa-search text-gray-400 text-5xl mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">검색 결과가 없습니다</h3>
-            <p class="text-gray-600 mb-4">다른 경제 용어를 입력해 보세요.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">인플레이션</span>
+          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">금리인상</span>
+          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">양적완화</span>
+          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">GDP</span>
+          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">경기불황</span>
         </div>
+      </div>
+    </section>
 
-        <div id="guide-section" class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-bold text-indigo-700 mb-4">경제 용어 해석기 사용법</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="border border-gray-200 rounded-lg p-4">
-                    <div class="text-indigo-600 text-xl mb-2"><i class="fas fa-search"></i></div>
-                    <h3 class="font-semibold text-gray-800 mb-2">용어 검색</h3>
-                    <p class="text-gray-600 text-sm">검색창에 알고 싶은 경제 용어를 입력하세요. 정확한 용어가 아니어도 부분 일치하는 결과를 찾아드립니다.</p>
-                </div>
-                <div class="border border-gray-200 rounded-lg p-4">
-                    <div class="text-indigo-600 text-xl mb-2"><i class="fas fa-layer-group"></i></div>
-                    <h3 class="font-semibold text-gray-800 mb-2">단계별 설명</h3>
-                    <p class="text-gray-600 text-sm">초급, 중급, 고급 단계별로 경제 용어에 대한 이해도를 높일 수 있습니다. 실생활 예시도 제공됩니다.</p>
-                </div>
-                <div class="border border-gray-200 rounded-lg p-4">
-                    <div class="text-indigo-600 text-xl mb-2"><i class="fas fa-project-diagram"></i></div>
-                    <h3 class="font-semibold text-gray-800 mb-2">관련 용어</h3>
-                    <p class="text-gray-600 text-sm">검색한 용어와 관련된 다른 경제 용어도 함께 제공하여 경제 개념 이해를 돕습니다.</p>
-                </div>
-            </div>
+    <!-- 검색 결과 영역 -->
+    <section id="results-container" class="glass-bg rounded-2xl p-7 shadow-lg fade-in mb-1 flex flex-col space-y-4 hidden">
+      <div>
+        <h2 id="term-title" class="text-2xl md:text-3xl text-indigo-800 font-extrabold tracking-tight mb-2"></h2>
+        <div class="flex border-b border-gray-200 mb-3 gap-0.5">
+          <button id="tab-basic" class="tab-active text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">초급 설명</button>
+          <button id="tab-intermediate" class="text-gray-500 text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">중급 설명</button>
+          <button id="tab-advanced" class="text-gray-500 text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">고급 설명</button>
+          <button id="tab-example" class="text-gray-500 text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">실생활 예시</button>
         </div>
+        <div class="pt-2">
+          <div id="tab-basic-content" class="">
+            <p id="basic-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
+          </div>
+          <div id="tab-intermediate-content" class="hidden">
+            <p id="intermediate-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
+          </div>
+          <div id="tab-advanced-content" class="hidden">
+            <p id="advanced-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
+          </div>
+          <div id="tab-example-content" class="hidden">
+            <p id="example-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-gray-700 mb-2"><i class="fa-solid fa-link text-indigo-400"></i> 관련 용어</h3>
+        <div id="related-terms" class="flex flex-wrap gap-2"></div>
+      </div>
+    </section>
 
-        <footer class="mt-8 text-center text-gray-500 text-sm">
-            <p>© 2025 경제 용어 해석기 - 초보자를 위한 경제 교육 도구 AI Log</p>
-        </footer>
-    </div>
+    <!-- 결과 없음 -->
+    <section id="no-results"
+      class="glass-bg rounded-2xl p-7 flex flex-col items-center justify-center shadow fade-in mb-1 hidden">
+      <span class="icon-circle bg-pink-100 text-pink-600 mb-1"><i class="fa-regular fa-face-frown fa-lg"></i></span>
+      <h3 class="text-xl font-semibold text-gray-700 mb-1">검색 결과가 없습니다</h3>
+      <p class="text-gray-500 text-base mb-1">다른 경제 용어를 입력해 보세요.</p>
+    </section>
 
-    <script>
+    <!-- 사용법 안내 -->
+    <section id="guide-section" class="glass-bg rounded-2xl p-7 shadow flex flex-col gap-5 fade-in">
+      <h2 class="text-xl md:text-2xl font-extrabold text-indigo-600 mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-circle-info text-indigo-400"></i> 경제 용어 해석기 사용법
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-4 flex flex-col items-center text-center">
+          <span class="icon-circle"><i class="fa-solid fa-search"></i></span>
+          <h3 class="font-bold text-gray-700 mb-1">용어 검색</h3>
+          <p class="text-gray-600 text-sm">검색창에 알고 싶은 경제 용어를 입력하세요. 부분 입력으로도 쉽게 찾을 수 있습니다.</p>
+        </div>
+        <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-4 flex flex-col items-center text-center">
+          <span class="icon-circle"><i class="fa-solid fa-layer-group"></i></span>
+          <h3 class="font-bold text-gray-700 mb-1">단계별 설명</h3>
+          <p class="text-gray-600 text-sm">초급, 중급, 고급 단계별로 경제 용어를 빠르게 비교할 수 있고, 실생활 예시까지 제공합니다.</p>
+        </div>
+        <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-4 flex flex-col items-center text-center">
+          <span class="icon-circle"><i class="fa-solid fa-diagram-project"></i></span>
+          <h3 class="font-bold text-gray-700 mb-1">관련 용어 네트워크</h3>
+          <p class="text-gray-600 text-sm">검색한 용어의 관련 용어도 칩 형태로 클릭해서 추가 설명을 받을 수 있습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center mt-10 text-gray-400 text-sm py-4 select-none">
+      <span>&copy; 2025 경제 용어 해석기 — 초보자를 위한 경제 교육 도구 | AI Log</span>
+    </footer>
+  </main>
+  <!-- SCRIPT -->
+  <script>
         // 경제 용어 데이터베이스
         const economicTerms = {
             "인플레이션": {
@@ -1012,182 +1039,143 @@
             } 
         };  
 
- // DOM 요소 선택
-        const searchInput = document.getElementById('search-input');
-        const clearButton = document.getElementById('clear-button');
-        const searchButton = document.getElementById('search-button');
-        const resultsContainer = document.getElementById('results-container');
-        const noResults = document.getElementById('no-results');
-        const guideSection = document.getElementById('guide-section');
-        const termTitle = document.getElementById('term-title');
-        const basicExplanation = document.getElementById('basic-explanation');
-        const intermediateExplanation = document.getElementById('intermediate-explanation');
-        const advancedExplanation = document.getElementById('advanced-explanation');
-        const exampleExplanation = document.getElementById('example-explanation');
-        const relatedTermsContainer = document.getElementById('related-terms');
-        
-        // 탭 버튼
-        const tabBasic = document.getElementById('tab-basic');
-        const tabIntermediate = document.getElementById('tab-intermediate');
-        const tabAdvanced = document.getElementById('tab-advanced');
-        const tabExample = document.getElementById('tab-example');
-        
-        // 탭 콘텐츠
-        const tabBasicContent = document.getElementById('tab-basic-content');
-        const tabIntermediateContent = document.getElementById('tab-intermediate-content');
-        const tabAdvancedContent = document.getElementById('tab-advanced-content');
-        const tabExampleContent = document.getElementById('tab-example-content');
-        
-        // 인기 검색어 칩
-        const termChips = document.querySelectorAll('.term-chip');
+ // DOM 요소 참조
+    const searchInput = document.getElementById('search-input');
+    const clearButton = document.getElementById('clear-button');
+    const searchButton = document.getElementById('search-button');
+    const resultsContainer = document.getElementById('results-container');
+    const noResults = document.getElementById('no-results');
+    const guideSection = document.getElementById('guide-section');
+    const termTitle = document.getElementById('term-title');
+    const basicExplanation = document.getElementById('basic-explanation');
+    const intermediateExplanation = document.getElementById('intermediate-explanation');
+    const advancedExplanation = document.getElementById('advanced-explanation');
+    const exampleExplanation = document.getElementById('example-explanation');
+    const relatedTermsContainer = document.getElementById('related-terms');
+    // 탭
+    const tabBasic = document.getElementById('tab-basic');
+    const tabIntermediate = document.getElementById('tab-intermediate');
+    const tabAdvanced = document.getElementById('tab-advanced');
+    const tabExample = document.getElementById('tab-example');
+    // 탭 콘텐츠
+    const tabBasicContent = document.getElementById('tab-basic-content');
+    const tabIntermediateContent = document.getElementById('tab-intermediate-content');
+    const tabAdvancedContent = document.getElementById('tab-advanced-content');
+    const tabExampleContent = document.getElementById('tab-example-content');
+    // 인기 칩
+    const termChips = document.querySelectorAll('.term-chip');
 
-        // 검색 입력창 이벤트 처리
-        searchInput.addEventListener('input', function() {
-            if (this.value.trim() !== '') {
-                clearButton.classList.remove('hidden');
-            } else {
-                clearButton.classList.add('hidden');
-            }
-        });
+    // UI 이벤트
+    searchInput.addEventListener('input', function() {
+      clearButton.style.display = this.value.trim() !== '' ? 'block' : 'none';
+    });
+    searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') searchTerm();
+    });
+    searchButton.addEventListener('click', searchTerm);
+    clearButton.addEventListener('click', function() {
+      searchInput.value = '';
+      clearButton.style.display = 'none';
+      searchInput.focus();
+    });
+    termChips.forEach(chip => {
+      chip.addEventListener('click', function() {
+        searchInput.value = this.textContent;
+        searchTerm();
+        termChips.forEach(c=>c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    tabBasic.addEventListener('click', ()=>activateTab('basic'));
+    tabIntermediate.addEventListener('click', ()=>activateTab('intermediate'));
+    tabAdvanced.addEventListener('click', ()=>activateTab('advanced'));
+    tabExample.addEventListener('click', ()=>activateTab('example'));
 
-        // 엔터키로 검색
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                searchTerm();
-            }
-        });
-
-        // 검색 버튼 클릭 이벤트
-        searchButton.addEventListener('click', searchTerm);
-
-        // 삭제 버튼 이벤트
-        clearButton.addEventListener('click', function() {
-            searchInput.value = '';
-            clearButton.classList.add('hidden');
-            searchInput.focus();
-        });
-
-        // 인기 검색어 칩 클릭 이벤트
-        termChips.forEach(chip => {
-            chip.addEventListener('click', function() {
-                searchInput.value = this.textContent;
-                searchTerm();
-            });
-        });
-
-        // 탭 전환 기능
-        tabBasic.addEventListener('click', function() {
-            activateTab('basic');
-        });
-
-        tabIntermediate.addEventListener('click', function() {
-            activateTab('intermediate');
-        });
-
-        tabAdvanced.addEventListener('click', function() {
-            activateTab('advanced');
-        });
-
-        tabExample.addEventListener('click', function() {
-            activateTab('example');
-        });
-
-        // 검색 함수
-        function searchTerm() {
-            const term = searchInput.value.trim();
-            
-            if (term === '') {
-                return;
-            }
-            
-            // 정확히 일치하는 용어 찾기
-            if (economicTerms[term]) {
-                displayTerm(term, economicTerms[term]);
-                return;
-            }
-            
-            // 부분 일치 검색 (첫 일치 항목 표시)
-            for (const key in economicTerms) {
-                if (key.includes(term) || term.includes(key)) {
-                    displayTerm(key, economicTerms[key]);
-                    return;
-                }
-            }
-            
-            // 검색 결과 없음
-            resultsContainer.classList.add('hidden');
-            guideSection.classList.add('hidden');
-            noResults.classList.remove('hidden');
+    function searchTerm() {
+      const term = searchInput.value.trim();
+      if(term==='') return;
+      // 정확 일치→표시
+      if (economicTerms[term]) {
+        displayTerm(term, economicTerms[term]);
+        return;
+      }
+      // 부분 일치 첫 항목 표시
+      for (const key in economicTerms) {
+        if (key.includes(term) || term.includes(key)) {
+          displayTerm(key, economicTerms[key]);
+          return;
         }
+      }
+      // 결과 없음
+      resultsContainer.classList.add('hidden');
+      guideSection.classList.add('hidden');
+      noResults.classList.remove('hidden');
+    }
 
-        // 용어 정보 표시 함수
-        function displayTerm(term, data) {
-            // 제목 설정
-            termTitle.textContent = term;
-            
-            // 설명 텍스트 설정
-            basicExplanation.textContent = data.basic;
-            intermediateExplanation.textContent = data.intermediate;
-            advancedExplanation.textContent = data.advanced;
-            exampleExplanation.textContent = data.example;
-            
-            // 관련 용어 목록 생성
-            relatedTermsContainer.innerHTML = '';
-            data.related.forEach(relatedTerm => {
-                const chip = document.createElement('span');
-                chip.className = 'term-chip px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200';
-                chip.textContent = relatedTerm;
-                chip.addEventListener('click', function() {
-                    searchInput.value = relatedTerm;
-                    searchTerm();
-                });
-                relatedTermsContainer.appendChild(chip);
-            });
-            
-            // 기본 탭 활성화
-            activateTab('basic');
-            
-            // 결과 섹션 표시
-            noResults.classList.add('hidden');
-            guideSection.classList.add('hidden');
-            resultsContainer.classList.remove('hidden');
-            
-            // 스크롤 이동
-            resultsContainer.scrollIntoView({ behavior: 'smooth' });
-        }
+    function displayTerm(term, data) {
+      termTitle.textContent = term;
+      basicExplanation.textContent = data.basic;
+      intermediateExplanation.textContent = data.intermediate;
+      advancedExplanation.textContent = data.advanced;
+      exampleExplanation.textContent = data.example;
+      // 관련 용어 칩
+      relatedTermsContainer.innerHTML = '';
+      (Array.isArray(data.related)?data.related:[]).forEach((relatedTerm)=>{
+        const chip = document.createElement('span');
+        chip.className = 'term-chip bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-sm cursor-pointer hover:bg-indigo-200 transition font-medium';
+        chip.textContent = relatedTerm;
+        chip.onclick = ()=>{searchInput.value = relatedTerm; searchTerm();};
+        relatedTermsContainer.appendChild(chip);
+      });
+      activateTab('basic');
+      noResults.classList.add('hidden');
+      guideSection.classList.add('hidden');
+      resultsContainer.classList.remove('hidden');
+      window.setTimeout(()=>{resultsContainer.scrollIntoView({behavior:'smooth'});}, 170);
+    }
 
-        // 탭 활성화 함수
-        function activateTab(tabName) {
-            // 모든 탭 비활성화
-            [tabBasic, tabIntermediate, tabAdvanced, tabExample].forEach(tab => {
-                tab.classList.remove('tab-active');
-                tab.classList.add('text-gray-500');
-            });
-            
-            // 모든 탭 콘텐츠 숨기기
-            [tabBasicContent, tabIntermediateContent, tabAdvancedContent, tabExampleContent].forEach(content => {
-                content.classList.add('hidden');
-            });
-            
-            // 선택한 탭 활성화
-            if (tabName === 'basic') {
-                tabBasic.classList.add('tab-active');
-                tabBasic.classList.remove('text-gray-500');
-                tabBasicContent.classList.remove('hidden');
-            } else if (tabName === 'intermediate') {
-                tabIntermediate.classList.add('tab-active');
-                tabIntermediate.classList.remove('text-gray-500');
-                tabIntermediateContent.classList.remove('hidden');
-            } else if (tabName === 'advanced') {
-                tabAdvanced.classList.add('tab-active');
-                tabAdvanced.classList.remove('text-gray-500');
-                tabAdvancedContent.classList.remove('hidden');
-            } else if (tabName === 'example') {
-                tabExample.classList.add('tab-active');
-                tabExample.classList.remove('text-gray-500');
-                tabExampleContent.classList.remove('hidden');
-            }
+    function activateTab(tabName) {
+      [tabBasic,tabIntermediate,tabAdvanced,tabExample].forEach(t=>{
+        t.classList.remove('tab-active');
+        t.classList.add('text-gray-500');
+      });
+      [tabBasicContent,tabIntermediateContent,tabAdvancedContent,tabExampleContent].forEach(c=>{
+        c.classList.add('hidden');
+      });
+      // Visible & active tab
+      if(tabName==='basic') {
+        tabBasic.classList.add('tab-active'); tabBasic.classList.remove('text-gray-500');
+        tabBasicContent.classList.remove('hidden');
+      } else if(tabName==='intermediate') {
+        tabIntermediate.classList.add('tab-active'); tabIntermediate.classList.remove('text-gray-500');
+        tabIntermediateContent.classList.remove('hidden');
+      } else if(tabName==='advanced') {
+        tabAdvanced.classList.add('tab-active'); tabAdvanced.classList.remove('text-gray-500');
+        tabAdvancedContent.classList.remove('hidden');
+      } else if(tabName==='example') {
+        tabExample.classList.add('tab-active'); tabExample.classList.remove('text-gray-500');
+        tabExampleContent.classList.remove('hidden');
+      }
+    }
+
+    // 모바일: 자동 입력시 키보드 닫힌 뒤 focus 유지
+    searchInput.addEventListener('blur', function() {
+      setTimeout(()=>{
+        if(document.activeElement!==searchInput &&
+          window.innerWidth<768 &&
+          searchInput.value!=='') {
+          window.scrollTo(0,0);
         }
-    </script>
+      },250);
+    });
+
+    // 최초 로딩시 guide만 보임
+    window.addEventListener('DOMContentLoaded', ()=>{
+      guideSection.classList.remove('hidden');
+      resultsContainer.classList.add('hidden');
+      noResults.classList.add('hidden');
+      clearButton.style.display = 'none';
+    });
+  </script>
 </body>
 </html>
