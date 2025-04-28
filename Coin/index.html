@@ -69,11 +69,79 @@
             visibility: visible;
             opacity: 1;
         }
+        
+        /* GPT Template Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        
+        .modal-content {
+            background-color: #1a2235;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        
+        .copy-btn {
+            background-color: #4c51bf;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background-color: #434190;
+        }
+        
+        .template-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #212b42;
+            border: 1px solid #2d3748;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-10">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center text-indigo-400 mb-6">AI LOG 코인 차트 기술적 분석 어시스턴트</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-indigo-400">AI LOG 코인 차트 기술적 분석 어시스턴트</h1>
+            <button id="gptTemplateBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-all">
+                GPT 템플릿
+            </button>
+        </div>
+        
         <p class="text-center text-gray-400 mb-8">차트를 보고 기술적 지표들의 상태를 입력하면 종합 분석을 제공합니다.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -457,6 +525,7 @@
         </div>
     </div>
 
+    <!-- Share Modal -->
     <div id="share-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
             <h3 class="text-xl font-semibold mb-4 text-indigo-300">분석 결과 공유</h3>
@@ -467,6 +536,185 @@
             </div>
             <div class="mt-4 flex justify-end">
                 <button id="close-share-modal" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-md font-medium">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GPT Template Modal -->
+    <div id="gptTemplateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeTemplateModal">&times;</span>
+            <h2 class="text-2xl font-bold text-indigo-300 mb-4">GPT 분석 템플릿</h2>
+            <p class="text-gray-400 mb-6">아래 템플릿을 복사하여 ChatGPT에게 코인 분석을 요청하세요.</p>
+            
+            <div class="mb-4">
+                <button id="copyAllTemplateBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-all">
+                    전체 템플릿 복사
+                </button>
+            </div>
+            
+            <div id="templateContent">
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-semibold text-indigo-300">전체 분석 요청 예시</h3>
+                        <button class="copy-btn" data-content="templateExample">복사</button>
+                    </div>
+                    <div id="templateExample" class="text-gray-300 text-sm">
+                        다음 기술적 지표 상태를 분석해주세요:
+
+▶️ RSI: 중립-높음 (60~70)
+▶️ MACD: 골든크로스 (MACD > 시그널)
+▶️ EMA: 상승추세 (단기 > 장기)
+▶️ 볼린저밴드: 상단밴드-중앙밴드 사이
+▶️ 거래량: 증가하는 거래량
+▶️ 일목균형표: 구름 위 (상승 추세)
+▶️ OBV: 상승추세
+
+코인명: 비트코인
+현재가: 137,175,000원
+타임프레임: 1시간봉
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">RSI</h3>
+                        <button class="copy-btn" data-content="rsiTemplate">복사</button>
+                    </div>
+                    <div id="rsiTemplate" class="text-gray-300 text-sm">
+▶️ RSI
+
+심한 과매도 (20 이하)
+과매도 (20~30)
+중립-낮음 (30~40)
+중립 (40~60)
+중립-높음 (60~70)
+과매수 (70~80)
+심한 과매수 (80 이상)
+
+→ RSI는 과매수/과매도 여부에 따라 매수 타이밍 분석에 중요합니다.
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">MACD</h3>
+                        <button class="copy-btn" data-content="macdTemplate">복사</button>
+                    </div>
+                    <div id="macdTemplate" class="text-gray-300 text-sm">
+▶️ MACD
+
+강한 골든크로스 (확실한 상승 교차)
+골든크로스 (MACD > 시그널)
+약한 골든크로스 (교차 시작)
+중립 (교차 임박)
+약한 데드크로스 (교차 시작)
+데드크로스 (MACD < 시그널)
+강한 데드크로스 (확실한 하락 교차)
+강세 다이버전스 (가격↓, MACD↑)
+약세 다이버전스 (가격↑, MACD↓)
+
+→ MACD는 추세 전환의 신호로, 매수·매도 타이밍 포착에 활용됩니다.
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">EMA (이동평균선)</h3>
+                        <button class="copy-btn" data-content="emaTemplate">복사</button>
+                    </div>
+                    <div id="emaTemplate" class="text-gray-300 text-sm">
+▶️ EMA (이동평균선)
+
+강한 상승추세 (단기 > 장기, 격차 확대)
+상승추세 (단기 > 장기)
+골든크로스 (단기선이 장기선 상향 돌파)
+중립 (교차 임박)
+데드크로스 (단기선이 장기선 하향 돌파)
+하락추세 (단기 < 장기)
+강한 하락추세 (단기 < 장기, 격차 확대)
+
+→ EMA는 장기적 추세 흐름 판단에 중요합니다.
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">볼린저밴드</h3>
+                        <button class="copy-btn" data-content="bbTemplate">복사</button>
+                    </div>
+                    <div id="bbTemplate" class="text-gray-300 text-sm">
+▶️ 볼린저밴드
+
+상단밴드 위로 돌파
+상단밴드 접촉
+상단밴드-중앙밴드 사이
+중앙밴드 근처
+중앙밴드-하단밴드 사이
+하단밴드 접촉
+하단밴드 아래로 돌파
+
+→ BB는 가격의 과열/침체 구간을 판단하며, 급등락 예상에 사용됩니다.
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">거래량</h3>
+                        <button class="copy-btn" data-content="volumeTemplate">복사</button>
+                    </div>
+                    <div id="volumeTemplate" class="text-gray-300 text-sm">
+▶️ 거래량
+
+매우 높은 거래량 (급증)
+증가하는 거래량
+평균 거래량
+감소하는 거래량
+낮은 거래량
+
+→ 거래량은 추세 지속 여부와 세력 개입 여부 판단에 중요합니다.
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">일목균형표</h3>
+                        <button class="copy-btn" data-content="ichimokuTemplate">복사</button>
+                    </div>
+                    <div id="ichimokuTemplate" class="text-gray-300 text-sm">
+▶️ 일목균형표
+
+강한 상승세 (구름 위, 전환선 > 기준선)
+구름 위 (상승 추세)
+구름 진입중 (위에서 아래로)
+구름 내부 (불확실성)
+구름 진입중 (아래에서 위로)
+구름 아래 (하락 추세)
+강한 하락세 (구름 아래, 전환선 < 기준선)
+
+→ 일목은 흐름의 강도와 방향성 판단에 유리합니다.
+                    </div>
+                </div>
+                
+                <div class="template-section">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-md font-semibold text-indigo-300">OBV</h3>
+                        <button class="copy-btn" data-content="obvTemplate">복사</button>
+                    </div>
+                    <div id="obvTemplate" class="text-gray-300 text-sm">
+▶️ OBV
+
+강한 상승추세
+상승추세
+중립
+하락추세
+강한 하락추세
+강세 다이버전스 (가격↓, OBV↑)
+약세 다이버전스 (가격↑, OBV↓)
+
+→ OBV는 매집/이탈 추정에 활용되며, 세력 동향 확인용입니다.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -516,6 +764,72 @@
             document.getElementById('save-button').addEventListener('click', function() {
                 saveCurrentAnalysis();
                 displaySavedAnalyses();
+            });
+            
+            // GPT Template modal handlers
+            const gptTemplateBtn = document.getElementById('gptTemplateBtn');
+            const gptTemplateModal = document.getElementById('gptTemplateModal');
+            const closeTemplateModal = document.getElementById('closeTemplateModal');
+            
+            gptTemplateBtn.addEventListener('click', function() {
+                gptTemplateModal.style.display = 'block';
+            });
+            
+            closeTemplateModal.addEventListener('click', function() {
+                gptTemplateModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === gptTemplateModal) {
+                    gptTemplateModal.style.display = 'none';
+                }
+            });
+            
+            // Copy template buttons
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const contentId = this.getAttribute('data-content');
+                    const content = document.getElementById(contentId).innerText;
+                    
+                    const textarea = document.createElement('textarea');
+                    textarea.value = content;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    const originalText = this.textContent;
+                    this.textContent = '복사됨!';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 2000);
+                });
+            });
+            
+            // Copy all template button
+            document.getElementById('copyAllTemplateBtn').addEventListener('click', function() {
+                const allTemplates = document.querySelectorAll('#templateContent .template-section');
+                let combinedContent = '';
+                
+                allTemplates.forEach((template, index) => {
+                    // Skip the first template which is the example
+                    if (index > 0) {
+                        const content = template.querySelector('[id]').innerText;
+                        combinedContent += content + '\n\n';
+                    }
+                });
+                
+                const textarea = document.createElement('textarea');
+                textarea.value = combinedContent.trim();
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                this.textContent = '전체 템플릿 복사됨!';
+                setTimeout(() => {
+                    this.textContent = '전체 템플릿 복사';
+                }, 2000);
             });
             
             // Check for shared analysis in URL
@@ -778,17 +1092,18 @@
         
         function findSignalValue(signals, type) {
             for (let signal of signals) {
-                if (signal.signal.type === type) {
+                if (signal.signal && signal.signal.type === type) {
                     return signal.signal.value;
                 }
             }
             
-            // Find by matching part of the key
-            for (let signal of signals) {
-                const keys = Object.keys(signal);
-                for (let key of keys) {
-                    if (key.includes(type)) {
-                        return signal[key].value;
+            // Try to find by matching part of the key in individual signals
+            for (let i = 0; i < signals.length; i++) {
+                const item = signals[i];
+                if (item.signal && typeof item.signal === 'object') {
+                    // Check if signal has a type property or try to infer from item keys
+                    if (item.signal[type] || String(item.signal).toLowerCase().includes(type.toLowerCase())) {
+                        return item.signal.value;
                     }
                 }
             }
@@ -801,10 +1116,13 @@
             let weightedSum = 0;
             
             signals.forEach(item => {
-                weightedSum += item.signal.value * item.weight;
-                totalWeight += item.weight;
+                if (item && item.signal && typeof item.signal.value !== 'undefined') {
+                    weightedSum += item.signal.value * item.weight;
+                    totalWeight += item.weight;
+                }
             });
             
+            if (totalWeight === 0) return 0;
             return weightedSum / totalWeight;
         }
         
@@ -851,17 +1169,17 @@
             let warnings = [];
             
             // Check for overbought conditions
-            if (signals.find(s => s.signal.type === 'rsi')?.signal.value <= -3) {
+            if (signals.find(s => s.signal && s.signal.value <= -3 && s.signal.label && s.signal.label.includes('매도'))) {
                 warnings.push("RSI가 과매수 구간에 있어 단기 조정 가능성이 있습니다.");
             }
             
             // Check for oversold conditions
-            if (signals.find(s => s.signal.type === 'rsi')?.signal.value >= 3) {
+            if (signals.find(s => s.signal && s.signal.value >= 3 && s.signal.label && s.signal.label.includes('매수'))) {
                 warnings.push("RSI가 과매도 구간에 있어 반등 가능성이 있습니다.");
             }
             
             // Check for bollinger band warnings
-            if (signals.find(s => s.signal.type === 'bollinger')?.signal.value <= -3) {
+            if (signals.find(s => s.signal && s.signal.value <= -3 && String(s).includes('bollinger'))) {
                 warnings.push("볼린저밴드 상단에 접근/돌파하여 조정 위험이 있습니다.");
             }
             
@@ -879,8 +1197,8 @@
             }
             
             // Check for conflicting signals
-            const emaSignal = signals.find(s => s.signal.type === 'ema')?.signal.value || 0;
-            const macdSignal = signals.find(s => s.signal.type === 'macd')?.signal.value || 0;
+            const emaSignal = signals.find(s => s.signal && String(s).includes('ema'))?.signal?.value || 0;
+            const macdSignal = signals.find(s => s.signal && String(s).includes('macd'))?.signal?.value || 0;
             
             if ((emaSignal > 2 && macdSignal < -2) || (emaSignal < -2 && macdSignal > 2)) {
                 warnings.push("EMA와 MACD가 상충된 신호를 보이고 있어 신중한 접근이 필요합니다.");
@@ -986,7 +1304,7 @@
             
             // Add saved analyses to list (most recent first)
             Object.keys(savedAnalyses)
-                .sort((a, b) => savedAnalyses[b].timestamp - savedAnalyses[a].timestamp)
+                .sort((a, b) => new Date(savedAnalyses[b].timestamp) - new Date(savedAnalyses[a].timestamp))
                 .forEach(id => {
                     const analysis = savedAnalyses[id];
                     const li = document.createElement('div');
