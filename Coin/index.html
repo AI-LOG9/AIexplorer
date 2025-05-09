@@ -6,42 +6,40 @@
     <title>코인 차트 기술적 분석 어시스턴트</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
     <style>
         body {
-            background-color: #121826;
-            color: #e2e8f0;
-            font-family: 'Inter', 'Noto Sans KR', sans-serif;
-        }
-        .input-field {
-            background-color: #1a2235;
-            border: 1px solid #2d3748;
-            color: #e2e8f0;
-        }
-        .input-field:focus {
-            border-color: #4c51bf;
-            outline: none;
-        }
-        .btn-primary {
-            background-color: #4c51bf;
-            color: white;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #434190;
-        }
-        .card {
-            background-color: #1a2235;
-            border: 1px solid #2d3748;
-        }
-        .signal-very-strong-buy { background-color: #10B981; }
-        .signal-strong-buy { background-color: #34D399; }
-        .signal-moderate-buy { background-color: #6EE7B7; }
-        .signal-weak-buy { background-color: #A7F3D0; }
-        .signal-neutral { background-color: #9CA3AF; }
-        .signal-weak-sell { background-color: #FECACA; }
-        .signal-moderate-sell { background-color: #F87171; }
-        .signal-strong-sell { background-color: #EF4444; }
-        .signal-very-strong-sell { background-color: #B91C1C; }
+    background-color: #1E2130;
+    color: #e2e8f0;
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+}
+.input-field {
+    background-color: #252A3D;
+    border: 1px solid #2d3748;
+    color: #e2e8f0;
+}
+.btn-primary {
+    background-color: #4F46E5;
+    color: white;
+    transition: all 0.3s;
+}
+.btn-primary:hover {
+    background-color: #4338ca;
+}
+.card {
+    background-color: #252A3D;
+    border: 1px solid #2d3748;
+}
+.signal-very-strong-buy { background-color: #10B981; }
+.signal-strong-buy { background-color: #34D399; }
+.signal-moderate-buy { background-color: #6EE7B7; }
+.signal-weak-buy { background-color: #A7F3D0; }
+.signal-neutral { background-color: #9CA3AF; }
+.signal-weak-sell { background-color: #FECACA; }
+.signal-moderate-sell { background-color: #F87171; }
+.signal-strong-sell { background-color: #EF4444; }
+.signal-very-strong-sell { background-color: #F43F5E; }
         
         .tooltip {
             position: relative;
@@ -136,13 +134,13 @@
 <body class="min-h-screen pb-10">
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-indigo-400">라떼로또 코인 차트 기술적 분석 어시스턴트 [Mark2]</h1>
+            <h1 class="text-3xl font-bold text-indigo-400">라떼로또 코인 차트 기술적 분석 어시스턴트 [Mark3]</h1>
             <button id="gptTemplateBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-all">
                 GPT 템플릿
             </button>
         </div>
         
-        <p class="text-center text-gray-400 mb-8">차트를 보고 기술적 지표들의 상태를 입력하면 종합 분석을 제공합니다.</p>
+        <p class="text-center text-gray-400 mb-8">차트를 보고 기술적 지표들의 상태를 입력하면 종합 분석을 제공합니다.[25.05.09ver]</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Left Column - Input Form -->
@@ -515,16 +513,14 @@
                     </div>
                 </div>
                 
-                <div id="saved-analyses" class="card rounded-lg p-6 mt-6 hidden">
+                <div id="saved-analyses" class="card rounded-lg p-6 mt-6">
                     <h2 class="text-xl font-semibold mb-4 text-indigo-300">저장된 분석</h2>
                     <div id="saved-analyses-list" class="text-sm">
                         <!-- Saved analyses will be inserted here -->
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
+       
     <!-- Share Modal -->
     <div id="share-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
