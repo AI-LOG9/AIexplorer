@@ -389,105 +389,176 @@
             
             <!-- Right Column - Results -->
             <div class="col-span-1">
-                <div id="results-container" class="card rounded-lg p-6 mb-6 hidden">
-                    <h2 class="text-xl font-semibold mb-4 text-indigo-300">분석 결과</h2>
-                    
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-400">분석 대상</span>
-                            <span id="result-coin" class="font-semibold"></span>
-                        </div>
-                        <div class="flex justify-between items-center mt-1">
-                            <span class="text-sm text-gray-400">타임프레임</span>
-                            <span id="result-timeframe" class="font-semibold"></span>
-                        </div>
-                        <div class="flex justify-between items-center mt-1">
-                            <span class="text-sm text-gray-400">분석 시각</span>
-                            <span id="result-timestamp" class="font-semibold"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <div class="text-center p-3 rounded-lg bg-gray-800 mb-3">
-                            <h3 class="text-lg font-semibold text-center mb-2">종합 신호</h3>
-                            <div id="overall-signal-container" class="flex items-center justify-center">
-                                <div id="overall-signal" class="w-48 h-12 rounded-full flex items-center justify-center font-bold text-gray-900"></div>
-                            </div>
-                            <div class="flex justify-between mt-3 text-xs text-gray-500">
-                                <span>강한 매도</span>
-                                <span>매도</span>
-                                <span>중립</span>
-                                <span>매수</span>
-                                <span>강한 매수</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h3 class="text-md font-semibold mb-2 text-gray-300">단기 전망 (6-24시간)</h3>
-                        <p id="short-term-outlook" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h3 class="text-md font-semibold mb-2 text-gray-300">중기 전망 (1-7일)</h3>
-                        <p id="mid-term-outlook" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h3 class="text-md font-semibold mb-2 text-gray-300">지지/저항 레벨</h3>
-                        <p id="support-resistance" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h3 class="text-md font-semibold mb-2 text-gray-300">주의 신호</h3>
-                        <p id="warning-signals" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-                    </div>
-                    
-                    <div class="mt-6">
-                        <h3 class="text-md font-semibold mb-2 text-gray-300">지표별 신호</h3>
-                        <div class="grid grid-cols-2 gap-2 text-xs">
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>RSI</span>
-                                <span id="rsi-signal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>볼린저밴드</span>
-                                <span id="bollinger-signal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>MACD</span>
-                                <span id="macd-signal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>EMA</span>
-                                <span id="ema-signal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>거래량</span>
-                                <span id="volume-signal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>일목구름</span>
-                                <span id="ichimoku-signal" class="font-semibold"></span>
-                            </div>
-                            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                                <span>OBV</span>
-                                <span id="obv-signal" class="font-semibold"></span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6">
-                        <div class="grid grid-cols-2 gap-3">
-                            <button id="share-button" class="btn-primary py-2 px-4 rounded-md font-medium text-sm">
-                                <i class="fas fa-share-alt mr-1"></i> 결과 공유
-                            </button>
-                            <button id="save-button" class="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md font-medium text-sm transition-all">
-                                <i class="fas fa-save mr-1"></i> 결과 저장
-                            </button>
-                        </div>
-                    </div>
+              <div id="results-container" class="card rounded-lg p-6 mb-6 hidden">
+    <h2 class="text-xl font-semibold mb-4 text-indigo-300">분석 결과</h2>
+    
+    <div class="mb-4">
+        <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-400">분석 대상</span>
+            <span id="result-coin" class="font-semibold"></span>
+        </div>
+        <div class="flex justify-between items-center mt-1">
+            <span class="text-sm text-gray-400">타임프레임</span>
+            <span id="result-timeframe" class="font-semibold"></span>
+        </div>
+        <div class="flex justify-between items-center mt-1">
+            <span class="text-sm text-gray-400">분석 시각</span>
+            <span id="result-timestamp" class="font-semibold"></span>
+        </div>
+    </div>
+    
+    <!-- 탭 메뉴 -->
+    <div class="flex border-b border-gray-700 mb-4">
+        <button id="tab-overview" class="px-4 py-2 font-medium text-sm border-b-2 border-indigo-500">종합 분석</button>
+        <button id="tab-charts" class="px-4 py-2 font-medium text-sm text-gray-400">차트 시각화</button>
+        <button id="tab-scenarios" class="px-4 py-2 font-medium text-sm text-gray-400">시나리오 분석</button>
+        <button id="tab-details" class="px-4 py-2 font-medium text-sm text-gray-400">지표별 상세</button>
+    </div>
+    
+    <!-- 탭 1: 종합 분석 -->
+    <div id="content-overview" class="tab-content">
+        <div class="mb-6">
+            <div class="text-center p-3 rounded-lg bg-gray-800 mb-3">
+                <h3 class="text-lg font-semibold text-center mb-2">종합 신호</h3>
+                <div id="overall-signal-container" class="flex items-center justify-center">
+                    <div id="overall-signal" class="w-48 h-12 rounded-full flex items-center justify-center font-bold text-gray-900"></div>
                 </div>
+                <div class="flex justify-between mt-3 text-xs text-gray-500">
+                    <span>강한 매도</span>
+                    <span>매도</span>
+                    <span>중립</span>
+                    <span>매수</span>
+                    <span>강한 매수</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="text-md font-semibold mb-2 text-gray-300">단기 전망 (6-24시간)</h3>
+            <p id="short-term-outlook" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="text-md font-semibold mb-2 text-gray-300">중기 전망 (1-7일)</h3>
+            <p id="mid-term-outlook" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="text-md font-semibold mb-2 text-gray-300">지지/저항 레벨</h3>
+            <p id="support-resistance" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="text-md font-semibold mb-2 text-gray-300">주의 신호</h3>
+            <p id="warning-signals" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
+        </div>
+    </div>
+    
+    <!-- 탭 2: 차트 시각화 -->
+    <div id="content-charts" class="tab-content hidden">
+        <div class="mb-6">
+            <h3 class="text-md font-semibold mb-2 text-gray-300">종합 신호 게이지</h3>
+            <div class="chart-container bg-gray-800 rounded-lg p-3">
+                <canvas id="signal-gauge-chart"></canvas>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <h3 class="text-md font-semibold mb-2 text-gray-300">지표별 신호 강도</h3>
+            <div class="chart-container bg-gray-800 rounded-lg p-3">
+                <canvas id="indicator-radar-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 탭 3: 시나리오 분석 -->
+    <div id="content-scenarios" class="tab-content hidden">
+        <div class="scenario-container">
+            <div class="scenario-header bullish" id="bullish-header">
+                <span class="text-green-400 font-medium">강세 시나리오</span>
+                <i class="fas fa-chevron-down text-gray-400"></i>
+            </div>
+            <div class="scenario-content" id="bullish-content">
+                <p id="bull-scenario-text" class="text-sm"></p>
+            </div>
+        </div>
+        
+        <div class="scenario-container">
+            <div class="scenario-header neutral" id="neutral-header">
+                <span class="text-gray-400 font-medium">중립 시나리오</span>
+                <i class="fas fa-chevron-down text-gray-400"></i>
+            </div>
+            <div class="scenario-content" id="neutral-content">
+                <p id="neutral-scenario-text" class="text-sm"></p>
+            </div>
+        </div>
+        
+        <div class="scenario-container">
+            <div class="scenario-header bearish" id="bearish-header">
+                <span class="text-red-400 font-medium">약세 시나리오</span>
+                <i class="fas fa-chevron-down text-gray-400"></i>
+            </div>
+            <div class="scenario-content" id="bearish-content">
+                <p id="bear-scenario-text" class="text-sm"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 탭 4: 지표별 상세 -->
+    <div id="content-details" class="tab-content hidden">
+        <div class="mb-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-medium text-indigo-300">RSI 분석</span>
+                <span id="rsi-value-display" class="text-sm bg-gray-700 px-2 py-1 rounded">값: --</span>
+            </div>
+            <p id="rsi-analysis" class="text-sm bg-gray-800 p-3 rounded-md"></p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-2 text-xs mt-4">
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>RSI</span>
+                <span id="rsi-signal" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>볼린저밴드</span>
+                <span id="bollinger-signal" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>MACD</span>
+                <span id="macd-signal" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>EMA</span>
+                <span id="ema-signal" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>거래량</span>
+                <span id="volume-signal" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>일목구름</span>
+                <span id="ichimoku-signal" class="font-semibold"></span>
+            </div>
+            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
+                <span>OBV</span>
+                <span id="obv-signal" class="font-semibold"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-6">
+        <div class="grid grid-cols-2 gap-3">
+            <button id="share-button" class="btn-primary py-2 px-4 rounded-md font-medium text-sm">
+                <i class="fas fa-share-alt mr-1"></i> 결과 공유
+            </button>
+            <button id="save-button" class="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md font-medium text-sm transition-all">
+                <i class="fas fa-save mr-1"></i> 결과 저장
+            </button>
+        </div>
+    </div>
+</div>
+
+
 
                 <div class="card rounded-lg p-6">
                     <h2 class="text-xl font-semibold mb-4 text-indigo-300">도움말</h2>
@@ -1421,7 +1492,258 @@
                 }
             }
         }
+        // 차트 관련 함수들
+function initializeCharts(results) {
+    createSignalGaugeChart(results.overallSignal.value);
+    createIndicatorRadarChart(results.individualSignals);
+}
+
+function createSignalGaugeChart(value) {
+    const chartElement = document.getElementById('signal-gauge-chart');
+    if (!chartElement) return;
+    
+    const chartCtx = chartElement.getContext('2d');
+    
+    // 기존 차트 제거
+    if (window.signalGaugeChart) {
+        window.signalGaugeChart.destroy();
+    }
+    
+    // 게이지 차트 생성
+    window.signalGaugeChart = new Chart(chartCtx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [value + 5, 10 - (value + 5)],
+                backgroundColor: [
+                    value > 0 ? 'rgba(16, 185, 129, 0.8)' : 
+                    value < 0 ? 'rgba(244, 63, 94, 0.8)' : 
+                    'rgba(156, 163, 175, 0.8)',
+                    'rgba(26, 33, 59, 0)'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            circumference: 180,
+            rotation: 270,
+            cutout: '80%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        }
+    });
+    
+    // 값 표시
+    chartCtx.fillStyle = '#e2e8f0';
+    chartCtx.font = 'bold 18px Inter, Noto Sans KR, sans-serif';
+    chartCtx.textAlign = 'center';
+    chartCtx.fillText(getSignalLabel(value), chartElement.width / 2, chartElement.height - 30);
+    
+    chartCtx.font = '14px Inter, Noto Sans KR, sans-serif';
+    chartCtx.fillText(`(${value.toFixed(1)})`, chartElement.width / 2, chartElement.height - 10);
+}
+
+function createIndicatorRadarChart(indicators) {
+    const chartElement = document.getElementById('indicator-radar-chart');
+    if (!chartElement) return;
+    
+    const chartCtx = chartElement.getContext('2d');
+    
+    // 기존 차트 제거
+    if (window.indicatorRadarChart) {
+        window.indicatorRadarChart.destroy();
+    }
+    
+    // 레이더 차트 생성
+    window.indicatorRadarChart = new Chart(chartCtx, {
+        type: 'radar',
+        data: {
+            labels: ['RSI', 'MACD', 'EMA', '볼린저밴드', '거래량', '일목구름', 'OBV'],
+            datasets: [{
+                label: '지표 신호 강도',
+                data: [
+                    indicators.rsi.value,
+                    indicators.macd.value,
+                    indicators.ema.value,
+                    indicators.bollinger.value,
+                    indicators.volume.value,
+                    indicators.ichimoku.value,
+                    indicators.obv.value
+                ],
+                backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                borderColor: 'rgba(79, 70, 229, 1)',
+                pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                pointRadius: 3
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    min: -5,
+                    max: 5,
+                    ticks: {
+                        stepSize: 1,
+                        backdropColor: 'rgba(30, 33, 48, 0)',
+                        color: '#9CA3AF'
+                    },
+                    angleLines: {
+                        color: 'rgba(45, 55, 72, 0.5)'
+                    },
+                    grid: {
+                        color: 'rgba(45, 55, 72, 0.5)'
+                    },
+                    pointLabels: {
+                        color: '#e2e8f0'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function generateScenarioAnalysis(signals, state) {
+    let bullScenario = '';
+    let neutralScenario = '';
+    let bearScenario = '';
+    
+    const overallValue = calculateOverallValue(signals);
+    const currentPrice = parseFloat(state.currentPrice) || 1000;
+    
+    // 강세 시나리오
+    if (overallValue > 0) {
+        bullScenario = `현재의 포지티브 신호가 계속되면서 단기적으로 ${Math.round(currentPrice * 1.1)} USD까지 상승할 수 있습니다. 거래량 증가 시 ${Math.round(currentPrice * 1.15)} USD 돌파도 가능합니다.`;
+    } else {
+        bullScenario = `현재 하락세에서 반등이 발생하려면 RSI가 30 이하에서 반등하는 과매도 신호와 MACD 히스토그램의 하락 폭 감소가 선행되어야 합니다. 이 경우 ${Math.round(currentPrice * 1.05)} USD 수준까지 반등이 가능합니다.`;
+    }
+    
+    // 중립 시나리오
+    neutralScenario = `현재 지표들이 혼합된 신호를 보이고 있어, ${Math.round(currentPrice * 0.97)} USD에서 ${Math.round(currentPrice * 1.03)} USD 범위 내에서 횡보할 가능성이 높습니다. 추가적인 확실한 추세 신호가 나타날 때까지 이 범위 내에서 변동할 것으로 예상됩니다.`;
+    
+    // 약세 시나리오
+    if (overallValue < 0) {
+        bearScenario = `현재의 네거티브 신호가 계속된다면, 단기적으로 ${Math.round(currentPrice * 0.9)} USD까지 하락할 수 있습니다. 거래량이 증가한다면 ${Math.round(currentPrice * 0.85)} USD 수준까지도 가능합니다.`;
+    } else {
+        bearScenario = `현재 상승세에서 조정이 발생하려면 RSI가 70 이상에서 이탈하는 과매수 신호와 MACD 크로스오버가 발생해야 합니다. 이 경우 ${Math.round(currentPrice * 0.95)} USD 수준까지 조정이 가능합니다.`;
+    }
+    
+    return {
+        bullish: bullScenario,
+        neutral: neutralScenario,
+        bearish: bearScenario
+    };
+}
+
+// 시나리오 토글 함수
+function toggleScenario(id) {
+    const content = document.getElementById(id);
+    if (content) {
+        content.classList.toggle('active');
+    }
+}
+
+// 기존 displayResults 함수 수정
+const originalDisplayResults = displayResults;
+
+displayResults = function(results) {
+    originalDisplayResults(results);
+    
+    // 차트 초기화
+    initializeCharts(results);
+    
+    // 시나리오 분석
+    const state = gatherAnalysisState();
+    const signals = [
+        { signal: results.individualSignals.rsi, weight: 1.5 },
+        { signal: results.individualSignals.bollinger, weight: 1.0 },
+        { signal: results.individualSignals.macd, weight: 2.0 },
+        { signal: results.individualSignals.ema, weight: 1.5 },
+        { signal: results.individualSignals.volume, weight: 1.0 },
+        { signal: results.individualSignals.ichimoku, weight: 1.5 },
+        { signal: results.individualSignals.obv, weight: 1.5 }
+    ];
+    
+    const scenarios = generateScenarioAnalysis(signals, state);
+    document.getElementById('bull-scenario-text').textContent = scenarios.bullish;
+    document.getElementById('neutral-scenario-text').textContent = scenarios.neutral;
+    document.getElementById('bear-scenario-text').textContent = scenarios.bearish;
+    
+    // RSI 값 표시
+    const rsiValue = document.getElementById('rsi-value').value || '??';
+    document.getElementById('rsi-value-display').textContent = `값: ${rsiValue}`;
+};
+
+// DOMContentLoaded 이벤트에 시나리오 클릭 이벤트 추가
+document.addEventListener('DOMContentLoaded', function() {
+    const existingLoad = window.onload;
+    
+    window.onload = function() {
+        if (existingLoad) existingLoad();
+ // 탭 전환 이벤트
+document.getElementById('tab-overview')?.addEventListener('click', function() {
+    switchTab('overview');
+});
+document.getElementById('tab-charts')?.addEventListener('click', function() {
+    switchTab('charts');
+});
+document.getElementById('tab-scenarios')?.addEventListener('click', function() {
+    switchTab('scenarios');
+});
+document.getElementById('tab-details')?.addEventListener('click', function() {
+    switchTab('details');
+});
+
+// 탭 전환 함수
+function switchTab(tabId) {
+    // 모든 탭 컨텐츠 숨기기
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+    });
+    
+    // 모든 탭 버튼 비활성화
+    document.querySelectorAll('[id^="tab-"]').forEach(button => {
+        button.classList.remove('border-indigo-500');
+        button.classList.add('text-gray-400');
+        button.classList.remove('text-white');
+    });
+    
+    // 선택한 탭만 표시
+    document.getElementById('content-' + tabId)?.classList.remove('hidden');
+    
+    // 선택한 탭 버튼 활성화
+    const activeTab = document.getElementById('tab-' + tabId);
+    if (activeTab) {
+        activeTab.classList.add('border-indigo-500');
+        activeTab.classList.remove('text-gray-400');
+        activeTab.classList.add('text-white');
+    }
+}
+       
+        // 시나리오 헤더 클릭 이벤트
+        document.getElementById('bullish-header')?.addEventListener('click', function() {
+            toggleScenario('bullish-content');
+        });
         
+        document.getElementById('neutral-header')?.addEventListener('click', function() {
+            toggleScenario('neutral-content');
+        });
+        
+        document.getElementById('bearish-header')?.addEventListener('click', function() {
+            toggleScenario('bearish-content');
+        });
+    };
+});
+
         // Global function definitions for HTML event handlers
         window.loadSavedAnalysis = loadSavedAnalysis;
         window.deleteSavedAnalysis = deleteSavedAnalysis;
