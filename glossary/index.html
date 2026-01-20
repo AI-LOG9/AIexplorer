@@ -1,1181 +1,434 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>경제 용어 해석기 - 쉽게 이해하는 경제 용어 사전</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-kr@3.3.1/index.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>라떼로또 경제용어 사전</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
   <style>
-    html {
-      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-      background-color: #f8fafc;
+    :root { --navy: #0f172a; }
+    html, body {
+      height: 100%;
+      font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+      background: var(--navy);
     }
-    .tab-active {
-      border-bottom: 3px solid #6366f1;
-      color: #4f46e5 !important;
-      background-color: #edf2ff;
+    .premium-bg {
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(99,102,241,0.22), rgba(15,23,42,0) 60%),
+        radial-gradient(850px 600px at 85% 20%, rgba(16,185,129,0.14), rgba(15,23,42,0) 55%),
+        radial-gradient(900px 600px at 55% 85%, rgba(168,85,247,0.16), rgba(15,23,42,0) 60%),
+        linear-gradient(180deg, #0f172a 0%, #0b1224 55%, #0a1020 100%);
     }
-    .term-chip {
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 1px 2px 0 rgba(80,80,120,0.04);
-    }
-    .term-chip:hover, .term-chip.active {
-      background: #6366f1;
-      color: #fff !important;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 4px 14px 0 rgba(99,102,241,0.14);
-    }
-    ::selection {
-      background: #c7d2fe;
-      color: #312e81;
-    }
-    .search-focus {
-      box-shadow: 0 0 0 3px #a5b4fc;
-    }
-    .fade-in {
-      animation: fadeIn 0.6s;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-    .glass-bg {
-      background: rgba(255,255,255,0.85);
+    .glass {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow:
+        0 16px 60px rgba(0, 0, 0, 0.45),
+        0 1px 0 rgba(255, 255, 255, 0.06) inset;
       backdrop-filter: blur(18px);
-      box-shadow: 0 7px 36px 0 rgba(100,100,160,0.09);
+      -webkit-backdrop-filter: blur(18px);
     }
-    .icon-circle {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg,#b6cdfc 35%,#ddd6fe 100%);
-      font-size: 1.45rem;
-      color: #4f46e5;
-      margin-bottom: 1rem;
+    .search-shell { position: relative; }
+    .search-shell::before {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      border-radius: 24px;
+      background: radial-gradient(600px 120px at 50% 0%, rgba(99,102,241,0.35), rgba(168,85,247,0.22), rgba(16,185,129,0.18), rgba(0,0,0,0));
+      opacity: 0;
+      filter: blur(14px);
+      transition: opacity 250ms ease;
+      pointer-events: none;
     }
+    .search-shell:focus-within::before { opacity: 1; }
+    ::selection { background: rgba(16,185,129,0.25); color: #e2e8f0; }
   </style>
 </head>
-<body class="min-h-screen text-gray-900">
-  <main class="container mx-auto px-3 py-7 max-w-4xl flex flex-col gap-8 bg-transparent">
-    <!-- 헤더영역 -->
-    <header class="flex flex-col gap-1 items-center mb-3">
-      <div class="flex items-center gap-3">
-        <span class="icon-circle shadow-lg"><i class="fa-solid fa-book-open-reader"></i></span>
-        <h1 class="text-center text-3xl sm:text-4xl font-bold text-indigo-700 tracking-tight leading-tight drop-shadow-sm">
-          경제 용어 해석기
+<body class="premium-bg min-h-screen text-slate-100">
+  <main class="min-h-screen flex items-center justify-center px-4 py-10">
+    <div class="w-full max-w-5xl">
+      <header class="text-center mb-8 sm:mb-10">
+        <p class="text-sm sm:text-base text-slate-300/90">Premium Fintech · High-end Dark Mode</p>
+        <h1 class="mt-2 text-3xl sm:text-5xl font-semibold tracking-tight">
+          <span class="bg-gradient-to-r from-amber-200 via-emerald-200 to-indigo-200 bg-clip-text text-transparent">
+            라떼로또 경제용어 사전
+          </span>
         </h1>
-      </div>
-      <p class="text-base text-gray-600 mb-2 max-w-md text-center">초급부터 고급까지, 경제 용어를 한 번에 쉽게 이해하세요!</p>
-    </header>
+        <p class="mt-3 text-sm sm:text-base text-slate-300 max-w-2xl mx-auto">
+          검색어를 치는 순간 바로 설명이 떠요. (3줄 요약 + 쉬운 예시)
+        </p>
+      </header>
 
-    <!-- 검색 영역 -->
-    <section class="glass-bg rounded-2xl p-6 mb-1 flex flex-col shadow fade-in">
-      <div class="flex flex-col md:flex-row gap-2 md:items-center">
-        <div class="relative flex-grow w-full md:max-w-xl">
-          <input type="text" id="search-input"
-            class="w-full px-5 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 transition search-focus"
-            placeholder="경제 용어 검색 - 예: 인플레이션, 스테이블코인, 부동산 PF 등" autocomplete="off" />
-          <button id="clear-button"
-            class="absolute right-3 top-2.5 text-gray-400 hover:text-red-500 transition duration-200 p-1"
-            style="display:none;">
-            <i class="fas fa-times-circle fa-lg"></i>
-          </button>
-        </div>
-        <button id="search-button"
-          class="flex items-center gap-2 px-6 py-3 bg-gradient-to-tr from-indigo-600 to-blue-500 hover:from-indigo-700
-           text-white font-semibold rounded-xl shadow transition duration-200 hover:shadow-lg text-lg">
-          <i class="fas fa-search"></i><span class="hidden sm:inline">검색</span>
-        </button>
-      </div>
-      <!-- 인기 검색어 -->
-      <div class="mt-3">
-        <div class="text-sm text-gray-500 mb-1 flex items-center gap-1">
-          <i class="fa-regular fa-fire text-orange-400"></i> 인기 검색어:
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">인플레이션</span>
-          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">금리인상</span>
-          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">양적완화</span>
-          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">GDP</span>
-          <span class="term-chip bg-indigo-100 text-indigo-700 rounded-full px-4 py-1.5 text-sm font-medium cursor-pointer hover:bg-indigo-200 transition">경기불황</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 검색 결과 영역 -->
-    <section id="results-container" class="glass-bg rounded-2xl p-7 shadow-lg fade-in mb-1 flex flex-col space-y-4 hidden">
-      <div>
-        <h2 id="term-title" class="text-2xl md:text-3xl text-indigo-800 font-extrabold tracking-tight mb-2"></h2>
-        <div class="flex border-b border-gray-200 mb-3 gap-0.5">
-          <button id="tab-basic" class="tab-active text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">초급 설명</button>
-          <button id="tab-intermediate" class="text-gray-500 text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">중급 설명</button>
-          <button id="tab-advanced" class="text-gray-500 text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">고급 설명</button>
-          <button id="tab-example" class="text-gray-500 text-sm font-semibold px-4 py-2 rounded-t transition select-none focus:outline-none">실생활 예시</button>
-        </div>
-        <div class="pt-2">
-          <div id="tab-basic-content" class="">
-            <p id="basic-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
-          </div>
-          <div id="tab-intermediate-content" class="hidden">
-            <p id="intermediate-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
-          </div>
-          <div id="tab-advanced-content" class="hidden">
-            <p id="advanced-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
-          </div>
-          <div id="tab-example-content" class="hidden">
-            <p id="example-explanation" class="text-base text-gray-800 leading-relaxed mb-2"></p>
+      <section class="glass rounded-3xl p-5 sm:p-7">
+        <div class="search-shell">
+          <div class="glass rounded-2xl px-4 sm:px-6 py-4 sm:py-5 border border-white/10">
+            <div class="flex items-center gap-3 sm:gap-4">
+              <div class="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-400/20 via-indigo-400/20 to-fuchsia-400/20 border border-white/10 flex items-center justify-center">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-slate-100/90" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <label for="searchInput" class="block text-xs sm:text-sm text-slate-300 mb-1">검색</label>
+                <input
+                  id="searchInput"
+                  type="search"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="예: 인플레이션, ETF, 스테이블코인, 부동산 PF, 기준금리..."
+                  class="w-full bg-transparent text-lg sm:text-2xl font-medium placeholder:text-slate-500/90 text-slate-100 caret-emerald-300 focus:outline-none"
+                />
+              </div>
+              <button
+                id="clearBtn"
+                class="hidden sm:inline-flex items-center justify-center w-11 h-11 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition"
+                type="button"
+                aria-label="검색어 지우기"
+              >
+                <svg class="w-5 h-5 text-slate-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm">
+              <button class="chip" data-q="인플레이션" type="button">인플레이션</button>
+              <button class="chip" data-q="기준금리" type="button">기준금리</button>
+              <button class="chip" data-q="ETF" type="button">ETF</button>
+              <button class="chip" data-q="스테이블코인" type="button">스테이블코인</button>
+              <button class="chip" data-q="부동산 PF" type="button">부동산 PF</button>
+              <button class="chip" data-q="비트코인" type="button">비트코인</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <h3 class="text-lg font-bold text-gray-700 mb-2"><i class="fa-solid fa-link text-indigo-400"></i> 관련 용어</h3>
-        <div id="related-terms" class="flex flex-wrap gap-2"></div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 결과 없음 -->
-    <section id="no-results"
-      class="glass-bg rounded-2xl p-7 flex flex-col items-center justify-center shadow fade-in mb-1 hidden">
-      <span class="icon-circle bg-pink-100 text-pink-600 mb-1"><i class="fa-regular fa-face-frown fa-lg"></i></span>
-      <h3 class="text-xl font-semibold text-gray-700 mb-1">검색 결과가 없습니다</h3>
-      <p class="text-gray-500 text-base mb-1">다른 경제 용어를 입력해 보세요.</p>
-    </section>
+      <section class="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-4">
+        <aside class="lg:col-span-2 glass rounded-3xl p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-100/95">검색 결과</h2>
+            <span id="countBadge" class="text-xs px-2 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300"></span>
+          </div>
+          <div id="resultsList" class="space-y-2"></div>
+          <p id="emptyHint" class="hidden mt-3 text-sm text-slate-300/90">
+            결과가 없어요. 다른 단어를 입력해보세요.
+          </p>
+        </aside>
 
-    <!-- 사용법 안내 -->
-    <section id="guide-section" class="glass-bg rounded-2xl p-7 shadow flex flex-col gap-5 fade-in">
-      <h2 class="text-xl md:text-2xl font-extrabold text-indigo-600 mb-2 flex items-center gap-2">
-        <i class="fa-solid fa-circle-info text-indigo-400"></i> 경제 용어 해석기 사용법
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-4 flex flex-col items-center text-center">
-          <span class="icon-circle"><i class="fa-solid fa-search"></i></span>
-          <h3 class="font-bold text-gray-700 mb-1">용어 검색</h3>
-          <p class="text-gray-600 text-sm">검색창에 알고 싶은 경제 용어를 입력하세요. 부분 입력으로도 쉽게 찾을 수 있습니다.</p>
-        </div>
-        <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-4 flex flex-col items-center text-center">
-          <span class="icon-circle"><i class="fa-solid fa-layer-group"></i></span>
-          <h3 class="font-bold text-gray-700 mb-1">단계별 설명</h3>
-          <p class="text-gray-600 text-sm">초급, 중급, 고급 단계별로 경제 용어를 빠르게 비교할 수 있고, 실생활 예시까지 제공합니다.</p>
-        </div>
-        <div class="bg-indigo-50 rounded-xl border border-indigo-100 p-4 flex flex-col items-center text-center">
-          <span class="icon-circle"><i class="fa-solid fa-diagram-project"></i></span>
-          <h3 class="font-bold text-gray-700 mb-1">관련 용어 네트워크</h3>
-          <p class="text-gray-600 text-sm">검색한 용어의 관련 용어도 칩 형태로 클릭해서 추가 설명을 받을 수 있습니다.</p>
-        </div>
-      </div>
-    </section>
+        <article class="lg:col-span-3 glass rounded-3xl p-5 sm:p-7">
+          <div id="detailEmpty" class="text-slate-300/90">
+            <p class="text-lg sm:text-xl font-semibold text-slate-100">여기서 설명이 보여요.</p>
+            <p class="mt-2 text-sm sm:text-base">왼쪽 결과에서 용어를 선택하거나, 검색창에 입력해보세요.</p>
+          </div>
 
-    <footer class="text-center mt-10 text-gray-400 text-sm py-4 select-none">
-      <span>&copy; 2025 경제 용어 해석기 — 초보자를 위한 경제 교육 도구 | AI Log</span>
-    </footer>
+          <div id="detailCard" class="hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs text-slate-300">용어</p>
+                <h3 id="detailTitle" class="mt-1 text-2xl sm:text-3xl font-semibold tracking-tight"></h3>
+              </div>
+              <span class="shrink-0 text-xs px-3 py-1 rounded-full bg-gradient-to-r from-emerald-400/20 via-indigo-400/20 to-fuchsia-400/20 border border-white/10 text-slate-100/90">
+                LatteLotto
+              </span>
+            </div>
+
+            <div class="mt-5">
+              <p class="text-xs text-slate-300">3줄 요약</p>
+              <ul id="detailDesc" class="mt-2 space-y-2 text-base sm:text-lg text-slate-100/95 leading-relaxed"></ul>
+            </div>
+
+            <div class="mt-6">
+              <p class="text-xs text-slate-300">실생활 예시</p>
+              <p id="detailExample" class="mt-2 text-sm sm:text-base text-slate-200/95 leading-relaxed"></p>
+            </div>
+
+            <div class="mt-6">
+              <p class="text-xs text-slate-300">검색 키워드(별칭)</p>
+              <div id="detailKeys" class="mt-2 flex flex-wrap gap-2"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="mt-8 text-center text-xs text-slate-400">
+        외부 API/서버 없이 동작합니다 · Tailwind CDN · Vanilla JS
+      </footer>
+    </div>
   </main>
-  <!-- SCRIPT -->
+
   <script>
-        // 경제 용어 데이터베이스
-        const economicTerms = {
-            "인플레이션": {
-                "basic": "물건 값이 전반적으로 계속 오르는 현상을 말해요. 작년에 5,000원이던 음료수가 올해 5,500원이 된다면, 그것은 인플레이션의 한 예입니다.",
-                "intermediate": "화폐 가치가 하락하고 물가가 지속적으로 상승하는 경제 현상입니다. 통화량 증가, 수요 증가, 공급 감소 등 다양한 요인이 영향을 미칩니다.",
-                "advanced": "통화량 증가, 총수요 증가, 비용 상승 등으로 인한 물가의 지속적인 상승을 의미합니다. 수요견인 인플레이션, 비용인상 인플레이션, 구조적 인플레이션 등 여러 유형이 있습니다.",
-                "example": "인플레이션이 연간 5%라면, 1년 전 100만원으로 살 수 있던 물건을 지금은 105만원을 지불해야 합니다. 또한, 은행에 예금한 돈의 실질 가치도 감소합니다. 예를 들어, 연 2% 이자를 주는 계좌에 돈을 넣었다면, 인플레이션을 고려할 때 실제로는 매년 3%의 구매력을 잃고 있는 셈입니다.",
-                "related": ["디플레이션", "스태그플레이션", "통화정책", "소비자물가지수(CPI)", "자산 가격 인플레이션"]
-            },
-            "디플레이션": {
-                "basic": "물건 값이 전반적으로 계속 내려가는 현상이에요. 작년에 5,000원이던 음료수가 올해 4,500원이 된다면, 이것이 디플레이션의 예입니다.",
-                "intermediate": "화폐 가치가 상승하고 물가가 지속적으로 하락하는 경제 현상입니다. 소비 감소, 생산 과잉, 통화량 감소 등이 주요 원인이 될 수 있습니다.",
-                "advanced": "총수요 감소, 생산성 향상, 통화량 감소 등으로 인한 물가의 지속적인 하락을 의미합니다. 디플레이션은 소비 지연, 투자 감소, 부채 부담 증가 등의 문제를 야기할 수 있습니다.",
-                "example": "디플레이션이 진행되면 소비자들은 '지금 사는 것보다 나중에 사면 더 싸게 살 수 있을 것'이라 생각해 구매를 미루게 됩니다. 예를 들어 노트북이 현재 100만원인데 1년 후에는 90만원이 될 것이라 예상된다면, 많은 소비자가 구매를 미룰 수 있습니다. 이런 소비 지연은 경제 활동을 더욱 위축시키는 악순환을 만들 수 있습니다.",
-                "related": ["인플레이션", "경기침체", "유동성 함정", "디플레이션 스파이럴", "통화정책"]
-                
-            },
-  "스테이블코인 (Stablecoin)": {
-    "basic": "가치가 거의 변하지 않도록 설계된 특별한 종류의 암호화폐예요. 1코인이 1달러나 1원처럼 일정한 가치를 유지하려고 해요.",
-    "intermediate": "주로 달러 같은 법정화폐나 다른 자산을 담보로 발행되어 가치를 안정적으로 유지해요. 비트코인처럼 가격 변동성이 큰 암호화폐와 달리 결제나 송금 등에 사용하기 편리하게 만들었어요.",
-    "advanced": "담보 종류에 따라 법정화폐 담보, 암호자산 담보, 알고리즘 기반 등으로 나뉩니다. 안정성을 유지하는 메커니즘이 중요하며, 규제 환경 변화에 영향을 많이 받아요. 자금세탁방지(AML) 등 규제 준수 여부가 신뢰도에 큰 영향을 미칩니다.",
-    "example": "해외에 있는 가족에게 돈을 보낼 때, 달러 가치에 고정된 스테이블 코인(USDC 등)을 사용하면 수수료를 아끼고 빠르게 송금할 수 있어요.",
-    "related": ["가치 연동 (Peg)", "준비금 (Reserve)", "법정화폐 담보 스테이블코인", "암호자산 담보 스테이블코인", "알고리즘 스테이블코인", "CBDC"]
-  },
-  "가치 연동 (Peg / Value Pegging)": {
-    "basic": "스테이블 코인이 1달러나 1원 같은 특정 가치에 딱 붙어서 움직이도록 묶어두는 것을 말해요.",
-    "intermediate": "주로 1:1 비율로 특정 법정화폐(예: USD)나 자산에 가치를 고정시키는 메커니즘이에요. 이를 위해 발행사는 해당 가치만큼의 준비금을 보유하고 있음을 증명해야 해요.",
-    "advanced": "가치 연동 유지 능력(페깅 유지)은 스테이블 코인의 신뢰도와 직결됩니다. 시장 변동성이나 준비금 부족 문제가 발생하면 페깅이 깨질 위험(디페깅)도 있어요. 안정적인 페깅 유지를 위한 다양한 기술적, 경제적 장치가 필요합니다.",
-    "example": "USDC라는 스테이블 코인은 항상 1개의 코인이 미국 1달러의 가치를 가지도록 설계되었어요. 이것이 바로 달러에 '가치 연동' 또는 '페깅'되었다고 말하는 거예요.",
-    "related": ["스테이블코인", "준비금 (Reserve)", "상환 (Redemption)", "디페깅 (De-pegging)"]
-  },
-  "법정화폐 담보 스테이블코인 (Fiat-backed Stablecoin)": {
-    "basic": "실제 돈(달러, 원화 등)을 은행 같은 곳에 맡겨두고, 그 금액만큼만 발행하는 스테이블 코인이에요.",
-    "intermediate": "가장 일반적인 형태로, 발행된 코인 수량만큼의 법정화폐를 준비금으로 보유하여 안정성을 확보해요. 대표적으로 USDC, USDT(테더) 등이 있어요. 준비금 보유 내역의 투명성과 정기적인 감사가 중요해요.",
-    "advanced": "중앙화된 발행 주체가 존재하며, 해당 주체의 신용도 및 준비금 관리 능력에 의존해요. 규제 당국의 감독을 받기 용이하지만, 발행사의 파산이나 규제 불확실성에 따른 위험이 존재할 수 있어요.",
-    "example": "A회사가 100만 달러를 은행에 예치하고, 1달러=1코인 비율로 100만 개의 스테이블 코인을 발행했어요. 이것이 법정화폐 담보 스테이블 코인이에요.",
-    "related": ["스테이블코인", "가치 연동 (Peg)", "준비금 (Reserve)", "상환 (Redemption)", "USDC", "USDT"]
-  },
-  "암호자산 담보 스테이블코인 (Crypto-backed Stablecoin)": {
-    "basic": "비트코인이나 이더리움 같은 다른 암호화폐를 담보로 잡고 발행하는 스테이블 코인이에요.",
-    "intermediate": "담보로 잡는 암호자산의 가치 변동 위험 때문에, 보통 발행하려는 스테이블 코인 가치보다 더 많은(초과 담보) 암호자산을 담보로 요구해요. 스마트 계약을 통해 자동화된 방식으로 운영되는 경우가 많아요.",
-    "advanced": "탈중앙화 방식으로 운영될 수 있다는 장점이 있지만, 담보 자산의 가격 급락 시 청산 위험이 발생할 수 있어요. 담보 비율 유지 및 청산 메커니즘의 안정성이 중요해요. 대표적으로 DAI가 있어요.",
-    "example": "150달러 가치의 이더리움을 스마트 계약에 맡기고, 100달러 가치의 스테이블 코인(DAI)을 빌리는 방식이에요.",
-    "related": ["스테이블코인", "가치 연동 (Peg)", "디파이 (DeFi)", "스마트 계약", "초과 담보 (Over-collateralization)", "청산 (Liquidation)", "DAI"]
-  },
-  "알고리즘 스테이블코인 (Algorithmic Stablecoin)": {
-    "basic": "담보 없이, 코인 수량을 자동으로 조절하는 프로그램(알고리즘)을 통해 가치를 유지하려고 시도하는 스테이블 코인이에요.",
-    "intermediate": "코인 가격이 목표 가치(예: 1달러)보다 높으면 코인 공급량을 늘리고, 낮으면 줄이는 방식으로 가격을 조절해요. 별도의 담보가 필요 없어 효율적일 수 있지만, 설계가 매우 복잡해요.",
-    "advanced": "과거 실패 사례(예: 테라/루나 사태)에서 보듯, 시장의 신뢰를 잃거나 극단적인 시장 상황에서는 가치 유지 메커니즘이 작동하지 않고 가격이 폭락할 위험(죽음의 소용돌이)이 매우 커요. 현재는 규제 및 기술적 문제로 인해 성공적인 모델을 찾기 어려운 상태예요.",
-    "example": "과거 '테라USD(UST)'는 자매 코인 '루나'와의 교환 메커니즘을 통해 1달러 가치를 유지하려 했으나, 시장 붕괴로 실패했어요.",
-    "related": ["스테이블코인", "가치 연동 (Peg)", "디페깅 (De-pegging)", "테라/루나 사태"]
-  },
-  "준비금 (Reserve)": {
-    "basic": "스테이블 코인의 가치를 보증하기 위해 발행사가 따로 보관하고 있는 돈이나 자산을 말해요.",
-    "intermediate": "법정화폐 담보 스테이블 코인의 경우, 발행된 코인과 1:1 가치를 가지는 현금, 국채 등 안전 자산으로 구성돼요. 준비금의 규모와 구성 내역은 스테이블 코인의 신뢰도에 매우 중요해요.",
-    "advanced": "준비금의 투명성과 정기적인 외부 감사는 규제 당국의 핵심 요구 사항이에요. 준비금 운용 방식(예: 단기 국채 투자)은 발행사의 수익 모델과 관련될 수 있지만, 안정성을 최우선으로 고려해야 해요.",
-    "example": "스테이블 코인 발행사 '서클(Circle)'은 USDC 발행량만큼의 달러 현금 및 미국 단기 국채를 준비금으로 보유하고 있다고 정기적으로 보고서를 발표해요.",
-    "related": ["스테이블코인", "법정화폐 담보 스테이블코인", "가치 연동 (Peg)", "상환 (Redemption)", "감사 (Audit)"]
-  },
-  "상환 (Redemption)": {
-    "basic": "가지고 있는 스테이블 코인을 발행사에게 주고, 그만큼의 실제 돈(달러, 원화 등)으로 다시 바꾸는 것을 말해요.",
-    "intermediate": "스테이블 코인이 약속된 가치(예: 1코인=1달러)를 유지하는 중요한 기능이에요. 사용자가 원할 때 언제든지 약속된 가치로 교환받을 수 있어야 신뢰를 얻을 수 있어요.",
-    "advanced": "대규모 상환 요청(뱅크런과 유사)이 발생할 경우, 발행사의 준비금 지급 능력과 상환 절차의 효율성이 시험대에 오를 수 있어요. 규제 당국은 안정적인 상환을 보장하기 위한 요건을 마련하고 있어요.",
-    "example": "스테이블 코인 100개를 가진 사람이 발행사에 신청하여 100달러를 자신의 은행 계좌로 돌려받는 과정이에요.",
-    "related": ["스테이블코인", "가치 연동 (Peg)", "준비금 (Reserve)", "법정화폐 담보 스테이블코인", "뱅크런 (Bank Run)"]
-  },
-  "스마트 계약 (Smart Contract)": {
-    "basic": "미리 정해진 조건이 맞으면 자동으로 실행되는 디지털 계약(프로그램)이에요.",
-    "intermediate": "블록체인 위에서 작동하며, 특정 조건 충족 시 자동으로 코인 전송, 계약 이행 등이 이루어져요. 중개자 없이 투명하고 신뢰성 있는 거래를 가능하게 해요. 디파이(DeFi) 서비스의 핵심 기술이에요.",
-    "advanced": "코드의 논리 오류나 해킹 취약점이 있을 경우 큰 금전적 손실로 이어질 수 있어요. 계약 내용을 수정하기 어렵다는 특징도 있어 초기 설계가 매우 중요하며, 코드 감사가 필수적이에요.",
-    "example": "A가 B에게 빌린 돈을 갚으면, 담보로 잡혔던 암호자산이 스마트 계약에 의해 자동으로 A에게 돌아가도록 프로그래밍할 수 있어요.",
-    "related": ["블록체인", "디파이 (DeFi)", "암호자산 담보 스테이블코인", "토큰화 (Tokenization)", "코드 감사 (Code Audit)"]
-  },
-  "디지털 지갑 (Digital Wallet / Crypto Wallet)": {
-    "basic": "암호화폐나 스테이블 코인을 보관하고 주고받을 수 있는 디지털 계정이나 앱이에요.",
-    "intermediate": "개인 키(비밀번호 역할)를 통해 소유권을 증명하며, 종류에 따라 거래소 지갑(Custodial), 개인 지갑(Non-custodial), 하드웨어 지갑(콜드월렛) 등으로 나뉘어요. 보안이 매우 중요해요.",
-    "advanced": "개인 지갑은 사용자가 직접 개인 키를 관리해야 하므로 분실 시 자산을 복구하기 어렵다는 단점이 있어요. 해킹, 피싱 등 다양한 보안 위협에 노출될 수 있어 사용자의 주의가 필요해요.",
-    "example": "스마트폰에 '메타마스크' 같은 앱을 설치하여 이더리움이나 스테이블 코인을 보관하고, 디파이 서비스에 연결하여 사용할 수 있어요.",
-    "related": ["암호화폐", "스테이블코인", "개인 키 (Private Key)", "공개 키 (Public Key)", "하드웨어 지갑 (Hardware Wallet)", "메타마스크 (Metamask)"]
-  },
-  "퍼블릭 블록체인 (Public Blockchain)": {
-    "basic": "누구나 참여하고 거래 내역을 볼 수 있는 공개된 블록체인 네트워크예요. 비트코인, 이더리움이 대표적이에요.",
-    "intermediate": "개방성과 투명성이 높지만, 거래 처리 속도가 상대적으로 느리고 수수료가 발생할 수 있어요. 누구나 네트워크 검증에 참여할 수 있어 탈중앙성이 높아요.",
-    "advanced": "네트워크 참여자 간의 합의 메커니즘(작업증명, 지분증명 등)이 중요하며, 확장성 문제(느린 속도, 높은 수수료)를 해결하기 위한 다양한 기술(레이어2 솔루션 등)이 개발되고 있어요.",
-    "example": "이더리움 네트워크 위에서 발행된 스테이블 코인은 누구나 지갑을 만들어 주고받을 수 있으며, 모든 거래 기록은 공개적으로 확인할 수 있어요.",
-    "related": ["블록체인", "프라이빗 블록체인", "탈중앙화", "이더리움 (Ethereum)", "합의 메커니즘", "거래 수수료 (Gas Fee)"]
-  },
-  "프라이빗 블록체인 (Private Blockchain)": {
-    "basic": "허가된 사용자만 참여하고 정보를 볼 수 있는 폐쇄적인 블록체인 네트워크예요.",
-    "intermediate": "기업이나 특정 기관 내부에서 데이터 관리, 업무 효율화 등을 위해 사용돼요. 퍼블릭 블록체인보다 처리 속도가 빠르고 통제가 용이하다는 장점이 있어요.",
-    "advanced": "중앙 관리 주체가 존재하여 탈중앙성은 낮지만, 데이터 프라이버시 보호와 운영 효율성 면에서 유리해요. CBDC 시스템이나 기업 간 컨소시엄 블록체인 등에 활용될 수 있어요.",
-    "example": "여러 은행이 컨소시엄을 구성하여, 허가된 은행들만 참여하여 거래 정보를 공유하고 정산하는 프라이빗 블록체인 시스템을 구축할 수 있어요.",
-    "related": ["블록체인", "퍼블릭 블록체인", "중앙화", "컨소시엄 블록체인", "CBDC"]
-  },
-  "거래 수수료 (Transaction Fee / Gas Fee)": {
-    "basic": "블록체인 네트워크를 사용할 때 내는 이용료예요. 거래를 처리해주는 사람들에게 보상으로 지급돼요.",
-    "intermediate": "주로 퍼블릭 블록체인에서 거래를 기록하고 검증하는 대가로 지불해요. 네트워크가 혼잡할수록 수수료가 비싸지는 경향이 있어요. 이더리움에서는 '가스비(Gas Fee)'라고 불러요.",
-    "advanced": "수수료 수준은 네트워크의 효율성 및 사용자 경험에 큰 영향을 미쳐요. 수수료를 낮추기 위한 기술(레이어2 등) 개발이 활발하며, 스테이블 코인 송금 시에도 고려해야 할 비용 요소예요.",
-    "example": "이더리움 네트워크에서 스테이블 코인을 친구에게 보내려면, 약간의 이더리움(ETH)을 거래 수수료(가스비)로 지불해야 거래가 처리돼요.",
-    "related": ["블록체인", "퍼블릭 블록체인", "이더리움 (Ethereum)", "채굴자 (Miner)", "검증인 (Validator)"]
-  },
-  "디파이 (DeFi / Decentralized Finance)": {
-    "basic": "은행 같은 중개 기관 없이, 블록체인 위에서 스마트 계약으로 돌아가는 탈중앙화된 금융 서비스예요.",
-    "intermediate": "예금, 대출, 투자, 보험 등 다양한 금융 서비스를 중개자 없이 P2P(개인 간) 방식으로 이용할 수 있어요. 스테이블 코인은 디파이 생태계에서 주요 교환 및 예치 수단으로 활용돼요.",
-    "advanced": "접근성이 높고 투명하다는 장점이 있지만, 스마트 계약의 취약점, 규제 불확실성, 높은 변동성 등의 위험이 존재해요. 사용자는 스스로 위험을 충분히 인지하고 참여해야 해요.",
-    "example": "디파이 플랫폼에 스테이블 코인을 예치하고 이자를 받거나, 암호자산을 담보로 스테이블 코인을 대출받을 수 있어요.",
-    "related": ["블록체인", "스마트 계약", "탈중앙화", "스테이블코인", "암호자산 담보 스테이블코인", "유니스왑 (Uniswap)", "메이커다오 (MakerDAO)"]
-  },
-  "탈중앙화 거래소 (DEX / Decentralized Exchange)": {
-    "basic": "중앙 운영 주체 없이, 스마트 계약을 통해 사용자들끼리 직접 암호화폐를 교환할 수 있는 거래소예요.",
-    "intermediate": "사용자가 직접 자신의 디지털 지갑을 연결하여 거래하며, 자산을 거래소에 맡길 필요가 없어 해킹 위험이 상대적으로 낮아요. 다양한 종류의 토큰(특히 디파이 관련) 거래가 가능해요.",
-    "advanced": "사용자 인터페이스가 다소 복잡할 수 있고, 유동성 부족 문제나 스마트 계약 취약점 위험이 있을 수 있어요. 법정화폐 직접 입출금이 어려운 경우가 많아요. 유니스왑, 커브 등이 대표적이에요.",
-    "example": "개인 지갑을 유니스왑(Uniswap)이라는 DEX에 연결하여, 보유한 이더리움을 스테이블 코인으로 직접 교환할 수 있어요.",
-    "related": ["디파이 (DeFi)", "스마트 계약", "디지털 지갑", "중앙화 거래소 (CEX)", "유동성 풀 (Liquidity Pool)", "유니스왑 (Uniswap)"]
-  },
-  "중앙화 거래소 (CEX / Centralized Exchange)": {
-    "basic": "업비트, 빗썸, 바이낸스처럼 특정 회사가 운영하고 관리하는 암호화폐 거래소예요.",
-    "intermediate": "사용자 친화적인 인터페이스와 높은 거래 속도, 풍부한 유동성을 제공해요. 법정화폐(원화, 달러 등) 입출금이 편리하고 고객 지원 서비스를 제공해요. 거래소에 자산을 보관하는 방식이에요.",
-    "advanced": "거래소가 해킹당하거나 파산할 경우 자산을 잃을 위험이 있어요(거래소 리스크). 거래 내역 등 데이터가 중앙 서버에 기록되며, KYC/AML 등 규제를 준수해야 해요.",
-    "example": "업비트(Upbit) 거래소에 원화를 입금하고, 그 돈으로 비트코인이나 다른 암호화폐, 또는 상장된 스테이블 코인을 사고 팔 수 있어요.",
-    "related": ["암호화폐", "스테이블코인", "탈중앙화 거래소 (DEX)", "고객확인제도 (KYC)", "자금세탁방지 (AML)", "업비트 (Upbit)", "바이낸스 (Binance)"]
-  },
-  "고객확인제도 (KYC / Know Your Customer)": {
-    "basic": "금융 회사가 서비스를 제공하기 전에 고객의 신원을 확인하는 절차예요.",
-    "intermediate": "자금 세탁이나 테러 자금 조달 등을 방지하기 위해 법적으로 요구되는 경우가 많아요. 보통 신분증, 주소 증명 서류 등을 제출하여 본인 인증을 해요. 암호화폐 거래소 가입 시 필수적인 경우가 많아요.",
-    "advanced": "KYC 절차는 금융 거래의 투명성을 높이지만, 개인 정보 보호 문제와 절차의 번거로움이 단점으로 지적되기도 해요. 규제 강화에 따라 KYC 기준도 점차 엄격해지는 추세예요.",
-    "example": "암호화폐 거래소에 가입하여 원화를 입출금하려면, 신분증 사진과 은행 계좌 정보를 제출하여 KYC 인증을 받아야 해요.",
-    "related": ["자금세탁방지 (AML)", "중앙화 거래소 (CEX)", "금융 규제", "개인정보보호"]
-  },
-  "자금세탁방지 (AML / Anti-Money Laundering)": {
-    "basic": "불법적인 자금이 깨끗한 돈처럼 세탁되는 것을 막기 위한 법과 규제를 말해요.",
-    "intermediate": "금융 기관(은행, 거래소 등)은 의심스러운 거래를 감시하고 당국에 보고할 의무가 있어요. 고객확인제도(KYC)는 AML의 중요한 부분이에요. 스테이블 코인을 포함한 암호화폐 거래에도 엄격하게 적용돼요.",
-    "advanced": "국제자금세탁방지기구(FATF) 등 국제기구에서 관련 규제 기준을 만들고 있으며, 각국 정부는 이를 바탕으로 법률을 제정해요. 규제 준수 여부는 금융 서비스의 신뢰도 및 합법성과 직결돼요.",
-    "example": "암호화폐 거래소는 AML 규정에 따라 거액의 현금 입출금이나 의심스러운 패턴의 거래가 발생하면 금융정보분석원(KoFIU)에 보고해야 해요.",
-    "related": ["고객확인제도 (KYC)", "금융 규제", "국제자금세탁방지기구 (FATF)", "금융정보분석원 (KoFIU)"]
-  },
-  "국경 간 결제 (Cross-border Payments)": {
-    "basic": "나라와 나라 사이에 돈을 주고받는 것을 말해요. 해외 송금이 대표적이에요.",
-    "intermediate": "기존 은행 시스템(SWIFT 등)은 여러 중개 기관을 거치기 때문에 시간이 오래 걸리고 수수료가 비싼 경우가 많아요. 스테이블 코인은 이를 개선할 잠재력이 커 주목받고 있어요.",
-    "advanced": "스테이블 코인을 활용하면 중개 기관을 최소화하여 거의 실시간으로 저렴하게 국경 간 결제가 가능해질 수 있어요. 다만, 각국의 규제 차이, 환율 문제, 법정화폐 교환 등의 해결 과제가 남아있어요.",
-    "example": "미국에 있는 회사가 필리핀에 있는 직원에게 월급을 보낼 때, 달러 스테이블 코인을 사용하면 은행보다 훨씬 빠르고 저렴하게 송금할 수 있어요.",
-    "related": ["스테이블코인", "해외 송금 (Remittance)", "스위프트 (SWIFT)", "환율", "금융 규제"]
-  },
-  "토큰화 (Tokenization)": {
-    "basic": "부동산, 미술품, 주식 같은 실제 자산을 블록체인 위에서 거래할 수 있는 디지털 토큰으로 바꾸는 것을 말해요.",
-    "intermediate": "자산을 작은 단위로 쪼개어(조각 투자) 여러 사람이 소유하거나 거래하기 쉽게 만들어요. 스마트 계약을 통해 소유권 이전이나 배당 지급 등을 자동화할 수 있어요.",
-    "advanced": "자산의 유동성을 높이고 새로운 투자 기회를 제공할 수 있지만, 법적/제도적 기반 마련이 중요해요. 토큰증권(STO)이 대표적인 예이며, 스테이블 코인은 토큰화된 자산을 거래하는 데 사용될 수 있어요.",
-    "example": "10억짜리 건물을 100만 개의 디지털 토큰으로 발행하여, 사람들이 1만 원 단위로 건물의 일부 소유권을 사고 팔 수 있게 하는 것이에요.",
-    "related": ["블록체인", "스마트 계약", "토큰증권 (STO)", "조각 투자", "유동성", "스테이블코인"]
-  },
-  "유틸리티 토큰 (Utility Token)": {
-    "basic": "특정 서비스나 플랫폼을 이용할 수 있는 권한을 주는 '디지털 쿠폰' 같은 토큰이에요.",
-    "intermediate": "투자 목적보다는 특정 블록체인 프로젝트의 서비스(예: 클라우드 저장 공간 사용, 게임 아이템 구매 등)를 이용하기 위해 사용돼요. 가격 변동성이 있을 수 있으며, 증권으로 간주되지 않는 경우가 많아요.",
-    "advanced": "프로젝트 생태계 활성화에 기여하지만, 실제 사용처가 명확하지 않거나 프로젝트가 실패할 경우 가치가 없어질 위험이 있어요. 증권성 여부에 대한 규제 논쟁이 있을 수 있어요.",
-    "example": "파일코인(Filecoin)은 분산형 클라우드 저장 공간을 이용하기 위해 사용되는 유틸리티 토큰이에요.",
-    "related": ["암호화폐", "토큰", "증권형 토큰 (Security Token)", "ICO (Initial Coin Offering)"]
-  },
-            "관세": {
-    "basic": "국경을 넘어 수입되거나 수출되는 상품에 대해 부과되는 세금이에요. 정부는 국내 산업을 보호하거나 재정 수입을 확보하기 위해 관세를 부과합니다.",
-    "intermediate": "관세는 수입품의 가격을 상승시켜 국내 생산품과의 가격 경쟁력을 높이는 보호무역 정책의 일환으로 사용될 수 있으며, 국가 재정 수입의 중요한 원천이 되기도 합니다. 관세율은 상품의 종류, 원산지, 정부 정책 등에 따라 다르게 적용됩니다.",
-    "advanced": "관세는 무역 장벽의 한 형태로, 수입량 조절, 국내 산업 보호, 특정 국가에 대한 경제적 압력 등 다양한 목적으로 활용됩니다. 세계무역기구(WTO) 체제 하에서 관세율 인하 및 철폐 노력이 지속되고 있지만, 특정 산업 보호나 국가 간 무역 불균형 해소를 위한 전략적 도구로 여전히 중요한 역할을 합니다. 관세 부과는 수입 상품 가격 상승을 통해 국내 소비자에게 부담을 줄 수 있고, 수출국의 반발을 초래하여 무역 분쟁으로 이어질 수 있다는 점도 고려해야 합니다.",
-    "example": "한국 정부가 특정 국가로부터 수입되는 농산물에 높은 관세를 부과하는 것은 국내 농업 산업을 보호하기 위한 조치입니다. 반대로, 다른 국가와의 자유무역협정(FTA) 체결을 통해 특정 상품에 대한 관세를 단계적으로 철폐하기도 합니다.",
-    "related": ["무역", "수출", "수입", "무역 장벽", "자유무역협정 (FTA)", "보호무역"]
-},
-"경상수지": {
-    "basic": "한 나라가 일정 기간 동안 외국과 재화, 서비스, 소득 등을 거래한 결과를 종합적으로 나타내는 지표예요. 수출과 수입의 차이, 해외 투자로 인한 소득 등을 포함합니다.",
-    "intermediate": "경상수지는 재화수지(상품 수출입), 서비스수지(용역 거래), 소득수지(임금, 투자 소득), 경상이전수지(무상 원조, 송금)로 구성됩니다. 경상수지 흑자는 외국에서 벌어들인 돈이 외국에 지급한 돈보다 많다는 의미이며, 적자는 그 반대를 의미합니다.",
-    "advanced": "경상수지 흑자는 일반적으로 국가의 대외 경쟁력이 강하고 외환 보유액이 증가하는 긍정적인 측면이 있지만, 과도한 흑자는 환율 하락 압력으로 작용하여 수출 경쟁력을 약화시킬 수 있습니다. 반대로 경상수지 적자가 지속되면 외환 부족 문제나 국가 신용도 하락의 원인이 될 수 있습니다. 따라서 경상수지 규모와 추이를 분석하는 것은 국가 경제의 건전성을 평가하는 데 중요한 요소입니다.",
-    "example": "한국은 제조업 수출 호조로 인해 오랫동안 경상수지 흑자를 유지해왔습니다. 하지만 최근 글로벌 경기 둔화와 수입 증가로 인해 흑자 폭이 줄어들거나 적자를 기록하는 경우도 발생하고 있습니다.",
-    "related": ["무역수지", "자본수지", "환율", "외환보유액", "국제수지"]
-},
-"기준금리": {
-    "basic": "한 나라의 중앙은행이 금융기관 간의 자금 거래 시 기준이 되는 금리예요. 이 금리는 시중 은행의 대출 금리, 예금 금리 등에 영향을 미칩니다.",
-    "intermediate": "중앙은행은 기준금리를 조절하여 통화량과 신용 규모를 간접적으로 통제하고, 이를 통해 물가 안정, 경기 조절, 금융 시스템 안정 등을 목표로 합니다. 기준금리 인상은 시중 금리 상승을 유발하여 소비와 투자를 위축시키고 인플레이션 압력을 낮추는 효과가 있으며, 기준금리 인하는 그 반대의 효과를 가져옵니다.",
-    "advanced": "기준금리는 통화정책의 핵심 도구로서, 경제 상황 변화에 따라 중앙은행의 신중한 판단하에 결정됩니다. 기준금리 변동은 가계의 대출 이자 부담, 기업의 투자 결정, 자산 시장 가격 등 경제 전반에 광범위한 영향을 미치므로, 시장 참여자들은 중앙은행의 통화정책 방향과 기준금리 결정에 높은 관심을 가집니다.",
-    "example": "한국은행이 물가 상승 압력을 억제하기 위해 기준금리를 인상하면, 은행의 주택담보대출 금리나 기업 대출 금리가 함께 상승하여 가계와 기업의 이자 부담이 늘어날 수 있습니다.",
-    "related": ["금리", "통화정책", "중앙은행", "물가", "경기"]
-},
-"국채": {
-    "basic": "국가가 재정 수입을 확보하기 위해 발행하는 채권이에요. 정부가 돈을 빌리는 일종의 차용증이라고 생각할 수 있습니다.",
-    "intermediate": "국채는 발행 주체인 국가의 신용도를 바탕으로 안정적인 투자 대상으로 여겨집니다. 국채는 만기, 이자율 등이 다양하며, 투자자들은 이를 통해 정기적인 이자 수입을 얻을 수 있습니다. 국가 재정 상황에 따라 국채의 안정성이 달라질 수 있습니다.",
-    "advanced": "국채는 정부의 재정 정책 수행에 필수적인 자금 조달 수단이며, 금융 시장에서 안전 자산의 기준 역할을 합니다. 국채 금리는 시장 금리의 벤치마크가 되며, 다른 채권 금리 및 대출 금리 결정에 영향을 미칩니다. 국가 부도 위험이 높아지면 국채 가격은 하락하고 금리는 상승하는 경향이 있습니다.",
-    "example": "한국 정부가 발행하는 국고채는 대표적인 안전 자산으로, 개인 투자자뿐만 아니라 기관 투자자들도 포트폴리오의 안정성을 높이기 위해 투자합니다.",
-    "related": ["채권", "정부", "재정", "금리", "안전 자산"]
-},
-"유상증자": {
-    "basic": "회사가 사업 자금을 조달하기 위해 주식을 새로 발행하여 기존 주주나 새로운 투자자에게 판매하는 것을 말해요. 주식을 더 발행하는 대신 돈을 받는 방식입니다.",
-    "intermediate": "유상증자를 통해 회사는 운영 자금, 투자 자금 등을 확보할 수 있으며, 재무 구조를 개선할 수도 있습니다. 유상증자에 참여하는 주주는 새로 발행된 주식을 시가보다 할인된 가격에 매입할 수 있는 권리(신주인수권)를 가질 수 있습니다.",
-    "advanced": "유상증자는 기업의 성장 가능성을 보여주는 긍정적인 신호일 수도 있지만, 기존 주식 수가 늘어나 주당순이익(EPS)이 희석될 수 있다는 단점도 있습니다. 또한, 유상증자 발표는 주가 하락의 원인이 되기도 합니다. 투자자는 유상증자의 목적, 규모, 발행 조건 등을 종합적으로 고려하여 투자 결정을 내려야 합니다.",
-    "example": "A 회사가 새로운 사업 확장을 위해 유상증자를 결정하고, 기존 주주들에게 신주인수권을 부여했습니다. 기존 주주들은 추가 자금을 투자하여 A 회사의 주식을 더 저렴하게 구매할 수 있습니다.",
-    "related": ["주식", "자본", "투자", "주주", "신주인수권"]
-},
-"무역수지": {
-    "basic": "일정 기간 동안 한 나라의 상품 수출액과 수입액의 차이를 나타내는 지표예요. 수출액이 수입액보다 많으면 무역수지 흑자, 반대면 무역수지 적자라고 합니다.",
-    "intermediate": "무역수지는 국가 경제의 중요한 부분을 차지하며, 수출 경쟁력과 산업 구조를 반영합니다. 무역수지 흑자는 외화 수입 증가로 이어져 국가 경제에 긍정적인 영향을 미칠 수 있지만, 과도한 흑자는 다른 국가와의 무역 마찰을 야기할 수도 있습니다.",
-    "advanced": "무역수지 변동은 환율, 물가, 경제 성장률 등 거시 경제 변수에 영향을 미칩니다. 예를 들어, 무역수지 적자가 지속되면 환율 상승 압력이 발생하고, 이는 수입 물가 상승으로 이어져 인플레이션을 유발할 수 있습니다. 따라서 정부는 무역수지 개선을 위해 수출 증대 정책, 수입 다변화 정책 등을 추진합니다.",
-    "example": "한국은 반도체, 자동차 등 주력 상품의 수출 호조로 인해 오랫동안 무역수지 흑자를 기록해왔습니다. 하지만 국제 유가 상승이나 글로벌 경기 둔화 등으로 인해 무역수지 적자를 기록하는 경우도 있습니다.",
-    "related": ["수출", "수입", "경상수지", "환율", "국제 무역"]
-},
-"외환보유액": {
-    "basic": "한 나라의 중앙은행이 보유하고 있는 외국 통화, 금, 국제통화기금(IMF) 특별인출권(SDR) 등의 대외 지급 준비 자산이에요. 국가가 비상시에 사용할 수 있는 자금입니다.",
-    "intermediate": "외환보유액은 국제 수지 불균형을 조정하고, 자국 통화 가치를 안정시키며, 대외 채무 이행 능력에 대한 신뢰도를 높이는 데 중요한 역할을 합니다. 적정 수준의 외환보유액은 외부 충격에 대한 국가 경제의 안전판 역할을 수행합니다.",
-    "advanced": "외환보유액 규모는 국가의 경제 규모, 대외 채무, 수입 규모, 환율 변동성 등을 고려하여 적정 수준으로 유지하는 것이 중요합니다. 과도한 외환보유액은 관리 비용 증가 및 투자 수익률 저하를 초래할 수 있으며, 부족한 외환보유액은 금융 시장 불안 및 국가 신용도 하락의 원인이 될 수 있습니다.",
-    "example": "한국은행은 외환보유액을 꾸준히 관리하여 금융 시장의 변동성에 대응하고, 국가의 대외 신인도를 유지하는 데 힘쓰고 있습니다.",
-    "related": ["중앙은행", "환율", "국제수지", "금융시장 안정"]
-},
-"콜금리": {
-    "basic": "금융기관끼리 남거나 부족한 자금을 아주 짧은 기간(주로 하루) 동안 빌리고 빌려주는 거래에서 적용되는 금리예요. 단기 금융 시장의 대표적인 금리입니다.",
-    "intermediate": "콜금리는 금융기관의 일시적인 자금 부족을 해소하고, 지급 결제 시스템의 효율성을 높이는 역할을 합니다. 중앙은행은 공개시장조작 등을 통해 콜금리에 영향을 미쳐 단기 금융 시장의 유동성을 조절하고, 간접적으로 다른 금리에 영향을 미칩니다.",
-    "advanced": "콜금리는 통화정책의 중요한 중간 목표로서, 중앙은행의 정책 금리 변화를 신속하게 반영하며, 다른 단기 시장 금리 및 장기 시장 금리에 파급 효과를 미칩니다. 콜금리 수준은 금융 시장의 자금 사정 및 금융기관의 유동성 상황을 나타내는 지표로 활용됩니다.",
-    "example": "은행 A가 일시적으로 지급 준비금이 부족하여 은행 B로부터 하루 동안 자금을 빌리면서 적용되는 금리가 콜금리입니다.",
-    "related": ["금리", "단기 금융 시장", "중앙은행", "통화정책", "유동성"]
-},
-"회사채": {
-    "basic": "회사가 사업 자금을 조달하기 위해 발행하는 채권이에요. 투자자에게 약속된 이자를 지급하고 만기에 원금을 상환하는 조건입니다.",
-    "intermediate": "회사채는 발행 회사의 신용도에 따라 투자 위험과 수익률이 달라집니다. 신용 등급이 높은 회사가 발행하는 채권은 비교적 안전하지만 수익률이 낮고, 신용 등급이 낮은 회사가 발행하는 채권은 수익률이 높지만 부도 위험이 있습니다.",
-    "advanced": "회사채 시장은 기업의 자금 조달의 중요한 통로이며, 채권 투자자에게는 다양한 투자 기회를 제공합니다. 회사채 금리는 시장 금리 수준, 발행 회사의 신용도, 만기 등에 따라 결정되며, 기업의 자금 조달 비용에 영향을 미칩니다. 신용 평가 기관은 회사채의 신용도를 평가하여 투자자에게 정보를 제공합니다.",
-    "example": "삼성전자가 사업 확장을 위해 회사채를 발행하여 투자자로부터 자금을 조달하고, 투자자에게 매년 약속된 이자를 지급합니다.",
-    "related": ["채권", "기업", "투자", "신용등급", "금리"]
-},
-"구축효과 (Crowding-out Effect)": {
-    "basic": "정부 지출 증가가 시장 금리 상승을 유발하여 민간 투자를 위축시키는 현상을 말해요. 정부가 돈을 많이 빌려 쓰면, 돈의 가격인 금리가 올라 기업들이 투자를 꺼리게 되는 것입니다.",
-    "intermediate": "구축효과는 정부가 국채 발행 등을 통해 재정 지출을 늘릴 때 발생할 수 있습니다. 정부의 자금 수요 증가는 시장의 자금 부족을 야기하고, 이는 금리 상승으로 이어져 기업의 차입 비용을 증가시키고 투자 의욕을 저하시킵니다.",
-    "advanced": "구축효과의 크기는 경제 상황, 금융 시장의 유동성, 정부 정책의 성격 등에 따라 달라질 수 있습니다. 불황기에는 정부 지출 증가가 총수요를 확대하여 구축효과가 미미할 수 있지만, 경기 호황기에는 구축효과가 크게 나타날 수 있습니다. 정부는 구축효과를 최소화하기 위해 통화 정책과의 조화, 효율적인 재정 지출 등을 고려해야 합니다.",
-    "example": "정부가 대규모 경기 부양책을 시행하기 위해 국채를 발행하여 자금을 조달하자, 시장 금리가 상승하여 기업들이 계획했던 설비 투자를 취소하거나 연기하는 상황이 발생했습니다.",
-    "related": ["재정정책", "정부 지출", "금리", "민간 투자", "경기 부양"]
-},
-            "퇴직연금": {
-            "basic": "회사를 다닐 때 미리 노후 자금을 준비하는 제도예요. 회사가 돈을 내주거나, 내가 낸 돈에 회사가 보태주기도 하고, 세금 혜택도 받을 수 있어요.",
-            "intermediate": "근로자의 안정적인 노후 생활 보장을 위해 기업이 근로자 재직 기간 중 퇴직급여 재원을 금융기관에 적립하고, 이를 기업 또는 근로자가 운용하여 근로자 퇴직 시 연금 또는 일시금으로 지급하는 제도입니다. 확정급여형(DB), 확정기여형(DC), 개인형퇴직연금(IRP)으로 나뉩니다.",
-            "advanced": "근로자퇴직급여 보장법에 따라 운영되며, DB형은 운용 책임이 사용자에게 있고, DC형은 근로자에게 있습니다. 운용 수익률에 따라 미래 수령액이 달라지며, 연금 수령 시 퇴직소득세 감면 혜택이 있습니다. 낮은 수익률, 중도 인출 제한 등이 단점으로 지적되기도 합니다.",
-            "example": "A회사는 DC형 퇴직연금을 운영하며, 매년 근로자 연봉의 1/12을 퇴직연금 계좌에 적립해줍니다. 근로자 김씨는 이 돈을 주식형 펀드와 채권형 펀드에 나누어 직접 운용하여 수익률을 관리합니다. 55세 이후 퇴직 시, 적립된 원금과 운용 수익을 합쳐 연금 또는 일시금으로 수령하게 됩니다.",
-            "related": ["IRP", "확정급여형(DB)", "확정기여형(DC)", "연금저축", "노후 준비"]
-        },
-        "IRP": {
-            "basic": "개인형 퇴직연금 계좌예요. 퇴직금이나 내가 따로 낸 돈을 이 계좌에 넣어서 직접 관리하고, 세금 혜택도 받을 수 있어요.",
-            "intermediate": "개인형 퇴직연금(Individual Retirement Pension) 계좌로, 근로자가 이직하거나 퇴직할 때 받은 퇴직급여와 개인적으로 추가 납입한 자금을 적립하여 운용할 수 있는 개인 명의의 퇴직 계좌입니다. 연금저축과 합산하여 연간 최대 900만원까지 세액공제 혜택을 받을 수 있습니다.",
-            "advanced": "퇴직급여 외에 개인 추가 납입이 가능하며, 다양한 금융상품(예금, 펀드, ETF, 리츠 등)으로 직접 포트폴리오를 구성하여 운용할 수 있습니다. 55세 이후 연금으로 수령 시 낮은 세율(3.3~5.5%)이 적용되며, 중도 인출은 법정 사유(무주택자 주택 구입 등) 외에는 제한됩니다. 금융기관마다 수수료와 운용 가능한 상품이 다릅니다.",
-            "example": "이직한 박씨는 이전 직장에서 받은 퇴직금 3,000만원을 IRP 계좌로 이체했습니다. 또한 매년 300만원씩 추가로 납입하며 연말정산 시 세액공제 혜택을 받고 있습니다. 박씨는 이 자금을 ETF와 예금으로 나누어 운용하며 노후를 준비하고 있습니다.",
-            "related": ["퇴직연금", "연금저축", "세액공제", "포트폴리오", "노후 준비"]
-        },
-        "리밸런싱": {
-            "basic": "투자할 때 여러 자산에 나눠 놓은 비율이 시간이 지나면서 달라지면, 원래 계획했던 비율로 다시 맞춰주는 거예요. 위험을 관리하고 꾸준한 수익을 내는 데 도움이 돼요.",
-            "intermediate": "시장 상황 변화로 인해 최초에 설정한 자산 배분 비중에서 벗어난 포트폴리오를 원래의 목표 비중으로 재조정하는 과정입니다. 이를 통해 포트폴리오의 위험 수준을 일정하게 유지하고, 장기적으로는 수익률을 높이는 효과를 기대할 수 있습니다.",
-            "advanced": "정기 리밸런싱(시간 기준)과 비중 리밸런싱(범위 기준) 방식으로 나뉩니다. 가격이 올라 비중이 커진 자산을 팔고, 가격이 내려 비중이 작아진 자산을 사는 방식으로 이루어집니다. 이는 '고가 매도, 저가 매수' 효과를 가져오지만, 거래 비용과 세금이 발생할 수 있다는 점을 고려해야 합니다. 리밸런싱 주기는 투자자의 성향과 시장 상황에 따라 다르게 설정할 수 있습니다.",
-            "example": "김씨는 주식 60%, 채권 40%로 포트폴리오를 구성했습니다. 1년 후 주가 상승으로 주식 비중이 70%로 늘어나자, 김씨는 주식 일부를 매도하고 채권을 매수하여 다시 60:40 비율로 맞추는 리밸런싱을 실행했습니다. 이를 통해 늘어난 위험을 줄이고, 상대적으로 저평가된 채권의 비중을 늘렸습니다.",
-            "related": ["포트폴리오", "자산배분", "분산투자", "위험 관리", "수익률"]
-        },
-        "중앙은행 디지털화폐 (CBDC)": {
-            "basic": "중앙은행이 직접 발행하는 디지털 형태의 돈이에요. 우리가 쓰는 지폐나 동전처럼 안전하지만, 스마트폰 앱 같은 디지털 형태로 사용하게 될 거예요.",
-            "intermediate": "Central Bank Digital Currency의 약자로, 중앙은행이 발행하는 법정 디지털 통화입니다. 현금과 동일한 가치를 지니며, 중앙은행의 부채로 기록됩니다. 민간 암호화폐와 달리 가치 변동성이 없고 발행 주체가 명확합니다.",
-            "advanced": "소매용 CBDC와 거액결제용 CBDC로 구분됩니다. 지급결제 시스템 효율화, 통화정책 파급효과 제고, 금융 포용성 증대 등의 장점이 기대되지만, 금융 안정성 저해, 개인정보 침해, 은행 중개기능 약화 등의 우려도 존재합니다. 현재 다수의 국가에서 연구 및 파일럿 테스트를 진행 중입니다.",
-            "example": "한국은행은 CBDC 도입 가능성을 검토하기 위해 모의실험을 진행하고 있습니다. 만약 CBDC가 도입된다면, 사람들은 스마트폰 앱을 통해 CBDC를 주고받거나 상점에서 결제할 수 있게 될 것입니다. 이는 현금 사용 감소 추세에 대응하고 새로운 결제 시스템을 제공할 수 있습니다.",
-            "related": ["디지털화폐", "블록체인", "암호화폐", "지급결제", "통화정책"]
-        },
-        "ESG (환경·사회·지배구조)": {
-            "basic": "기업이 환경 보호(Environment), 사회 공헌(Social), 그리고 투명한 경영(Governance)을 얼마나 잘 실천하는지를 평가하는 기준이에요. 요즘 투자자들이 중요하게 생각하는 요소입니다.",
-            "intermediate": "기업의 비재무적 성과를 측정하는 지표로, 환경(Environment), 사회(Social), 지배구조(Governance)의 약자입니다. 지속가능한 성장을 위한 기업의 사회적 책임과 역할을 강조하며, 투자 결정의 중요한 고려 요소로 부상하고 있습니다.",
-            "advanced": "환경(기후변화 대응, 친환경 에너지 사용 등), 사회(인권 존중, 산업 안전, 지역사회 공헌 등), 지배구조(이사회 구성, 주주 권리 보호, 경영 투명성 등) 측면에서 기업 활동을 평가합니다. ESG 성과가 높은 기업은 장기적으로 재무 성과도 우수할 가능성이 높다는 인식이 확산되고 있습니다. ESG 공시 표준화, 그린워싱(위장 환경주의) 방지 등이 주요 과제로 남아있습니다.",
-            "example": "글로벌 연기금들은 투자 결정 시 ESG 평가 점수가 낮은 기업에는 투자를 줄이거나 제외하는 추세를 보입니다. 예를 들어, 탄소 배출량이 많은 기업이나 노동 환경 문제가 있는 기업은 투자 대상에서 배제될 수 있습니다. 국내 기업들도 ESG 경영 보고서를 발간하고 관련 투자를 늘리고 있습니다.",
-            "related": ["지속가능경영", "사회책임투자(SRI)", "기업지배구조", "기후변화", "탄소중립"]
-        },
-        "탄소 국경조정제도 (CBAM)": {
-            "basic": "유럽연합(EU) 같은 곳에서 물건을 수입할 때, 그 물건을 만드는 과정에서 발생한 탄소 배출량에 따라 일종의 세금을 부과하는 제도예요. 환경 규제가 약한 나라의 제품에 불리할 수 있어요.",
-            "intermediate": "Carbon Border Adjustment Mechanism의 약자로, 유럽연합(EU)이 자국보다 탄소 배출 규제가 약한 국가에서 생산된 제품을 수입할 때, 해당 제품의 탄소 배출량에 상응하는 비용을 부과하는 제도입니다. '탄소 누출' 방지와 공정한 경쟁 환경 조성을 목표로 합니다.",
-            "advanced": "철강, 알루미늄, 시멘트, 비료, 전력, 수소 등 6개 품목에 대해 시범 운영 중이며, 점차 적용 대상이 확대될 예정입니다. 수출 기업은 제품 생산 과정에서의 탄소 배출량을 측정하고 보고해야 하며, EU 배출권거래제(ETS) 가격과 연동된 인증서를 구매해야 할 수 있습니다. 이는 국내 기업의 탄소 감축 노력과 에너지 전환을 가속화하는 요인으로 작용할 수 있습니다.",
-            "example": "한국의 A 철강회사가 EU에 철강 제품을 수출할 때, 제품 생산 과정에서 배출된 탄소량을 EU 규정에 따라 보고해야 합니다. 만약 한국의 탄소 가격이 EU보다 낮다면, 그 차액만큼 CBAM 인증서를 구매해야 하므로 수출 비용이 증가하게 됩니다. 이는 가격 경쟁력 하락으로 이어질 수 있습니다.",
-            "related": ["탄소배출권", "기후변화", "보호무역주의", "ESG", "EU ETS"]
-        },
-        "공급망 재편": {
-            "basic": "제품을 만드는 데 필요한 부품이나 원자재를 공급받는 방식이 바뀌는 것을 말해요. 특정 국가에 너무 의존하지 않고 여러 나라로 공급처를 다변화하는 추세입니다.",
-            "intermediate": "글로벌 기업들이 생산 및 공급 네트워크를 재구성하는 현상입니다. 미중 갈등, 팬데믹, 전쟁 등 지정학적 리스크와 효율성 중심에서 안정성·회복력 중심으로 공급망 관리 패러다임이 변화하면서 나타나고 있습니다.",
-            "advanced": "기존의 글로벌 분업 구조에서 벗어나 자국 우선주의(리쇼어링), 인접국 협력 강화(니어쇼어링), 동맹국 중심 재편(프렌드쇼어링) 등 다양한 형태로 진행됩니다. 이는 글로벌 교역 구조 변화, 생산 비용 상승, 특정 산업의 경쟁 구도 변화 등을 야기할 수 있습니다. 반도체, 배터리 등 첨단 산업 분야에서 특히 두드러지고 있습니다.",
-            "example": "미국 정부는 자국 내 반도체 생산 시설 투자를 장려하고, 중국 의존도를 낮추기 위해 동맹국들과 협력하여 새로운 공급망을 구축하고 있습니다. 이에 따라 삼성전자나 TSMC 같은 기업들이 미국 내 대규모 공장 건설 계획을 발표했습니다. 자동차 회사들도 팬데믹 이후 부품 공급 부족을 겪으면서 특정 국가에 집중된 공급망을 다변화하고 있습니다.",
-            "related": ["지정학적 리스크", "리쇼어링", "니어쇼어링", "프렌드쇼어링", "글로벌 가치사슬(GVC)"]
-        },
-        "인구 오너스": {
-            "basic": "나이 든 사람은 많아지고 태어나는 아이는 줄면서 경제에 부담이 되는 상황을 말해요. 일할 사람은 줄고 부양해야 할 노인은 늘어나 경제 성장이 어려워질 수 있어요.",
-            "intermediate": "고령화와 저출산으로 인해 생산가능인구(15~64세) 비율이 감소하고 부양해야 할 인구(유소년 및 노년) 비율이 증가하면서 경제 성장에 부담으로 작용하는 현상입니다. '인구 보너스(Demographic Bonus)'의 반대 개념입니다.",
-            "advanced": "생산가능인구 감소는 노동 공급 부족, 소비 위축, 투자 감소로 이어져 잠재성장률을 하락시킵니다. 또한 고령 인구 증가는 연금, 의료비 등 사회복지 지출 부담을 가중시켜 재정 건전성을 악화시킬 수 있습니다. 한국은 세계에서 가장 빠른 속도로 고령화가 진행되고 있어 인구 오너스 문제가 심각한 과제로 대두되고 있습니다.",
-            "example": "한국의 합계출산율은 1명 미만으로 매우 낮고, 고령 인구 비율은 급증하고 있습니다. 이로 인해 향후 10년 안에 생산가능인구가 급격히 줄어들 것으로 예상됩니다. 이는 기업의 인력난을 심화시키고, 국민연금 고갈 시점을 앞당기는 등 경제·사회 전반에 걸쳐 부정적인 영향을 미칠 것으로 우려됩니다.",
-            "related": ["고령화 사회", "저출산", "생산가능인구", "잠재성장률", "국민연금"]
-        },
-        "부동산 PF (프로젝트 파이낸싱)": {
-            "basic": "큰 부동산 개발 사업을 할 때, 사업 자체의 미래 수익성을 보고 돈을 빌려주는 방식이에요. 아파트 단지나 상가 건물을 지을 때 주로 사용됩니다.",
-            "intermediate": "특정 부동산 개발 프로젝트의 미래 현금흐름을 담보로 자금을 조달하는 금융 기법입니다. 사업주의 신용도보다는 프로젝트 자체의 사업성을 중심으로 대출이 이루어집니다. 주로 대규모 건설 사업에 활용됩니다.",
-            "advanced": "시행사, 시공사, 금융기관 등 다양한 참여자 간의 복잡한 계약 구조를 가집니다. 높은 레버리지 효과를 기대할 수 있지만, 부동산 경기 침체 시 사업성이 악화되면 대규모 부실로 이어질 위험이 큽니다. 최근 금리 인상과 건설 원가 상승, 미분양 증가 등으로 부동산 PF 부실 우려가 커지고 있으며, 이는 금융 시스템 리스크로 전이될 수 있습니다.",
-            "example": "A 시행사는 대규모 아파트 건설 프로젝트를 위해 은행, 증권사 등 여러 금융기관으로부터 PF 대출을 받았습니다. 시공사인 B 건설사는 책임 준공을 약속했습니다. 그러나 최근 부동산 시장 침체로 미분양이 속출하면서 사업 수익성이 악화되었고, 시행사는 대출 원리금 상환에 어려움을 겪고 있습니다. 만약 시행사가 부도나면 금융기관과 시공사 모두 큰 손실을 입게 됩니다.",
-            "related": ["부동산 시장", "건설 경기", "금융 리스크", "미분양", "신용 경색"]
-        },
-        "디지털자산": {
-            "basic": "인터넷 같은 디지털 환경에서 가치를 가지는 자산을 말해요. 비트코인 같은 암호화폐뿐만 아니라, 게임 아이템이나 디지털 예술 작품(NFT) 등도 포함될 수 있어요.",
-            "intermediate": "분산원장기술(블록체인 등) 또는 유사 기술을 사용하여 디지털 형태로 발행되고 거래되는 자산의 총칭입니다. 암호화폐(가상자산), 대체불가토큰(NFT), 토큰증권(STO) 등이 대표적입니다.",
-            "advanced": "기존 자산과 달리 실물 없이 전자적으로만 존재하며, 프로그래밍이 가능하다는 특징이 있습니다. 금융 시스템 혁신, 새로운 투자 기회 제공 등의 잠재력을 가지지만, 높은 변동성, 규제 불확실성, 해킹 및 보안 위험 등의 문제점도 안고 있습니다. 각국 정부는 투자자 보호와 금융 시스템 안정을 위해 디지털자산 관련 규제를 마련하고 있습니다.",
-            "example": "투자자 A는 암호화폐 거래소에서 비트코인과 이더리움을 매매하여 시세 차익을 추구합니다. 예술가 B는 자신의 디지털 그림을 NFT로 발행하여 온라인 마켓플레이스에서 판매합니다. 증권사 C는 부동산 수익권을 기반으로 한 토큰증권(STO) 발행을 준비하고 있습니다.",
-            "related": ["암호화폐", "가상자산", "NFT", "토큰증권(STO)", "블록체인"]
-        },
-        "AI 경제": {
-            "basic": "인공지능(AI) 기술이 경제 활동 전반에 영향을 미치는 것을 말해요. AI가 생산성을 높이고 새로운 산업을 만들기도 하지만, 일자리를 위협할 수도 있다는 우려도 있어요.",
-            "intermediate": "인공지능 기술의 발전과 확산이 경제 성장, 생산성, 고용, 산업 구조 등에 미치는 영향을 포괄하는 개념입니다. AI는 데이터 분석, 자동화, 예측 모델링 등을 통해 다양한 경제 분야에서 혁신을 주도하고 있습니다.",
-            "advanced": "AI는 노동 생산성을 향상시키고 새로운 상품과 서비스 창출을 통해 경제 성장에 기여할 잠재력이 큽니다. 하지만 일자리 대체, 소득 불평등 심화, 데이터 편향성 및 윤리 문제 등 해결해야 할 과제도 많습니다. AI 기술 경쟁력 확보와 사회적 수용성 제고를 위한 정책적 노력이 중요합니다.",
-            "example": "제조업에서는 AI 기반 로봇이 생산 라인의 효율성을 높이고 불량률을 감소시킵니다. 금융업에서는 AI가 고객 맞춤형 투자 상품을 추천하거나 신용 평가 모델을 고도화합니다. 유통업에서는 AI가 수요 예측을 통해 재고 관리를 최적화합니다. 반면, 단순 반복적인 사무직이나 일부 전문직은 AI로 대체될 위험이 있습니다.",
-            "related": ["인공지능(AI)", "4차 산업혁명", "생산성", "자동화", "일자리 변화"]
-        },
-        "스태그플레이션": {
-            "basic": "경기는 안 좋은데 물가는 계속 오르는 어려운 상황을 말해요. 보통 경기가 나쁘면 물가도 안정되는데, 이 둘이 동시에 나빠지는 특이한 현상입니다.",
-            "intermediate": "경기 침체(Stagnation)와 물가 상승(Inflation)이 동시에 발생하는 현상입니다. 일반적으로 경기 침체 시에는 수요 위축으로 물가가 하락하지만, 스태그플레이션 상황에서는 비용 상승 요인(예: 유가 급등) 등으로 인해 물가가 오릅니다.",
-            "advanced": "총공급 충격(주로 비용 인상 요인)이 주요 원인으로 작용하며, 정책 대응이 매우 어렵습니다. 물가를 잡기 위해 금리를 인상하면 경기가 더욱 침체되고, 경기를 부양하기 위해 돈을 풀면 물가 상승을 더욱 부추길 수 있기 때문입니다(정책 딜레마). 1970년대 오일 쇼크 시기에 대표적인 스태그플레이션이 발생했습니다.",
-            "example": "만약 국제 유가가 급등하여 기업들의 생산 비용이 크게 증가하고, 이 비용 증가가 상품 가격 인상으로 이어져 높은 물가 상승률이 지속되는 상황을 가정해 봅시다. 동시에 높은 물가와 비용 부담으로 소비와 투자가 위축되어 경제 성장률은 둔화된다면, 이는 스태그플레이션 상황에 해당합니다. 가계는 소득은 늘지 않는데 물가만 올라 실질 구매력이 감소하는 고통을 겪게 됩니다.",
-            "related": ["인플레이션", "경기침체", "실업률", "공급 충격", "오일 쇼크"]
-        },
-        "지정학적 리스크": {
-            "basic": "국가 간의 정치적, 군사적 긴장이나 갈등이 경제에 미치는 위험을 말해요. 전쟁, 무역 분쟁 등이 발생하면 금융 시장이 불안해지고 무역이 위축될 수 있어요.",
-            "intermediate": "국가 간의 정치·외교·군사적 관계 변화나 갈등이 경제 및 금융 시장에 미치는 불확실성과 위험 요인을 의미합니다. 전쟁, 테러, 무역 분쟁, 영토 분쟁, 주요국 정치 불안정 등이 포함됩니다.",
-            "advanced": "지정학적 리스크는 국제 유가 및 원자재 가격 급등, 글로벌 공급망 교란, 금융 시장 변동성 확대, 투자 및 교역 위축 등을 통해 실물 경제와 금융 시장에 부정적인 영향을 미칩니다. 특히 에너지 및 식량 안보, 특정 산업의 공급망 안정성에 직접적인 타격을 줄 수 있습니다. 리스크의 예측 및 통제가 어렵다는 특징이 있습니다.",
-            "example": "러시아-우크라이나 전쟁 발발 이후 국제 유가와 천연가스 가격이 급등하여 전 세계적으로 에너지 비용 부담이 커졌고, 이는 인플레이션 압력을 가중시켰습니다. 또한 밀 등 곡물 수출 차질로 식량 안보 위기가 부각되었습니다. 미중 기술 패권 경쟁은 반도체 등 첨단 산업의 공급망 재편과 글로벌 기술 기업들의 경영 불확실성을 높이고 있습니다.",
-            "related": ["공급망 재편", "에너지 안보", "국제 관계", "무역 분쟁", "금융시장 변동성"]
-        },
-            "금리인상": {
-                "basic": "은행이 돈을 빌려줄 때 이자율을 올리는 것을 말해요. 집이나 차를 사기 위해 대출받을 때 더 많은 이자를 내야 합니다.",
-                "intermediate": "중앙은행이 기준금리를 올리는 정책으로, 시중 은행의 대출금리와 예금금리가 함께 상승합니다. 경제 과열을 막고 물가 상승을 억제하는 효과가 있습니다.",
-                "advanced": "통화 긴축 정책의 일환으로, 시장의 유동성을 줄이고 인플레이션을 억제하기 위해 시행됩니다. 금리인상은 대출 수요를 감소시키고, 저축을 장려하며, 자산 가격에 하방 압력을 가합니다.",
-                "example": "기준금리가 2%에서 3%로 오르면, 변동금리 주택담보대출을 가진 가구는 매달 상환 부담이 증가합니다. 예를 들어 3억원의 30년 만기 대출이라면, 매달 약 12만원의 추가 이자 부담이 생길 수 있습니다. 반면, 예금자는 더 높은 이자 수익을 기대할 수 있어 소비보다 저축이 촉진됩니다.",
-                "related": ["금리인하", "통화정책", "기준금리", "인플레이션", "경기과열"]
-            },
-            "금리인하": {
-                "basic": "은행이 돈을 빌려줄 때 이자율을 낮추는 것을 말해요. 집이나 차를 사기 위해 대출받을 때 더 적은 이자를 내게 됩니다.",
-                "intermediate": "중앙은행이 기준금리를 낮추는 정책으로, 시중 은행의 대출금리와 예금금리가 함께 하락합니다. 경기 침체 시 경제 활성화를 위해 실시합니다.",
-                "advanced": "통화 완화 정책의 일환으로, 시장에 유동성을 공급하고 경제 활동을 촉진하기 위해 시행됩니다. 금리인하는 대출 수요를 증가시키고, 소비와 투자를 장려하며, 자산 가격에 상방 압력을 가합니다.",
-                "example": "기준금리가 3%에서 2%로 내려가면, 주택담보대출을 가진 가구는 매달 상환 부담이 줄어듭니다. 3억원의 30년 만기 대출이라면, 매달 약 12만원의 이자 부담이 감소할 수 있습니다. 기업들도 더 낮은 비용으로 자금을 조달할 수 있어 투자와 고용이 늘어날 수 있습니다.",
-                "related": ["금리인상", "통화정책", "기준금리", "경기침체", "양적완화"]
-            },
-            "양적완화": {
-                "basic": "중앙은행이 시장에 많은 돈을 풀어 경제를 활성화시키는 방법이에요. 마치 경제라는 화분에 물을 듬뿍 주는 것과 비슷해요.",
-                "intermediate": "중앙은행이 국채나 기타 금융자산을 대규모로 매입하여 시장에 자금을 공급하는 통화정책입니다. 일반적인 금리 인하만으로는 경기 부양 효과가 제한적일 때 사용합니다.",
-                "advanced": "전통적인 금리 정책의 한계를 극복하기 위한 비전통적 통화정책으로, 중앙은행이 자산 매입을 통해 장기금리를 낮추고 유동성을 증가시키는 전략입니다. 금융시장 안정화, 자산가격 상승, 투자 및 소비 활성화 효과를 기대할 수 있습니다.",
-                "example": "2008년 글로벌 금융위기 이후 미국 연방준비제도(Fed)는 대규모 양적완화를 실시했습니다. 이로 인해 주택담보대출 금리가 하락하여 주택 구매가 활성화되고, 주식시장이 회복되었습니다. 일반 가정에서는 낮은 이자율로 대출을 받거나 재융자할 수 있었고, 투자자들은 채권보다 주식과 같은 위험자산에 투자하는 경향이 강해졌습니다.",
-                "related": ["양적긴축", "통화정책", "제로금리", "인플레이션", "자산버블"]
-            },
-            "GDP": {
-                "basic": "한 나라에서 1년 동안 만들어진 모든 상품과 서비스의 가치를 더한 것이에요. 국가 경제의 크기를 나타내는 중요한 숫자입니다.",
-                "intermediate": "국내총생산(Gross Domestic Product)의 약자로, 일정 기간 동안 한 국가 내에서 생산된 모든 최종 재화와 서비스의 시장 가치 합계를 의미합니다. 경제 성장과 국가 경제 규모를 측정하는 주요 지표입니다.",
-                "advanced": "GDP는 소비, 투자, 정부지출, 순수출(수출-수입)의 합으로 계산됩니다. 명목 GDP와 실질 GDP로 구분되며, 실질 GDP는 인플레이션 효과를 제거하여 실제 경제 성장을 측정합니다. 경기 변동, 생활수준, 국가 간 경제력 비교 등에 활용됩니다.",
-                "example": "한국의 2022년 GDP는 약 1,734조원으로, 이는 모든 국민이 생산한 상품과 서비스의 총 가치입니다. 이를 인구로 나눈 1인당 GDP는 약 3.3만 달러로, 국민 개개인의 평균적인 경제적 생활수준을 가늠할 수 있습니다. GDP가 전년 대비 2.6% 성장했다면, 경제 규모가 그만큼 커졌다는 의미입니다.",
-                "related": ["GNP", "경제성장률", "1인당 GDP", "국민소득", "경기순환"]
-            },
-            "경기불황": {
-                "basic": "경제 활동이 위축되고 일자리가 줄어드는 어려운 시기를 말해요. 사람들이 돈을 덜 쓰고, 기업들이 물건을 덜 만들게 됩니다.",
-                "intermediate": "경제 성장이 둔화되거나, 마이너스 성장을 기록하는 기간으로, 실업률 증가, 소비 감소, 기업 수익 하락 등의 특징이 나타납니다. 일반적으로 2분기 연속 GDP가 감소하면 경기불황으로 정의합니다.",
-                "advanced": "경기순환의 수축기로, 총수요 감소, 생산 능력 과잉, 신용 경색, 자산 가격 하락 등이 복합적으로 작용합니다. 경기불황은 구조적, 순환적, 또는 외부 충격에 의해 발생할 수 있으며, 재정정책과 통화정책을 통해 대응하게 됩니다.",
-                "example": "경기불황기에는 기업들이 신규 채용을 줄이고 구조조정을 하게 되어 실업률이 상승합니다. 예를 들어, 2008년 글로벌 금융위기 때 한국의 실업률은 3.2%에서 3.6%로 증가했고, 많은 자영업자들이 폐업했습니다. 가계는 소득 감소나 불안감으로 소비를 줄이고, 주택과 주식 같은 자산 가격이 하락하여 자산 가치가 감소하는 경험을 하게 됩니다.",
-                "related": ["경기침체", "실업률", "경기순환", "디플레이션", "경기부양책"]
-            },
-            "경기호황": {
-                "basic": "경제가 활발히 성장하고 일자리가 많이 생기는 좋은 시기를 말해요. 사람들이 돈을 많이 쓰고, 기업들이 물건을 많이 만들게 됩니다.",
-                "intermediate": "경제 성장률이 높고, 실업률이 낮으며, 소비와 투자가 활발하게 이루어지는 경기순환의 확장기를 의미합니다. 기업 이윤과 자산 가격이 상승하는 특징이 있습니다.",
-                "advanced": "총수요 증가, 생산성 향상, 신용 확대, 자산 가격 상승 등이 선순환을 이루는 경기순환의 정점기를 말합니다. 다만 과도한 경기호황은 인플레이션, 자산버블, 금융 불안정성 등의 리스크를 수반할 수 있습니다.",
-                "example": "경기호황기에는 기업들의 매출과 이익이 증가하면서 더 많은 인력을 채용하고 임금도 상승합니다. 예를 들어, 2000년대 초반 IT 붐 시기에 한국의 경제성장률은 7%를 넘었고, 실업률은 3% 미만으로 낮아졌습니다. 가계는 소득 증가로 소비를 늘리고, 주택과 주식 같은 자산 가격이 상승하여 자산 가치가 증가하는 혜택을 누리게 됩니다.",
-                "related": ["경기확장", "완전고용", "경기과열", "인플레이션", "자산버블"]
-            },
-            "주가": {
-                "basic": "주식의 가격을 말해요. 회사가 잘 되면 주가가 오르고, 안 좋아지면 주가가 내려갑니다.",
-                "intermediate": "주식시장에서 거래되는 주식의 현재 가격으로, 투자자들의 해당 기업에 대한 미래 가치 평가가 반영됩니다. 기업 실적, 경제 상황, 시장 심리 등 다양한 요인에 의해 변동됩니다.",
-                "advanced": "주가는 기업의 현재 및 미래 수익에 대한 시장의 기대치를 반영하며, 수요와 공급의 원리에 따라 결정됩니다. 기업의 내재가치(펀더멘털)와 시장 심리, 거시경제 요인, 산업 트렌드, 정책 변화 등 복합적인 요소들이 주가 형성에 영향을 미칩니다.",
-                "example": "예를 들어, 스마트폰 제조 회사가 혁신적인 신제품을 출시하여 매출이 크게 증가할 것으로 예상되면 투자자들은 이 회사의 주식을 더 많이 사고자 하므로 주가가 상승합니다. 반대로 회사에 재정 문제가 생기거나 경쟁에서 뒤처지면 주가가 하락합니다. 2020년 코로나19 팬데믹 초기에 많은 기업의 주가가 급락했지만, 디지털 전환이 가속화되면서 IT 기업들의 주가는 오히려 크게 상승했습니다.",
-                "related": ["주식시장", "주가지수", "PER", "배당수익률", "시가총액"]
-            },
-            "베어마켓": {
-                "basic": "주식 시장이 오랜 기간 계속해서 내려가는 상황을 말해요. 마치 곰(Bear)이 앞발로 내리치듯 시장이 내려간다고 해서 붙여진 이름입니다.",
-                "intermediate": "주가가 고점에서 20% 이상, 하락하고, 장기간(보통 2개월 이상) 하락세가 지속되는 주식시장의 상태를 의미합니다. 경기 침체, 기업 실적 악화, 투자 심리 위축 등이 주요 원인입니다.",
-                "advanced": "구조적 경기 침체, 금융 위기, 또는 자산 버블 붕괴 등으로 인해 자산 가격이 지속적으로 하락하는 시장 상황을 의미합니다. 베어마켓에서는 대부분의 산업과 종목이 동반 하락하며, 변동성이 높아지고 거래량이 감소하는 특징이 있습니다.",
-                "example": "2008년 글로벌 금융위기 당시, 한국의 코스피 지수는 2007년 10월 약 2,000포인트에서 2009년 초 약 1,000포인트까지 약 50% 하락했습니다. 이 기간 동안 개인 투자자들의 주식 자산 가치가 크게 감소했고, 많은 퇴직연금 펀드도 큰 손실을 입었습니다. 이런 상황에서는 주식보다 현금이나 안전자산을 선호하는 투자 전략이 유리할 수 있습니다.",
-                "related": ["불마켓", "시장침체", "주가지수", "경기순환", "투자심리"]
-            },
-            "불마켓": {
-                "basic": "주식 시장이 오랜 기간 계속해서 올라가는 상황을 말해요. 마치 황소(Bull)가 뿔로 치받아 올리듯 시장이 올라간다고 해서 붙여진 이름입니다.",
-                "intermediate": "주가가 최저점에서 20% 이상 상승하고, 장기간(보통 수개월 이상) 상승세가 지속되는 주식시장의 상태를 의미합니다. 경기 회복, 기업 실적 개선, 투자 심리 개선 등이 주요 원인입니다.",
-                "advanced": "경제 성장, 기업 이익 증가, 확장적 통화정책, 투자자 낙관론 등에 힘입어 자산 가격이 지속적으로 상승하는 시장 상황을 의미합니다. 불마켓에서는 시장 참여자들의 위험 선호 경향이 높아지고, 거래량이 증가하며, 새로운 투자자들의 유입이 늘어나는 특징이 있습니다.",
-                "example": "2009년 글로벌 금융위기 이후부터 2020년 코로나19 팬데믹 이전까지, 미국 S&P 500 지수는 약 400% 상승하는 장기 불마켓을 경험했습니다. 이 기간 동안 꾸준히 주식에 투자한 사람들은 큰 수익을 얻었습니다. 예를 들어, 2010년 삼성전자 주식에 1,000만원을 투자했다면, 2020년에는 그 가치가 약 5,000만원으로 증가했을 것입니다.",
-                "related": ["베어마켓", "시장활황", "주가지수", "경기확장", "투자심리"]
-            },
-            "금융시장": {
-                "basic": "돈과 관련된 여러 상품(주식, 채권 등)을 사고파는 장소를 말해요. 마치 우리가 물건을 사고파는 시장처럼, 금융 상품을 거래하는 곳입니다.",
-                "intermediate": "자금 공급자와 수요자가 만나 금융 상품을 거래하는 시장으로, 주식시장, 채권시장, 외환시장, 파생상품시장 등이 포함됩니다. 기업과 정부는 자금을 조달하고, 투자자는 수익을 추구합니다.",
-                "advanced": "금융자산의 가격 형성과 거래가 이루어지는 메커니즘으로, 직접금융시장과 간접금융시장, 발행시장과 유통시장, 단기금융시장과 장기금융시장 등으로 구분됩니다. 금융시장은 자원의 효율적 배분, 유동성 제공, 위험 관리, 정보 생산 등의 경제적 기능을 수행합니다.",
-                "example": "주식시장에서는 삼성전자나 현대자동차 같은 기업의 주식이 거래됩니다. 투자자가 삼성전자 주식을 50만원에 구매했다가 60만원에 판매하면 10만원의 수익을 얻습니다. 채권시장에서는 정부나 기업이 발행한 채권이 거래되며, 일정 기간 동안 정해진 이자를 받을 수 있습니다. 예를 들어, 3년 만기 국채에 1,000만원을 투자하면 연 2%의 이자를 받고 만기에 원금을 돌려받는 식입니다.",
-                "related": ["자본시장", "주식시장", "채권시장", "외환시장", "금융중개기관"]
-            },
-            "환율": {
-                "basic": "한 나라의 돈을 다른 나라의 돈으로 바꿀 때의 교환 비율을 말해요. 예를 들어, 1달러가 1,300원이라면 1달러를 얻기 위해 1,300원을 내야 합니다.",
-                "intermediate": "두 국가 통화 간의 교환 비율로, 외환시장에서 수요와 공급에 의해 결정됩니다. 국가 간 무역, 투자, 여행 등 국제 거래에서 중요한 역할을 합니다.",
-                "advanced": "환율은 국가 간 경제 펀더멘털, 금리 차이, 국제수지, 정치적 안정성, 통화정책, 시장 심리 등 다양한 요인에 의해 영향을 받습니다. 변동환율제에서는 시장 원리에 따라 자유롭게 변동하며, 고정환율제에서는 정부가 일정 수준을 유지하기 위해 개입합니다.",
-                "example": "원/달러 환율이 1,300원에서 1,400원으로 상승하면, 미국 여행을 계획하는 한국인은 같은 금액의 달러를 구매하기 위해 더 많은 원화를 지불해야 합니다. 100달러를 환전하려면 이전에는 13만원이 필요했지만, 이제는 14만원이 필요합니다. 반면, 미국으로 수출하는 한국 기업은 같은 금액의 달러를 받더라도 더 많은 원화 수익을 얻을 수 있어 경쟁력이 상승합니다.",
-                "related": ["외환시장", "원화가치", "환율변동", "환리스크", "외환보유액"]
-            },
-            "통화량": {
-                "basic": "경제 내에서 돌아다니는 모든 돈의 양을 말해요. 현금뿐만 아니라 은행 예금 등도 포함됩니다.",
-                "intermediate": "한 경제 내에서 유통되는 화폐의 총량으로, 현금(M0), 요구불예금을 포함한 협의의 통화(M1), 저축성 예금을 포함한 광의의 통화(M2) 등으로 구분됩니다. 중앙은행이 통화정책을 통해 관리합니다.",
-                "advanced": "통화량은 중앙은행의 기준금리 조정, 지급준비율 변경, 공개시장조작 등의 통화정책 수단을 통해 조절됩니다. 통화량과 물가는 장기적으로 밀접한 관계가 있으며, 통화량이 지나치게 증가하면 인플레이션을, 감소하면 디플레이션을 유발할 수 있습니다.",
-                "example": "한국은행이 기준금리를 낮추면 시중 은행들도 대출 금리를 낮추게 되고, 이는 기업과 가계의 대출 증가로 이어집니다. 더 많은 돈이 시장에 풀리면서 통화량이 증가합니다. 예를 들어, 코로나19 팬데믹 초기에 한국은행은 기준금리를 0.5%까지 낮췄고, 그 결과 2020년 M2 통화량은 전년 대비 9.8% 증가했습니다. 통화량 증가는 단기적으로 경기 부양 효과가 있지만, 장기적으로는 물가 상승 압력으로 작용할 수 있습니다.",
-                "related": ["통화정책", "중앙은행", "인플레이션", "기준금리", "유동성"]
-            },
-            "재정정책": {
-                "basic": "정부가 세금을 걷고 쓰는 방법을 통해 경제를 관리하는 정책이에요. 경기가 나쁠 때는 세금을 줄이거나 정부 지출을 늘려 경제를 활성화시킵니다.",
-                "intermediate": "정부의 수입(세금)과 지출(재정 지출)을 조절하여 경제 활동에 영향을 미치는 정책입니다. 경기 침체기에는 확장적 재정정책(감세, 지출 확대)을, 경기 과열기에는 긴축적 재정정책(증세, 지출 축소)을 실시합니다.",
-                "advanced": "총수요 관리를 위한 주요 정책 수단으로, 자동안정화 장치와 재량적 정책으로 구분됩니다. 재정정책은 승수효과를 통해 GDP에 영향을 미치지만, 재정적자, 구축효과, 시차 문제, 정치적 제약 등의 한계도 존재합니다.",
-                "example": "2020년 코로나19 팬데믹 시기에 한국 정부는 여러 차례 추가경정예산을 편성하여 재난지원금을 지급했습니다. 가구당 40-100만원의 재난지원금은 소비를 진작시키는 효과가 있었습니다. 또한 소상공인 지원, 고용유지 지원금 등 다양한 재정 지출을 통해 경기 침체를 완화하고자 했습니다. 이런 확장적 재정정책은 단기적으로 경기를 부양하지만, 국가 부채 증가라는 부담을 남길 수 있습니다.",
-                "related": ["통화정책", "경기부양", "재정적자", "국가부채", "승수효과"]
-            },
-            "통화정책": {
-                "basic": "중앙은행이 돈의 양과 금리를 조절하여 경제를 관리하는 정책이에요. 경기가 나쁠 때는 금리를 낮추고 돈을 많이 풀어 경제를 활성화시킵니다.",
-                "intermediate": "중앙은행이 통화량과 금리를 조절하여 물가 안정과 경제 성장을 도모하는 정책입니다. 경기 침체기에는 완화적 통화정책(금리 인하, 통화량 확대)을, 경기 과열기에는 긴축적 통화정책(금리 인상, 통화량 축소)을 실시합니다.",
-                "advanced": "중앙은행이 기준금리 조정, 지급준비율 변경, 공개시장조작, 비전통적 수단(양적완화, 포워드 가이던스) 등을 통해 금융시장과 실물경제에 영향을 미치는 정책입니다. 통화정책의 효과는 이자율 경로, 자산가격 경로, 환율 경로, 신용 경로 등 다양한 경로를 통해 파급됩니다.",
-                "example": "2020년 코로나19 팬데믹 초기에 한국은행은 기준금리를 1.25%에서 0.5%까지 낮추는 완화적 통화정책을 실시했습니다. 이로 인해 주택담보대출 금리가 하락하여 주택 구매가 활성화되었고, 기업대출 금리도 낮아져 기업들의 자금조달 부담이 감소했습니다. 그러나 2022년부터는 인플레이션 압력에 대응하기 위해 기준금리를 점진적으로 인상하는 긴축적 통화정책으로 전환했습니다.",
-                "related": ["재정정책", "기준금리", "중앙은행", "인플레이션", "통화량"]
-            },
-            "중앙은행": {
-                "basic": "한 국가의 돈을 관리하는 가장 중요한 은행이에요. 한국에서는 한국은행이 중앙은행 역할을 합니다. 돈의 양과 금리를 조절하는 일을 담당해요.",
-                "intermediate": "통화 발행, 통화정책 수립 및 집행, 금융시장 안정 유지 등을 담당하는 국가의 최고 금융기관입니다. 물가 안정을 주된 목표로 하며, 정부로부터 독립적으로 운영됩니다.",
-                "advanced": "법정 독점적 화폐 발행권을 가진 기관으로, 최종대부자 기능, 금융기관 간 결제시스템 운영, 외환보유액 관리, 금융 감독 등의 역할을 수행합니다. 대부분의 중앙은행은 물가안정목표제를 채택하고 있으며, 거시건전성 정책에도 관여합니다.",
-                "example": "한국은행은 매월 금융통화위원회를 개최하여 기준금리를 결정합니다. 2022년 5월, 한국은행은 인플레이션 압력에 대응하기 위해 기준금리를 1.5%에서 1.75%로 인상했습니다. 이러한 결정은 시중 은행의 대출금리와 예금금리에 영향을 미쳐, 결과적으로 가계와 기업의 대출 부담이 증가하고 소비와 투자가 위축될 수 있습니다. 또한 한국은행은 위기 상황에서 금융시장 안정을 위해 다양한 유동성 공급 조치를 실시할 수 있습니다.",
-                "related": ["통화정책", "기준금리", "인플레이션", "금융안정", "외환보유액"]
-            },
-            "경기순환": {
-                "basic": "경제가 좋아졌다가 나빠지는 것이 계속 반복되는 현상을 말해요. 마치 사계절이 번갈아 오는 것처럼, 경제도 호황과, 후퇴, 불황, 회복의 단계를 순환합니다.",
-                "intermediate": "경제 활동이 확장과 수축을 반복하는 현상으로, 일반적으로 확장기, 정점, 수축기, 저점의 4단계로 구분됩니다. 경기순환은 생산, 고용, 소득, 소비 등 다양한 경제지표의 변동을 통해 관찰됩니다.",
-                "advanced": "총수요와 총공급의 변동, 통화 및 신용 순환, 자본재 투자 변동, 기술 혁신, 외부 충격 등 다양한 요인에 의해 발생하는 경제의 주기적 변동입니다. 주기의 길이와 강도는 일정하지 않으며, 정부와 중앙은행은 경기 안정화 정책을 통해 순환의 진폭을 완화하고자 합니다.",
-                "example": "한국 경제는 1997년 외환위기와 2008년 글로벌 금융위기를 겪으며 뚜렷한 경기순환을 보였습니다. 예를 들어, 2008년 금융위기 이후 경기 저점을 찍은 후 2009-2011년에는 회복과 확장기를 거쳤습니다. 이 시기에는 주택가격이 상승하고, 실업률이 감소하며, 소비가 활성화되었습니다. 그러나 2012년부터 유럽 재정위기, 중국 경제 둔화 등의 영향으로 다시 경기가 하강하는 모습을 보였습니다. 이처럼 가계와 기업은 경기순환에 따라 소득과 수익의 변동을 경험하게 됩니다.",
-                "related": ["경기확장", "경기침체", "경기선행지수", "경기동행지수", "경기후행지수"]
-            },
-            "경제지표": {
-                "basic": "경제 상황을 알려주는 다양한 숫자 정보를 말해요. 체온계가 우리 몸의 건강 상태를 알려주듯이, 경제지표는 경제의 건강 상태를 알려줍니다.",
-                "intermediate": "국가 경제의 현황과 추세를 측정하고 분석하는 데 사용되는 통계 자료로, GDP, 물가지수, 실업률, 무역수지 등이 대표적입니다. 경제 주체들의 의사결정과 정책 수립에 중요한 정보를 제공합니다.",
-                "advanced": "경제지표는 선행지표, 동행지표, 후행지표로 구분될 수 있으며, 각각 경기 변동의 예측, 현재 상황 파악, 확인 및 검증에 활용됩니다. 또한 경제지표의 해석에는 추세, 변동성, 계절성, 기저효과 등 다양한 요소를 고려해야 합니다.",
-                "example": "매월 발표되는 고용보고서는 실업률과 신규 일자리 수를 보여줍니다. 예를 들어, 실업률이 3%에서 4%로 상승하고 신규 일자리가 감소한다면, 이는 경기가 둔화되고 있다는 신호일 수 있습니다. 이런 정보는 구직자에게는 취업 시장 상황을, 기업에게는 향후 수요 전망을, 정부에게는 정책 방향 설정에 중요한 근거를 제공합니다. 또한 소비자물가지수(CPI)가 전년 대비 5% 상승했다면, 가계는 생활비 부담이 그만큼 늘었음을 체감하게 됩니다.",
-                "related": ["GDP", "물가지수", "실업률", "무역수지", "경기선행지수"]
-            },
-            "유동성": {
-                "basic": "돈이나 자산을 빠르게 현금으로 바꿀 수 있는 정도를 말해요. 현금은 유동성이 가장 높고, 집이나 땅은 유동성이 낮습니다.",
-                "intermediate": "자산을 가치 손실 없이 신속하게 현금화할 수 있는 능력을 의미합니다. 경제 전체적으로는 시중에 풀려 있는 자금의 양을 지칭하기도 합니다. 금융시장의 원활한 작동과 경제 활동에 중요한 요소입니다.",
-                "advanced": "유동성은 시장 유동성과 자금 유동성으로 구분할 수 있습니다. 시장 유동성은 자산의 거래 용이성을, 자금 유동성은 경제 주체들이 보유한 가용 자금을 의미합니다. 중앙은행의 통화정책은 시장의 유동성에 직접적인 영향을 미치며, 유동성 위기는 금융 시스템의 붕괴로 이어질 수 있습니다.",
-                "example": "주식은 주식시장이 열려있을 때 몇 분 안에 현금화할 수 있어 유동성이 높은 편입니다. 반면, 부동산은 매도자와 매수자를 찾고 거래 절차를 밟는 데 몇 개월이 걸릴 수 있어 유동성이 낮습니다. 2008년 금융위기 때는 부동산 시장의 유동성이 크게 감소하여, 급히 집을 팔아야 하는 사람들은 시세보다 훨씬 낮은 가격에 팔아야 했습니다. 유동성이 부족한 상황에서는 현금의 가치가 상대적으로 높아지고, 비유동적 자산의 가격은 하락하는 경향이 있습니다.",
-                "related": ["통화량", "시장유동성", "유동성 함정", "유동성 위기", "현금 선호도"]
-            },
-            "소비자물가지수": {
-                "basic": "일반 가정에서 자주 구매하는 물건과 서비스의 가격 변화를 보여주는 지수예요. 이 지수가 오르면 생활비가 증가했다는 뜻입니다.",
-                "intermediate": "소비자물가지수(CPI)는 소비자가 구매하는 대표적인 상품과 서비스의 가격 변화를 측정하는 지표입니다. 인플레이션 수준을 파악하고, 임금 조정, 연금 인상, 물가연동국채 등에 활용됩니다.",
-                "advanced": "특정 기준 시점의 소비자 바스켓 가격을 100으로 하여 현재 시점의 동일 바스켓 가격을 지수화한 것입니다. 라스파이레스 방식으로 계산되며, 품목별 가중치는 가계동향조사를 통해 결정됩니다. 계절조정, 변동성이 큰 식품 및 에너지를 제외한 근원 인플레이션 등 다양한 형태로 분석됩니다.",
-                "example": "2022년 한국의 소비자물가지수는 전년 대비 약 5.1% 상승했습니다. 이는 20만원이던 월 식비가 약 21만원으로, 10만원이던 공과금이 약 10만 5천원으로 증가했음을 의미합니다. 특히 국제 에너지 가격 상승으로 전기요금과 가스요금이 크게 올랐고, 외식비도 상승했습니다. 이렇게 물가가 오르면 실질 소득이 감소하는 효과가 있어, 같은 월급을 받더라도 구매력이 떨어지게 됩니다.",
-                "related": ["인플레이션", "근원물가지수", "생활물가지수", "물가상승률", "실질소득"]
-               },
-            "주식": {
-                "basic": "회사의 소유권을 나타내는 작은 조각이에요. 주식을 구매하면 그 회사의 일부를 소유하게 되는 셈입니다.",
-                "intermediate": "기업이 사업 자금을 조달하기 위해 발행하는 증권으로, 주주는 기업의 이익 배당과 의사결정 참여 권리를 갖습니다. 주식시장에서 거래되며 가격은 수요와 공급에 따라 변동합니다.",
-                "advanced": "기업의 자본금을 구성하는 균등한 단위로서 소유자에게 이익배당청구권, 잔여재산분배청구권, 의결권 등 주주로서의 권리를 부여합니다. 주식의 가치는 기업의 현재 및 미래 수익성, 자산가치, 성장 가능성, 거시경제 환경 등 다양한 요인에 의해 결정됩니다.",
-                "example": "김씨는 100만원으로 삼성전자 주식 10주를 구매했습니다. 이후 삼성전자의 신제품 출시로 주가가 10% 상승하여 김씨의 주식 가치는 110만원이 되었습니다. 또한 삼성전자가 주당 1,000원의 배당금을 지급하여 김씨는 10,000원의 추가 수익도 얻었습니다. 주주총회에서는 자신의 보유 주식 수에 비례하여 회사의 중요 결정에 투표할 수 있는 권리도 있습니다.",
-                "related": ["주가", "배당금", "주주", "주식시장", "시가총액"]
-            },
-            "채권": {
-                "basic": "정부나 기업에게 돈을 빌려주고, 약속한 기간 동안 정해진 이자를 받는 금융 상품이에요. 만기에는 원금도 돌려받습니다.",
-                "intermediate": "발행자(정부, 기업 등)가 자금 조달을 위해 발행하는 부채 증권으로, 정해진 만기와 이자율을 가집니다. 일반적으로 주식보다 안전하지만 수익률은 낮은 편이며, 시장 금리 변동에 따라 가격이 변동합니다.",
-                "advanced": "채권은 발행자의 신용도, 만기, 이자 지급 방식(고정금리, 변동금리), 상환 우선순위 등에 따라 다양한 종류로 나뉩니다. 채권 가격은 시장 금리와 반대 방향으로 움직이며, 듀레이션, 수익률곡선, 신용스프레드 등의 개념을 통해 분석됩니다. 또한 조기상환옵션, 전환권 등 다양한 특약이 포함될 수 있습니다.",
-                "example": "이씨는 1,000만원으로 A기업의 3년 만기 회사채를 구매했습니다. 이 채권의 표면금리는 연 4%로, 이씨는 매년 40만원의 이자를 받습니다. 만기인 3년 후에는 원금 1,000만원도 돌려받게 됩니다. 그러나 구매 후 시장 금리가 5%로 상승하자 이 채권의 시장가격은 약 970만원으로 하락했습니다. 만기까지 보유하면 원금은 보장되지만, 중간에 팔 경우 손실이 발생할 수 있습니다.",
-                "related": ["국채", "회사채", "수익률", "듀레이션", "채권시장"]
-            },
-            "시가총액": {
-                "basic": "회사의 모든 주식을 현재 주가로 계산한 총 가치예요. 회사의 규모를 나타내는 중요한 지표입니다.",
-                "intermediate": "발행 주식 총수에 현재 주가를 곱한 값으로, 주식시장에서 평가되는 기업의 총 가치를 의미합니다. 기업 규모를 비교하는 기준이 되며, 주가 변동이나 유상증자 등에 따라 변동합니다.",
-                "advanced": "시가총액은 기업 가치 평가의 한 지표로, 기업의 장부상 가치(순자산)와 다를 수 있습니다. 대형주, 중형주, 소형주 분류의 기준이 되며, 지수 편입이나 투자 전략 수립에 중요한 요소입니다. 그러나 시가총액만으로는 기업의 수익성, 성장성, 재무 건전성 등을 판단할 수 없어 다른 재무지표와 함께 고려해야 합니다.",
-                "example": "삼성전자의 발행 주식 수가 약 60억 주이고, 주가가 7만원이라면 시가총액은 약 420조원입니다. 이는 한국 주식시장에서 가장 큰 규모로, 코스피 지수에서 차지하는 비중도 매우 높습니다. 반면, 시가총액 1조원 미만의 중소형 기업들은 대형 기관투자자들의 투자 대상에서 제외되는 경우가 많습니다. 주식형 펀드 투자 시 '대형주 펀드'나 '중소형주 펀드' 등 시가총액 기준으로 투자 전략이 다른 상품들을 볼 수 있습니다.",
-                "related": ["대형주", "중소형주", "시가총액 가중지수", "기업가치", "주식수"]
-            },
-            "배당금": {
-                "basic": "회사가 벌어들인 이익 중 일부를 주주들에게 나눠주는 돈이에요. 주식을 보유한 사람에게 정기적으로 지급됩니다.",
-                "intermediate": "기업이 발생시킨 순이익의 일부를 주주에게 환원하는 형태로, 현금 배당, 주식 배당, 재산 배당 등 다양한 방식이 있습니다. 배당수익률(연간 배당금/주가)은 투자자의 주요 고려 요소 중 하나입니다.",
-                "advanced": "배당은 기업의 배당정책에 따라 결정되며, 배당성향(순이익 대비 배당금 비율)은 기업의 성장단계, 재무상태, 미래 투자계획 등에 따라 달라집니다. 일반적으로 성숙기 기업은 높은 배당성향을, 성장기 기업은 낮은 배당성향을 보입니다. 배당의 안정성, 성장성, 지속가능성 등은 배당투자 전략에서 중요한 평가 요소입니다.",
-                "example": "박씨는 SK텔레콤 주식 100주를 보유하고 있습니다. SK텔레콤이 작년 실적을 바탕으로 주당 10,000원의 배당금을 지급하기로 결정했다면, 박씨는 100만원(100주 × 10,000원)의 배당금을 받게 됩니다. 주가가 25만원이라면 배당수익률은 4%(10,000원 ÷ 250,000원)가 됩니다. 이러한 배당수익은 주가 상승과 별개로 정기적인 현금 흐름을 제공하기 때문에, 은퇴자나 안정적인 수입을 원하는 투자자들에게 인기 있는 투자 전략입니다.",
-                "related": ["배당수익률", "배당성향", "배당주", "배당락", "중간배당"]
-            },
-            "금리": {
-                "basic": "돈을 빌리거나 맡길 때 적용되는 이자율이에요. 예금이나 적금을 하면 금리만큼 이자를 받고, 대출을 받으면 금리만큼 이자를 내야 합니다.",
-                "intermediate": "자금의 시간적 가치를 나타내는 비율로, 중앙은행이 결정하는 기준금리와 시중 은행의 예금 및 대출 금리로 구분됩니다. 경제 상황, 인플레이션, 통화정책 등에 따라 변동하며 금융시장 전반에 큰 영향을 미칩니다.",
-                "advanced": "금리는 명목금리와 실질금리(명목금리-인플레이션율)로 구분됩니다. 또한 기간구조에 따라 단기금리와 장기금리가 있으며, 이들의 관계를 나타낸 것이 수익률곡선입니다. 금리는 자산 가격과 반대 방향으로 움직이는 경향이 있으며, 금리 상승기에는 일반적으로 채권 가격이 하락하고 예금의 매력이 증가합니다. 금리 결정 요인으로는 중앙은행 정책, 경제성장률, 인플레이션, 재정수지, 국제 자본 흐름 등이 있습니다.",
-                "example": "2022년 한국은행이 기준금리를 1.25%에서 1.75%로 인상했을 때, 시중 은행들도 예금금리와 대출금리를 함께 올렸습니다. 이로 인해 1억원의 주택담보대출을 받은 최씨의 경우, 월 상환금이 약 33만원에서 38만원으로 5만원 증가했습니다. 반면, 5천만원을 1년 정기예금에 가입한 정씨는 금리가 2%에서 2.5%로 올라 연간 이자 수익이 100만원에서 125만원으로 25만원 증가했습니다. 금리 변동은 대출자와 예금자에게 반대 방향의 영향을 미치게 됩니다.",
-                "related": ["기준금리", "예금금리", "대출금리", "변동금리", "고정금리"]
-            },
-            "예금": {
-                "basic": "은행에 돈을 맡기는 것을 말해요. 맡긴 돈은 필요할 때 찾을 수 있고, 은행은 그 대가로 이자를 줍니다.",
-                "intermediate": "금융기관에 자금을 맡기고 약정된 이자를 받는 금융상품으로, 입출금이 자유로운 요구불예금과 일정 기간 동안 인출이 제한된 저축성예금으로 구분됩니다. 안전성이 높지만 수익률은 상대적으로 낮은 편입니다.",
-                "advanced": "예금은 금융기관의 주요 자금 조달 수단으로, 예금자보호법에 의해 1인당 5,000만원 한도 내에서 원금과 이자가 보장됩니다. 예금금리는 시장금리와 연동되며, 일반적으로 기간이 길수록, 금액이 클수록 높은 금리가 적용됩니다. 은행은 예금으로 조달한 자금을 대출이나 투자에 활용하여 예대마진을 통해 수익을 창출합니다. 예금은 단기 유동성 관리, 비상자금 준비, 안전자산 배분 등의 목적으로 활용됩니다.",
-                "example": "직장인 김씨는 월급 300만원을 받아 생활비 200만원을 제외한 100만원을 매월 정기예금에 예치하고 있습니다. 연 3%의 금리로 1년간 1,200만원을 예치하면 약 36만원의 이자 수익(세금 차감 전)을 얻을 수 있습니다. 또한 갑작스러운 지출에 대비해 500만원은 언제든 찾을 수 있는 보통예금에 보관하고 있지만, 이 계좌의 금리는 연 0.1%로 매우 낮습니다. 대학생 이씨는 등록금을 위해 매월 용돈에서 일부를 적금에 넣고 있으며, 정해진 만기까지 꾸준히 납입하면 원금과 이자를 한번에 받게 됩니다.",
-                "related": ["보통예금", "정기예금", "예금자보호", "이자소득세", "복리"]
-            },
-            "적금": {
-                "basic": "매월 일정액을 은행에 저축하는 방식이에요. 목돈을 모으기 위한 계획적인 저축 방법입니다.",
-                "intermediate": "일정 기간 동안 정기적으로 일정 금액을 납입하고 만기에 원금과 이자를 받는 금융상품입니다. 일반적으로 예금보다 금리가 높으며, 자동이체를 통해 강제 저축 효과가 있습니다.",
-                "advanced": "적금은 원금이 점진적으로 쌓이는 구조로, 단리와 복리 방식으로 이자가 계산됩니다. 만기 해지 시 최대 이율을 적용받지만, 중도 해지 시 약정 금리보다 낮은 중도해지이율이 적용됩니다. 청년우대적금, 주택청약종합저축 등 특정 조건과 목적에 따른 다양한 적금 상품이 있으며, 일부는 세제 혜택이 제공됩니다. 적금은 목돈 마련, 특정 목표 달성을 위한 저축 수단으로 활용됩니다.",
-                "example": "신혼부부 박씨는 3년 후 주택 구입을 위한 목돈을 마련하기 위해 매월 100만원씩 36개월 만기의 주택청약종합저축에 가입했습니다. 연 3.5%의 금리를 적용받아 만기 시 원금 3,600만원에 약 195만원의 이자(세전)를 더해 총 3,795만원을 수령할 예정입니다. 또한 주택청약종합저축은 주택 청약 자격을 부여하고 소득공제 혜택도 제공합니다. 대학생 김씨는 해외여행 자금 마련을 위해 매월 용돈에서 10만원씩 1년 만기 적금에 가입했고, 만기 시 120만원의 원금과 약 2만원의 이자를 받아 여행 경비로 사용했습니다.",
-                "related": ["정기적금", "자유적금", "청약저축", "중도해지", "만기이율"]
-            },
-            "대출": {
-                "basic": "은행이나 금융기관에서 돈을 빌리는 것을 말해요. 빌린 돈은 정해진 기간 안에 이자와 함께 갚아야 합니다.",
-                "intermediate": "금융기관이 개인이나 기업에게 일정 기간 동안 자금을 빌려주고 이자를 받는 금융 거래입니다. 담보대출, 신용대출, 주택담보대출, 전세자금대출 등 다양한 종류가 있으며, 상환 방식, 금리 종류, 대출 기간에 따라 구분됩니다.",
-                "advanced": "대출은 금융기관의 주요 수익원으로, 대출 심사 과정에서 신용평가, 담보가치 평가, 상환능력 평가 등이 이루어집니다. 금리는 고정금리와 변동금리로 나뉘며, 상환방식은 원리금균등분할상환, 원금균등분할상환, 만기일시상환 등이 있습니다. LTV(Loan to Value, 담보가치 대비 대출 비율)와 DTI(Debt to Income, 소득 대비 부채 비율)는 주택담보대출의 중요한 규제 지표입니다. 대출 이용 시 이자 부담, 연체 시 신용도 하락, 담보권 실행 위험 등을 고려해야 합니다.",
-                "example": "30대 직장인 이씨는 5억원 아파트를 구입하기 위해 2억원의 주택담보대출을 받았습니다. LTV 40%로 대출을 받았으며, 연 3.5%의 변동금리, 30년 만기, 원리금균등분할상환 방식을 선택했습니다. 매월 약 90만원의 원리금을 상환하게 되며, 30년 동안 총 3억 2,400만원(원금 2억원 + 이자 1억 2,400만원)을 상환하게 됩니다. 그러나 금리가 1%p 상승하면 월 상환금은 약 108만원으로 증가합니다. 대학생 박씨는 등록금 마련을 위해 300만원의 학자금대출을 받았고, 졸업 후 취업을 한 뒤 매월 일정액을 상환하고 있습니다.",
-                "related": ["담보대출", "신용대출", "금리", "원리금균등상환", "대출한도"]
-            },
-            "투자": {
-                "basic": "미래에 더 큰 수익을 얻기 위해 현재 자금을 사용하는 행위예요. 주식, 부동산, 사업 등 다양한 대상에 투자할 수 있습니다.",
-                "intermediate": "미래의 경제적 이익을 기대하고 현재의 자금을 투입하는 경제 활동입니다. 투자 대상의 가치 상승, 정기적인 수익(배당, 이자, 임대료 등), 사업 확장 등을 통해 수익을 창출할 수 있으며, 리스크와 수익률이 비례하는 특성이 있습니다.",
-                "advanced": "투자는 금융투자와 실물투자로 구분할 수 있으며, 투자 결정 시 기대수익률, 위험, 유동성, 투자 기간, 세금 영향 등 다양한 요소를 고려해야 합니다. 분산투자, 자산배분, 투자 시점 분산(달러 코스트 애버리징) 등의 전략을 통해 리스크를 관리할 수 있습니다. 투자 성공의 핵심은 본인의 투자 목표, 위험 감내도, 투자 기간 등을 고려한 맞춤형 전략을 수립하고 일관성 있게 실행하는 것입니다.",
-                "example": "40대 회사원 김씨는 노후 준비를 위해 월급의 20%를 다양한 자산에 분산 투자하고 있습니다. 안전자산으로 국채와 예금에 40%, 성장자산으로 국내외 주식형 펀드에 50%, 대체투자로 부동산 간접투자상품에 10%를 배분했습니다. 20년 후 은퇴를 목표로 장기 투자하며, 시장 상황에 따라 1년에 한 번씩 자산 배분을 조정합니다. 주식시장이 급락했을 때는 오히려 매수 기회로 삼아 주식 비중을 늘리는 전략을 실행하고 있습니다. 이런 투자 방식으로 지난 10년간 연평균 6%의 수익률을 달성했으며, 처음 투자한 5,000만원은 현재 약 9,000만원으로 증가했습니다.",
-                "related": ["수익률", "리스크", "분산투자", "자산배분", "복리효과"]
-            },
-            "포트폴리오": {
-                "basic": "한 사람이 보유한 여러 투자 자산의 조합을 말해요. 주식, 채권, 부동산 등 다양한 자산을 조합하여 위험을 분산합니다.",
-                "intermediate": "투자자가 보유한 여러 투자 자산의 집합체로, 효율적인 수익과 위험 관리를 위해 다양한 자산을 조합합니다. 투자 목표, 위험 감내도, 투자 기간에 따라 구성이 달라지며, 정기적인 리밸런싱을 통해 관리됩니다.",
-                "advanced": "현대 포트폴리오 이론에 따르면, 서로 상관관계가 낮은 자산들을 조합함으로써 전체 포트폴리오의 위험을 개별 자산의 위험보다 낮출 수 있습니다. 효율적 프론티어는 같은 위험 수준에서 최대 수익률을, 또는 같은 수익률에서 최소 위험을 제공하는 최적의 포트폴리오 조합을 나타냅니다. 자산 배분(전략적, 전술적), 종목 선택, 투자 시점 분산, 정기적인 리밸런싱 등을 통해 포트폴리오를 관리합니다. 투자 성과 평가 시에는 샤프 비율, 알파, 베타 등의 지표를 활용합니다.",
-                "example": "35세 전문직 종사자 박씨는 1억원의 투자 자금을 다음과 같이 포트폴리오로 구성했습니다: 국내 주식 3,000만원(삼성전자, 현대차 등 대형주 위주), 해외 주식 2,000만원(글로벌 ETF 통해 투자), 채권 3,000만원(국채 및 우량 회사채), 현금성 자산 1,000만원(MMF), 대체투자 1,000만원(리츠 상품). 2022년 주식시장이 하락하면서 주식 비중이 40%로 줄어들자, 연말 리밸런싱을 통해 채권에서 주식으로 일부 자금을 이동시켜 원래의 자산 배분 비율을 회복했습니다. 이러한 포트폴리오 구성으로 시장 변동성에도 불구하고 안정적인 수익을 추구하고 있습니다.",
-                "related": ["자산배분", "분산투자", "리밸런싱", "효율적 프론티어", "샤프 비율"]
-            },
-"비트코인": {
-            "basic": "인터넷에서만 사용할 수 있는 디지털 화폐의 한 종류예요. 정부나 은행의 통제 없이 개인 간에 자유롭게 거래할 수 있다는 특징이 있어요.",
-            "intermediate": "탈중앙화된 암호화폐로, 블록체인 기술을 기반으로 작동합니다. 발행 주체가 없으며, 채굴이라는 과정을 통해 새로운 비트코인이 생성되고 거래가 기록됩니다.",
-            "advanced": "분산 원장 기술인 블록체인을 기반으로 하는 최초의 암호화폐입니다. 공급량이 2,100만 개로 제한되어 있어 희소성을 가지며, 익명성, 검열 저항성 등의 특징으로 인해 가치 저장 수단 및 거래 매체로 사용됩니다.",
-            "example": "A씨는 2020년에 1개의 비트코인을 1,000만원에 구매했습니다. 2024년에 비트코인 가격이 7,000만원까지 상승하면서 A씨는 상당한 투자 수익을 얻었습니다. 비트코인은 온라인 쇼핑몰에서 결제 수단으로 사용되기도 하며, 개인 간 거래 시 은행을 거치지 않고 직접 송금할 수 있습니다.",
-            "related": ["블록체인", "암호화폐", "탈중앙화", "채굴", "가상화폐 지갑"]
-        },
-        "블록체인": {
-            "basic": "거래 기록을 여러 컴퓨터에 분산해서 저장하는 기술이에요. 정보가 투명하게 공개되고 위변조가 어렵다는 장점이 있어서 비트코인 같은 암호화폐의 기반 기술로 사용됩니다.",
-            "intermediate": "분산 원장 기술의 한 형태로, 거래 정보를 담고 있는 블록들이 시간 순서대로 연결되어 하나의 사슬처럼 이어져 있는 구조입니다. 네트워크 참여자들의 합의를 통해 새로운 블록이 추가되며, 데이터의 무결성과 보안성이 높습니다.",
-            "advanced": "암호화, 합의 알고리즘, 분산 네트워크 등의 기술을 융합하여 데이터의 투명성, 보안성, 불변성을 보장하는 기술입니다. 금융, 물류, 헬스케어, 투표 등 다양한 분야에서 활용될 수 있으며, 스마트 계약과 같은 혁신적인 응용 서비스를 가능하게 합니다.",
-            "example": "비트코인 거래 내역은 블록체인에 기록되어 모든 참여자가 확인할 수 있습니다. 한 번 기록된 거래는 임의로 수정하거나 삭제하는 것이 매우 어렵습니다. 또한, 식품 이력 추적 시스템에 블록체인 기술을 적용하면 소비자는 제품의 생산부터 유통까지의 모든 과정을 투명하게 확인할 수 있습니다.",
-            "related": ["비트코인", "암호화폐", "분산 원장", "스마트 계약", "탈중앙화"]
-        },
-        "암호화폐": {
-            "basic": "암호 기술을 이용해서 만든 디지털 화폐를 말해요. 실물 돈과는 달리 눈에 보이지 않지만, 온라인에서 물건을 사거나 다른 사람에게 송금할 수 있습니다.",
-            "intermediate": "암호화 기술을 사용하여 거래의 보안성을 높이고, 새로운 화폐 발행을 통제하는 디지털 자산입니다. 중앙은행의 개입 없이 작동하는 탈중앙화된 형태가 많으며, 변동성이 크다는 특징이 있습니다.",
-            "advanced": "분산 원장 기술인 블록체인 또는 이와 유사한 기술을 기반으로 하며, 암호학적 방법을 통해 거래의 유효성을 검증하고 위변조를 방지합니다. 비트코인, 이더리움, 솔라나 등 다양한 종류가 있으며, 각각 고유한 기술적 특징과 사용 사례를 가지고 있습니다.",
-            "example": "A씨는 암호화폐 거래소를 통해 비트코인과 이더리움을 구매했습니다. 그는 이 암호화폐들을 장기적인 투자 목적으로 보유하고 있으며, 일부는 스테이킹이라는 방식을 통해 추가적인 수익을 얻고 있습니다. 또한, B씨는 온라인 게임 플랫폼에서 암호화폐를 이용하여 게임 아이템을 구매하기도 합니다.",
-            "related": ["비트코인", "이더리움", "블록체인", "가상화폐 지갑", "탈중앙화 금융(DeFi)"]
-        },
-        "거시경제": {
-            "basic": "나라 전체의 경제를 보는 관점이에요. 예를 들어, 우리나라 전체의 물가, 실업률, 경제 성장 같은 큰 그림을 분석하는 것을 말합니다.",
-            "intermediate": "국가 또는 더 넓은 지역의 경제 전체의 움직임과 기능을 연구하는 경제학의 한 분야입니다. 총생산, 물가 수준, 실업률, 경제 성장, 국제 수지 등 aggregate 변수들을 분석합니다.",
-            "advanced": "국민 소득, 고용, 물가, 이자율 등 경제 전반에 걸친 변수들의 상호작용을 분석하고, 경제 성장, 경기 변동, 인플레이션, 실업 등 주요 경제 현상을 설명하고 예측하는 데 초점을 맞춥니다. 주요 연구 분야로는 경제 성장 이론, 경기 변동 이론, 통화 이론, 재정 이론, 국제 경제 등이 있습니다.",
-            "example": "정부는 거시경제 지표인 GDP 성장률이 둔화될 것으로 예상됨에 따라 경기 부양을 위한 재정 정책을 준비하고 있습니다. 한국은행은 물가 상승률이 목표치를 상회하자 금리 인상을 통해 통화 정책을 긴축적으로 운영하고 있습니다. 이처럼 거시경제 분석은 정부와 중앙은행의 정책 결정에 중요한 역할을 합니다.",
-            "related": ["미시경제", "GDP", "물가 상승률", "실업률", "경제 성장률"]
-        },
-        "소비자 신뢰지수": {
-            "basic": "사람들이 앞으로의 경제 상황에 대해 얼마나 낙관적으로 생각하는지를 나타내는 지표예요. 이 지수가 높으면 사람들이 돈을 더 많이 쓸 거라고 예상할 수 있습니다.",
-            "intermediate": "가계의 소비 심리를 종합적으로 나타내는 지표로, 현재 및 미래의 경제 상황에 대한 소비자들의 기대와 평가를 설문조사를 통해 측정합니다. 소비 지출 변화를 예측하는 데 활용됩니다.",
-            "advanced": "미래의 소비 지출을 예측하는 데 유용한 선행 지표로, 소비자들의 경제 상황에 대한 기대, 고용 전망, 소득 전망, 구매 계획 등을 종합적으로 반영합니다. 지수가 높을수록 소비 심리가 낙관적임을 의미하며, 이는 경제 활동 증가로 이어질 가능성이 높습니다.",
-            "example": "한국은행이 발표하는 소비자심리지수(CCSI)가 지난달보다 상승했습니다. 이는 소비자들이 앞으로의 경제 상황이 더 나아질 것이라고 기대하는 경향이 강해졌다는 것을 의미하며, 곧 소비 지출 증가로 이어질 수 있습니다. 반대로 지수가 하락하면 소비자들이 지갑을 닫을 가능성이 높아집니다.",
-            "related": ["경기 선행 지수", "경제 심리", "소비 지출", "경기 예측", "경제 지표"]
-        },
-        "신용등급": {
-            "basic": "개인이나 회사가 돈을 얼마나 잘 갚을 수 있는지를 평가한 점수예요. 신용등급이 높으면 돈을 빌리기가 쉽고, 이자도 낮아질 수 있습니다.",
-            "intermediate": "개인 또는 기업의 채무 상환 능력에 대한 신용 평가 기관의 평가 결과입니다. 신용 등급은 대출 금리 결정, 투자 결정, 신용 카드 발급 등에 활용되며, 높을수록 채무 불이행 위험이 낮다는 것을 의미합니다.",
-            "advanced": "신용 평가 기관은 과거의 채무 이행 기록, 소득 수준, 자산 규모, 부채 규모 등 다양한 요인을 종합적으로 분석하여 신용 등급을 부여합니다. 개인 신용 등급은 금융 거래 조건에 큰 영향을 미치며, 기업 신용 등급은 자금 조달 비용 및 가능성에 영향을 미칩니다. 대표적인 신용 평가 기관으로는 NICE평가정보, KCB 등이 있습니다.",
-            "example": "A씨는 신용 관리를 꾸준히 하여 신용 등급이 매우 높습니다. 덕분에 그는 은행에서 낮은 금리로 주택 담보 대출을 받을 수 있었습니다. 반면, B씨는 과거 연체 기록이 많아 신용 등급이 낮아 카드 발급이 어렵고, 대출 금리도 높은 편입니다.",
-            "related": ["신용 점수", "채무 불이행", "대출 금리", "신용 평가 기관", "개인 신용 정보"]
-        },
-        "채권금리": {
-            "basic": "채권을 발행한 주체가 돈을 빌린 대가로 투자자에게 지급하는 이자율이에요. 시장 상황이나 채권의 종류에 따라 금리가 달라집니다.",
-            "intermediate": "채권 투자에 대한 수익률을 나타내는 지표로, 채권 가격과 반비례 관계를 가집니다. 시장 금리, 인플레이션 기대, 발행 주체의 신용도 등 다양한 요인에 의해 결정됩니다.",
-            "advanced": "채권 금리는 액면가에 대한 이자 지급액의 비율인 표면 금리, 투자자가 채권을 매수한 가격을 기준으로 계산한 수익률인 만기 수익률 등으로 구분됩니다. 채권 금리는 통화 정책의 중요한 전달 경로이며, 다른 자산의 수익률 결정에도 영향을 미칩니다. 일반적으로 장기 채권 금리는 단기 채권 금리보다 높으며, 위험도가 높은 채권일수록 높은 금리가 적용됩니다.",
-            "example": "정부가 발행한 국채 금리가 상승하면, 새로 발행되는 국채에 투자했을 때 얻을 수 있는 수익이 늘어납니다. 또한, 시장 금리 상승은 기존에 발행된 채권 가격 하락의 원인이 되기도 합니다. 예를 들어, A회사의 채권 금리가 높아졌다면, 이는 회사의 재정 상태가 불안정하다고 시장이 평가할 수 있다는 신호일 수 있습니다.",
-            "related": ["채권", "시장 금리", "수익률 곡선", "만기 수익률", "표면 금리"]
-        },
-        "금리 스프레드": {
-            "basic": "서로 다른 종류의 채권이나 대출 상품 간의 금리 차이를 말해요. 이 차이를 통해 시장 상황이나 위험 정도를 파악할 수 있습니다.",
-            "intermediate": "두 가지 다른 금리 사이의 차이를 의미하며, 주로 만기, 신용 등급, 유동성 등이 다른 금융 상품 간의 금리 차이를 분석하는 데 사용됩니다. 경제 상황 변화에 대한 시장의 기대감을 반영하기도 합니다.",
-            "advanced": "국채 금리와 회사채 금리 간의 스프레드는 신용 위험 프리미엄을 나타내며, 장단기 금리 스프레드는 경기 전망에 대한 시장의 기대를 반영합니다. 금리 스프레드는 금융 시장의 안정성, 투자 심리, 통화 정책 효과 등을 분석하는 데 중요한 지표로 활용됩니다. 예를 들어, 신용 스프레드가 확대되면 시장의 위험 회피 심리가 강해졌다고 해석할 수 있습니다.",
-            "example": "국고채 3년물 금리가 3%이고, 같은 만기의 회사채 금리가 5%라면 금리 스프레드는 2%p입니다. 이 스프레드는 회사채가 국채보다 더 위험하다고 평가되어 투자자들이 추가적인 수익률을 요구하기 때문에 발생합니다. 또한, 장기 국채 금리와 단기 국채 금리의 차이가 줄어들면 앞으로 경기 성장세가 둔화될 수 있다는 신호로 해석될 수 있습니다.",
-            "related": ["금리", "채권", "신용 위험", "수익률 곡선", "시장 심리"]
-        },
-        "자산 배분": {
-            "basic": "가진 돈을 여러 종류의 자산(예: 주식, 채권, 부동산)에 나누어서 투자하는 것을 말해요. 이렇게 하면 위험을 줄이고 안정적인 수익을 얻는 데 도움이 됩니다.",
-            "intermediate": "투자 목표와 위험 감수 수준에 따라 다양한 자산(주식, 채권, 현금, 부동산 등)에 투자 비중을 결정하는 전략입니다. 장기적인 관점에서 투자 수익률에 가장 큰 영향을 미치는 요소 중 하나로 여겨집니다.",
-            "advanced": "투자자의 투자 목표, 투자 기간, 위험 감내도 등을 고려하여 최적의 자산 조합을 결정하는 포트폴리오 전략의 핵심입니다. 전략적 자산 배분은 장기적인 목표 수익률 달성을 위해, 전술적 자산 배분은 단기적인 시장 상황 변화에 대응하기 위해 활용됩니다. 벤치마크 포트폴리오 설정, 자산군 간의 상관관계 분석, 리밸런싱 등이 주요 관리 요소입니다.",
-            "example": "A씨는 은퇴 후 안정적인 생활을 위해 투자 자산을 주식 40%, 채권 40%, 부동산 20% 비율로 배분했습니다. 주식 시장이 과열되었다고 판단될 때는 주식 비중을 줄이고 채권 비중을 늘리는 방식으로 자산 배분을 조정합니다. 반면, 젊은 투자자인 B씨는 높은 수익률을 추구하기 위해 주식 비중을 70%까지 높이고, 채권 비중은 20%, 현금 비중은 10%로 자산 배분을 구성했습니다.",
-            "related": ["포트폴리오", "분산 투자", "위험 관리", "수익률", "리밸런싱"]
-        },
-        "헤지": {
-            "basic": "가지고 있는 투자 자산의 가격이 떨어질 위험을 줄이기 위한 투자 방법이에요. 마치 우산을 준비해서 비가 올 것에 대비하는 것과 비슷합니다.",
-            "intermediate": "미래의 불확실한 가격 변동 위험을 회피하거나 줄이기 위한 투자 전략입니다. 파생 상품(선물, 옵션 등)을 이용하여 기존 투자 포지션의 위험을 상쇄하는 방식으로 주로 사용됩니다.",
-            "advanced": "다양한 금융 상품 및 전략을 활용하여 특정 자산이나 포트폴리오가 직면한 시장 위험, 신용 위험, 환율 위험 등을 관리하는 기법입니다. 완벽한 위험 제거는 어려울 수 있지만, 예측 불가능한 손실 발생 가능성을 줄이는 데 효과적입니다. 예를 들어, 주식 투자자는 주가 하락에 대비하기 위해 주식 선물 매도 포지션을 취하거나 풋옵션을 매수할 수 있습니다.",
-            "example": "수출 기업인 A사는 환율 변동 위험에 노출되어 있습니다. 달러화 가치가 하락하면 수출 대금을 원화로 환전했을 때 손실이 발생할 수 있습니다. 이를 방지하기 위해 A사는 선물환 계약을 통해 미래의 환율을 미리 고정시키는 헤지 전략을 사용합니다. 농부 B씨는 수확 시기에 농산물 가격이 하락할 것을 우려하여 농산물 선물 계약을 통해 미리 판매 가격을 확정하는 방식으로 가격 변동 위험을 헤지할 수 있습니다.",
-            "related": ["위험 관리", "파생 상품", "선물", "옵션", "환율 변동"]
-        },
-        "투자 수익률 (ROI)": {
-            "basic": "투자한 돈에 비해 얼마나 이익을 얻었는지 백분율로 나타낸 거예요. 예를 들어, 100만원을 투자해서 10만원을 벌었다면 ROI는 10%입니다.",
-            "intermediate": "Return on Investment의 약자로, 투자 효율성을 측정하는 지표입니다. 투자로 인해 발생한 순이익을 투자 원금으로 나눈 값에 100을 곱하여 백분율로 표시합니다.",
-            "advanced": "투자 성과를 평가하는 데 가장 널리 사용되는 지표 중 하나로, 투자 기간, 위험 수준 등을 고려하지 않은 단순 수익률입니다. 보다 정확한 분석을 위해서는 연간 수익률, 위험 조정 수익률 등 다른 지표와 함께 고려해야 합니다. ROI는 기업의 투자 결정, 개인의 자산 관리, 프로젝트 평가 등 다양한 분야에서 활용됩니다.",
-            "example": "A씨는 1,000만원을 투자하여 1년 후 1,200만원으로 만들었습니다. 이때 투자 수익률(ROI)은 (1,200만원 - 1,000만원) / 1,000만원 * 100% = 20%입니다. B회사는 새로운 설비 투자에 1억원을 지출하여 연간 1,500만원의 추가 이익을 얻었습니다. 이 투자의 ROI는 (1,500만원 / 1억원) * 100% = 15%입니다.",
-            "related": ["수익률", "투자", "순이익", "투자 원금", "자산"]
-        },
-        "상장 기업": {
-            "basic": "자신들의 주식을 일반 사람들이 자유롭게 사고팔 수 있도록 주식 시장에 등록한 회사를 말해요.",
-            "intermediate": "주식 시장의 상장 요건을 충족하여 일반 투자자들이 주식을 거래할 수 있도록 공개된 기업입니다. 상장을 통해 자금 조달을 용이하게 하고 기업 인지도를 높일 수 있지만, 경영 투명성 확보 및 주가 관리 등의 의무를 가지게 됩니다.",
-            "advanced": "증권 거래소의 심사를 거쳐 주식을 공개적으로 발행하고 유통할 수 있게 된 기업입니다. 상장 기업은 재무 상태 및 경영 정보를 정기적으로 공시해야 하며, 주주총회를 통해 주주들의 의견을 수렴해야 합니다. 상장은 기업의 성장과 발전에 중요한 계기가 되지만, 동시에 시장의 평가에 따라 주가가 변동하는 위험도 안게 됩니다.",
-            "example": "삼성전자는 한국 주식 시장에 상장된 대표적인 기업입니다. 누구나 증권 계좌를 통해 삼성전자 주식을 사고팔 수 있습니다. 상장 기업은 매년 실적 발표를 통해 회사의 경영 상황을 투자자들에게 공개해야 합니다. 또한, 주주들은 주주총회에 참석하여 회사의 중요한 의사 결정에 참여할 수 있습니다.",
-            "related": ["주식", "주식 시장", "상장", "주주", "공시"]
-        },
-        "가계 부채": {
-            "basic": "가정에서 은행이나 다른 금융기관으로부터 빌린 돈의 총액을 말해요. 빚이 너무 많으면 경제적으로 어려워질 수 있습니다.",
-            "intermediate": "가구가 보유한 모든 금융 부채의 합으로, 주택 담보 대출, 신용 대출, 카드 빚 등을 포함합니다. 과도한 가계 부채는 소비 위축, 금융 시스템 불안정 등 거시 경제에 부정적인 영향을 미칠 수 있습니다.",
-            "advanced": "가계 부채는 차입 목적, 차입 주체, 만기 구조 등에 따라 다양하게 분류될 수 있습니다. 가처분 소득 대비 가계 부채 비율은 가계의 채무 상환 능력을 나타내는 중요한 지표입니다. 정부는 가계 부채 증가 속도를 조절하고 건전성을 확보하기 위해 다양한 정책을 시행합니다.",
-            "example": "A씨는 주택 구입을 위해 은행에서 3억원의 주택 담보 대출을 받았습니다. 또한, 자동차 구입을 위해 2천만원의 자동차 할부금을 내고 있으며, 신용 카드 빚도 500만원 있습니다. A씨의 가계 부채는 총 3억 2,500만원입니다. 금리 인상으로 인해 A씨의 매달 상환 부담이 증가하여 가계 경제에 어려움을 겪고 있습니다.",
-            "related": ["부채", "대출", "주택 담보 대출", "신용 대출", "금리"]
-        },
-        "기준 금리": {
-            "basic": "한 나라의 중앙은행이 시중 은행에 돈을 빌려줄 때 적용하는 이자율이에요. 이 기준 금리가 오르거나 내리면 다른 은행들의 금리에도 영향을 줍니다.",
-            "intermediate": "중앙은행이 금융 기관 간의 단기 자금 거래에 적용하는 정책 금리입니다. 통화 정책의 주요 수단으로 활용되며, 시중 금리 전반에 영향을 미쳐 경제 활동을 조절하는 역할을 합니다.",
-            "advanced": "기준 금리는 콜금리, 환매조건부채권(RP) 금리 등 다양한 형태로 운영될 수 있으며, 중앙은행의 통화 정책 목표(물가 안정, 경기 부양 등)에 따라 결정됩니다. 기준 금리 변동은 가계 및 기업의 차입 비용, 투자 결정, 자산 가격 등에 광범위한 영향을 미칩니다.",
-            "example": "한국은행은 물가 상승 압력에 대응하기 위해 기준 금리를 1.5%에서 1.75%로 인상했습니다. 이에 따라 시중 은행의 예금 금리와 대출 금리도 함께 상승하여 가계의 이자 부담이 늘어나고 기업의 투자 심리가 위축될 수 있습니다. 반대로 경기 침체 시에는 기준 금리를 인하하여 시장에 유동성을 공급하고 경제 활동을 촉진합니다.",
-            "related": ["금리", "중앙은행", "통화 정책", "예금 금리", "대출 금리"]
-        },
-        "국채": {
-            "basic": "나라에서 돈을 빌리기 위해 발행하는 채권이에요. 비교적 안전한 투자로 여겨지며, 정부가 돈을 갚겠다는 약속이 담겨 있습니다.",
-            "intermediate": "정부가 재정 수입을 확보하기 위해 발행하는 채무 증권입니다. 만기와 이자율이 정해져 있으며, 일반적으로 회사채보다 안전한 투자 자산으로 간주됩니다. 국채 금리는 시장 금리의 기준이 되는 경우가 많습니다.",
-            "advanced": "국채는 발행 주체, 만기, 이자 지급 방식 등에 따라 다양한 종류로 나뉩니다(예: 국고채, 국고채권, 물가연동국채 등). 국채는 정부의 신용도를 바탕으로 발행되므로 신용 위험이 낮으며, 금융 시장의 안정성을 높이는 역할을 합니다. 또한, 국채는 통화 정책의 공개 시장 조작 수단으로 활용되기도 합니다.",
-            "example": "A씨는 안정적인 투자를 위해 1,000만원 상당의 10년 만기 국채를 매입했습니다. 이 국채는 연 3%의 이자를 지급하며, 만기 시 A씨는 원금 1,000만원을 돌려받게 됩니다. 국채는 일반적으로 주식보다 변동성이 낮아 안전 자산으로 분류되며, 투자 포트폴리오의 안정성을 높이는 데 기여합니다.",
-            "related": ["채권", "정부", "안전 자산", "시장 금리", "회사채"]
-        },
-        "국제 수지": {
-            "basic": "한 나라가 다른 나라와 돈을 주고받은 모든 거래를 기록한 거예요. 수출과 수입, 투자 등을 모두 포함하며, 나라의 경제 상황을 보여주는 중요한 지표입니다.",
-            "intermediate": "일정 기간 동안 한 국가의 거주자와 비거주자 간에 발생한 모든 경제적 거래를 종합적으로 기록한 통계입니다. 경상 수지, 자본 수지, 금융 계정 등으로 구성됩니다.",
-            "advanced": "국제 수지는 한 나라의 대외 경제 활동을 종합적으로 보여주는 지표로, 경상 수지는 상품 및 서비스 거래, 소득 수지, 경상 이전 수지를 포함하며, 자본 수지는 자본 이전, 금융 계정은 직접 투자, 증권 투자, 파생 금융 상품, 기타 투자, 준비 자산의 변동을 기록합니다. 국제 수지 불균형은 환율 변동, 외환 보유액 변동, 대외 채무 증가 등 다양한 경제적 영향을 미칠 수 있습니다.",
-            "example": "한국의 주요 수출 품목은 반도체와 자동차이며, 주요 수입 품목은 원유와 천연가스입니다. 만약 한국의 수출액이 수입액보다 많다면 경상 수지는 흑자를 기록하게 됩니다. 이는 한국 경제의 대외 경쟁력이 높다는 것을 의미할 수 있습니다. 반대로 수입액이 수출액보다 많다면 경상 수지는 적자를 기록하게 되며, 이는 외화 유출을 초래할 수 있습니다.",
-            "related": ["경상 수지", "무역 수지", "자본 수지", "환율", "외환 보유액"]
-        },
-        "기업": {
-            "basic": "이윤을 내기 위해 물건을 만들거나 서비스를 제공하는 조직을 말해요. 회사라고도 부릅니다.",
-            "intermediate": "영리 활동을 목적으로 자본, 노동 등의 생산 요소를 결합하여 재화나 서비스를 생산하고 판매하는 경제 주체입니다. 개인 기업, 법인 기업 등 다양한 형태가 있으며, 경제 시스템에서 중요한 역할을 수행합니다.",
-            "advanced": "기업은 생산 활동을 통해 부가가치를 창출하고, 고용을 증대시키며, 기술 혁신을 주도하는 등 경제 성장의 핵심적인 역할을 담당합니다. 기업의 경영 목표는 이윤 극대화이며, 이를 위해 생산, 마케팅, 재무, 인사 등 다양한 기능을 수행합니다. 기업은 시장 환경 변화에 끊임없이 적응하고 경쟁 우위를 확보하기 위해 노력합니다.",
-            "example": "삼성전자는 스마트폰, TV, 반도체 등 다양한 전자 제품을 생산하고 판매하는 대표적인 한국 기업입니다. 현대자동차는 자동차를 제조하여 국내외 시장에 판매하고 있습니다. 이러한 기업들은 경제 활동을 통해 일자리를 창출하고 국가 경제 발전에 기여합니다.",
-            "related": ["회사", "시장", "생산", "소비", "이윤"]
-        },
-        "노동 시장": {
-            "basic": "일하려는 사람들과 사람을 고용하려는 회사들이 만나는 곳이에요. 여기서 임금과 고용 조건 등이 결정됩니다.",
-            "intermediate": "노동력의 수요와 공급이 이루어지는 시장입니다. 기업은 생산 활동에 필요한 노동력을 수요하고, 개인은 임금을 받고 노동력을 공급합니다. 노동 시장의 상황은 임금 수준, 고용률, 실업률 등에 영향을 미칩니다.",
-            "advanced": "노동 시장은 경제 활동의 중요한 부분을 차지하며, 임금 결정, 노동력 배분, 생산성 향상 등 다양한 경제적 기능을 수행합니다. 노동 시장의 구조와 기능은 경제 성장, 기술 변화, 정부 정책 등 다양한 요인에 의해 영향을 받습니다. 노동 시장 분석은 실업 문제 해결, 인적 자원 개발, 소득 분배 개선 등 정책 수립에 중요한 기초 자료를 제공합니다.",
-            "example": "최근 한국의 노동 시장은 청년 실업률이 높고, 고령화로 인해 노동력 부족 문제가 심화되고 있습니다. 정부는 청년 일자리 창출을 위한 정책을 추진하고 있으며, 기업들은 생산성 향상을 위해 자동화 설비 투자를 늘리고 있습니다. 노동 조합은 근로자들의 권익 보호를 위해 임금 인상 및 노동 조건 개선을 요구합니다.",
-            "related": ["실업률", "고용률", "임금", "노동 조합", "인적 자원"]
-        },
-        "물가 상승률": {
-            "basic": "물건이나 서비스의 가격이 얼마나 빠르게 오르고 있는지를 나타내는 비율이에요. 이 비율이 높으면 돈의 가치가 떨어진다는 의미입니다.",
-            "intermediate": "일정 기간 동안 상품과 서비스의 전반적인 가격 수준이 상승하는 비율을 의미합니다. 소비자물가지수(CPI), 생산자물가지수(PPI) 등을 이용하여 측정하며, 경제 정책 결정에 중요한 지표로 활용됩니다.",
-            "advanced": "물가 상승률은 수요 측면의 요인(총수요 증가, 통화량 증가 등)과 공급 측면의 요인(생산 비용 증가, 공급망 차질 등)에 의해 영향을 받습니다. 높은 물가 상승률은 실질 소득 감소, 구매력 저하, 경제 불안정 등을 초래할 수 있으며, 중앙은행은 통화 정책을 통해 물가 안정을 목표로 합니다.",
-            "example": "2022년 한국의 연간 소비자물가 상승률은 5.1%를 기록했습니다. 이는 1년 전에 10만원으로 살 수 있었던 물건을 이제는 10만 5천 1백원을 지불해야 살 수 있다는 의미입니다. 특히 에너지 가격과 식료품 가격 상승이 물가 상승을 주도했으며, 이는 가계의 생활비 부담을 크게 증가시켰습니다.",
-            "related": ["인플레이션", "소비자물가지수", "생산자물가지수", "금리", "통화 정책"]
-        },
-        "생산성": {
-            "basic": "정해진 시간이나 노력으로 얼마나 많은 결과물을 만들어낼 수 있는지를 나타내는 정도예요. 생산성이 높아지면 경제가 더 효율적으로 운영될 수 있습니다.",
-            "intermediate": "투입된 자원(노동, 자본 등) 대비 산출된 재화나 서비스의 비율을 의미합니다. 노동 생산성, 자본 생산성, 총요소 생산성 등으로 측정되며, 경제 성장과 생활 수준 향상의 중요한 원동력입니다.",
-            "advanced": "생산성 향상은 기술 혁신, 교육 수준 향상, 효율적인 자원 배분, 경영 혁신 등을 통해 이루어질 수 있습니다. 생산성 증가는 기업의 경쟁력 강화, 임금 상승, 물가 안정 등 다양한 경제적 효과를 가져옵니다. 정부는 생산성 향상을 위해 연구 개발 투자 확대, 인적 자원 개발, 규제 완화 등 다양한 정책을 추진합니다.",
-            "example": "A회사는 새로운 자동화 설비를 도입하여 이전보다 적은 인력으로 더 많은 제품을 생산할 수 있게 되었습니다. 이는 A회사의 노동 생산성이 향상되었음을 의미합니다. 또한, 직원들의 직무 교육을 강화하여 업무 효율성을 높이는 것도 생산성 향상의 한 방법입니다. 국가 전체적으로는 과학 기술 발전에 대한 투자가 생산성 향상에 중요한 역할을 합니다.",
-            "related": ["효율성", "기술 혁신", "노동", "자본", "경제 성장"]
-        },
-        "경기 예측": {
-            "basic": "미래의 경제 상황이 어떻게 될지 예상하는 것을 말해요. 정부나 연구 기관 등에서 다양한 정보를 바탕으로 예측합니다.",
-            "intermediate": "다양한 경제 지표와 분석 도구를 활용하여 미래의 경제 활동 수준, 성장률, 물가, 실업률 등을 전망하는 과정입니다. 경제 정책 수립, 기업 경영 전략, 개인 투자 결정 등에 활용됩니다.",
-            "advanced": "경기 예측은 계량 경제 모델, 시계열 분석, 설문 조사 등 다양한 방법론을 활용하며, 단기 예측, 중장기 예측 등으로 구분됩니다. 예측의 정확성은 경제 상황의 복잡성, 예측 모델의 한계, 외부 충격 등 다양한 요인에 의해 영향을 받을 수 있습니다. 경기 예측은 불확실성을 줄이고 합리적인 의사 결정을 돕는 데 중요한 역할을 하지만, 예측 결과는 참고 자료로 활용되어야 합니다.",
-            "example": "한국개발연구원(KDI)은 2025년 한국 경제 성장률을 2.5%로 전망했습니다. 이는 올해보다 소폭 상승한 수치이지만, 글로벌 경기 둔화 가능성 등 하방 위험 요인도 존재한다고 분석했습니다. 정부는 이러한 경기 예측 결과를 바탕으로 내년도 예산 편성 및 경제 정책 방향을 설정합니다. 기업들은 경기 전망에 따라 생산 계획, 투자 계획 등을 조정할 수 있습니다.",
-            "related": ["경제 지표", "경기 순환", "경제 성장률", "물가", "실업률"]
-        },
-        "개인 소비 지출": {
-            "basic": "개인들이 물건이나 서비스를 사는 데 쓴 돈을 모두 합한 금액이에요. 소비가 많아지면 경제가 활발해진다고 볼 수 있습니다.",
-            "intermediate": "가계가 재화와 서비스를 구매하는 데 지출한 총액을 의미합니다. 경제 활동의 가장 큰 부분을 차지하며, GDP의 중요한 구성 요소 중 하나입니다. 소비 심리, 소득 수준, 금리 등 다양한 요인에 의해 영향을 받습니다.",
-            "advanced": "개인 소비 지출은 내구재(자동차, 가전제품 등), 비내구재(식료품, 의류 등), 서비스(의료, 교육, 여가 등) 지출로 구분됩니다. 소비 지출 패턴은 경제 구조 변화, 인구 구조 변화, 기술 발전 등 장기적인 추세에 따라 변화하기도 합니다. 정부는 소비 활성화를 위해 세금 감면, 소비 장려 정책 등을 시행할 수 있습니다.",
-            "example": "통계청에 따르면, 2024년 4분기 개인 소비 지출은 전년 동기 대비 3% 증가했습니다. 이는 코로나19 팬데믹 이후 소비 심리가 회복되고 있다는 것을 보여줍니다. 특히 여행, 외식 등 서비스 분야의 소비 증가폭이 컸습니다. 개인 소비 지출 증가는 기업의 매출 증가로 이어져 경제 성장에 긍정적인 영향을 미칠 수 있습니다.",
-            "related": ["소비", "GDP", "소비자 신뢰 지수", "소득", "경제 성장"]
-        },
-        "환율 변동": {
-            "basic": "한 나라 돈의 가치가 다른 나라 돈에 비해 오르거나 내리는 것을 말해요. 환율이 오르면 외국 물건을 사는 데 더 많은 돈이 필요해집니다.",
-            "intermediate": "두 국가 간 통화의 교환 비율이 변하는 현상입니다. 외환 시장에서의 수요와 공급, 국가 간 금리 차이, 경제 성장률 전망, 정치적 안정성 등 다양한 요인에 의해 영향을 받습니다.",
-            "advanced": "환율 변동은 수출입 가격 경쟁력, 외국인 투자 흐름, 국가 간 자본 이동 등에 큰 영향을 미칩니다. 변동 환율 제도에서는 시장의 자율적인 힘에 의해 환율이 결정되지만, 정부나 중앙은행이 외환 시장에 개입하여 환율 변동성을 완화하기도 합니다. 환율 변동은 기업의 수익성, 개인의 해외 여행 비용 등에 직접적인 영향을 미치므로 경제 주체들은 환율 변동 위험에 대비해야 합니다.",
-            "example": "원/달러 환율이 1,300원에서 1,400원으로 상승하면, 미국에서 수입하는 상품의 원화 가격이 상승하여 국내 물가 상승의 원인이 될 수 있습니다. 반대로, 한국에서 미국으로 수출하는 기업은 달러로 받은 대금을 원화로 환전했을 때 더 많은 돈을 받을 수 있어 수출 경쟁력이 높아질 수 있습니다.",
-            "related": ["환율", "외환 시장", "수출", "수입", "국제 수지"]
-        },
-        "경제 성장률": {
-            "basic": "한 나라의 경제 규모가 1년 동안 얼마나 커졌는지 백분율로 나타낸 거예요. 이 비율이 높을수록 경제가 빠르게 발전하고 있다는 의미입니다.",
-            "intermediate": "일정 기간 동안 한 국가의 실질 국내총생산(GDP)이 증가한 비율을 의미합니다. 경제 성과는 국민들의 생활 수준 향상과 직결되기 때문에 중요한 경제 지표로 간주됩니다.",
-            "advanced": "경제 성장률은 노동 투입 증가, 자본 축적, 기술 진보 등 다양한 요인에 의해 영향을 받습니다. 지속 가능한 경제 성장을 위해서는 생산성 향상, 혁신 촉진, 인적 자원 개발 등이 중요합니다. 정부는 경제 성장률을 높이기 위해 재정 정책, 통화 정책, 규제 완화 등 다양한 정책 수단을 활용합니다.",
-            "example": "한국의 2024년 경제 성장률은 2.1%로 예상됩니다. 이는 작년 성장률보다 소폭 상승한 수치이지만, 글로벌 경기 둔화, 고금리 지속 등 여러 위험 요인으로 인해 성장세가 제한적일 수 있다는 분석이 있습니다. 높은 경제 성장률은 일자리 창출, 소득 증대, 삶의 질 향상 등 긍정적인 효과를 가져올 수 있습니다.",
-            "related": ["GDP", "경기 순환", "생산성", "투자", "소비"]
-        },
-        "무역": {
-            "basic": "나라와 나라 사이에 물건이나 서비스를 사고파는 활동을 말해요. 수출은 우리나라 물건을 외국에 파는 것이고, 수입은 외국 물건을 우리나라로 사 오는 것입니다.",
-            "intermediate": "국가 간 재화와 서비스의 이동을 의미합니다. 수출은 국내에서 생산된 재화를 해외로 판매하는 것이고, 수입은 해외에서 생산된 재화를 국내로 구매하는 것입니다. 무역은 국가 간 경제적 상호 의존성을 높이고 경제 성장에 기여합니다.",
-            "advanced": "무역은 비교 우위 이론에 기반하여 국가 간 자원 배분을 효율화하고 소비자의 선택 폭을 넓히는 역할을 합니다. 자유 무역 협정(FTA), 세계 무역 기구(WTO) 등 국제적인 협력을 통해 무역 장벽을 낮추고 자유로운 무역을 촉진하려는 노력이 이루어지고 있습니다. 무역 수지(수출액 - 수입액)는 한 나라의 대외 경쟁력을 나타내는 중요한 지표입니다.",
-            "example": "한국은 반도체, 자동차, 스마트폰 등을 해외 여러 나라에 수출하여 많은 외화를 벌어들이고 있습니다. 반대로, 원유, 천연가스 등 에너지 자원은 대부분 수입에 의존하고 있습니다. 한국의 무역 규모는 세계적으로도 큰 편이며, 무역은 한국 경제 성장의 중요한 동력입니다.",
-            "related": ["수출", "수입", "무역 수지", "자유 무역 협정 (FTA)", "세계 무역 기구 (WTO)"]
-        },
-        "수요와 공급": {
-            "basic": "물건을 사려는 사람들의 욕구(수요)와 팔려는 사람들의 능력(공급)이 만나서 가격이 결정되는 원리예요. 수요가 많으면 가격이 오르고, 공급이 많으면 가격이 내립니다.",
-            "intermediate": "경제학의 가장 기본적인 개념으로, 수요는 특정 가격에서 소비자들이 구매하고자 하는 재화나 서비스의 양을 의미하고, 공급은 특정 가격에서 생산자들이 판매하고자 하는 재화나 서비스의 양을 의미합니다. 시장 가격은 수요와 공급의 균형점에서 결정됩니다.",
-            "advanced": "수요 곡선은 가격과 수요량 간의 음의 관계를, 공급 곡선은 가격과 공급량 간의 양의 관계를 나타냅니다. 수요와 공급에 영향을 미치는 요인으로는 소득 수준, 선호도, 대체재 가격, 생산 기술, 생산 요소 가격 등이 있습니다. 시장 균형은 수요 곡선과 공급 곡선이 만나는 점에서 이루어지며, 이때의 가격과 거래량을 균형 가격과 균형 거래량이라고 합니다.",
-            "example": "여름철에 아이스크림 수요가 증가하면 아이스크림 가격이 오르는 경향이 있습니다. 반대로, 특정 스마트폰 모델의 생산량이 늘어나 공급이 증가하면 가격이 하락할 수 있습니다. 정부는 특정 상품의 가격 안정을 위해 수요를 억제하거나 공급을 확대하는 정책을 시행하기도 합니다.",
-            "related": ["시장 가격", "균형 가격", "수요 곡선", "공급 곡선", "시장 경제"]
-        },
-        "시장 경제": {
-            "basic": "물건이나 서비스의 가격이 정부의 통제 없이 자유롭게 수요와 공급에 따라 결정되는 경제 시스템이에요. 대부분의 나라가 이 방식을 따르고 있습니다.",
-            "intermediate": "개인의 자유로운 경제 활동과 사유 재산권을 보장하고, 시장에서의 자유로운 경쟁을 통해 자원이 배분되는 경제 체제입니다. 가격 메커니즘이 자원 배분의 핵심적인 역할을 수행합니다.",
-            "advanced": "시장 경제는 효율적인 자원 배분, 혁신 촉진, 소비자 선택의 다양성 확보 등의 장점을 가지지만, 소득 불균형 심화, 환경 문제 악화, 시장 실패 가능성 등의 단점도 안고 있습니다. 정부는 시장 경제의 효율성을 유지하면서도 이러한 문제점을 해결하기 위해 법률 제정, 규제, 공공 서비스 제공 등의 역할을 수행합니다.",
-            "example": "한국, 미국, 일본 등 대부분의 국가들은 시장 경제 체제를 채택하고 있습니다. 이들 국가에서는 기업들이 자유롭게 제품을 생산하고 판매하며, 소비자들은 자신의 소득과 선호에 따라 원하는 제품을 선택할 수 있습니다. 정부는 독과점 규제, 환경 보호, 소비자 보호 등 시장의 공정한 경쟁과 효율성을 위한 최소한의 개입을 합니다.",
-            "related": ["수요와 공급", "가격", "자유 경쟁", "정부 개입", "계획 경제"]
-        },
-        "자본": {
-            "basic": "돈이나 공장, 기계처럼 물건을 만들거나 서비스를 제공하는 데 사용되는 모든 것을 말해요. 투자를 통해 늘릴 수 있습니다.",
-            "intermediate": "생산 활동에 사용되는 모든 재화와 서비스를 의미합니다. 금융 자본(돈), 실물 자본(기계, 건물, 설비 등), 인적 자본(노동자의 기술과 지식) 등으로 구분됩니다. 자본은 생산성을 향상시키고 경제 성장을 촉진하는 중요한 요소입니다.",
-            "advanced": "경제학에서 자본은 이윤을 목적으로 사용되는 생산 수단을 의미하며, 고정 자본(장기간 사용되는 자산)과 유동 자본(단기간 사용되는 자산)으로 나눌 수 있습니다. 자본 축적은 경제 성장의 핵심 동력이며, 효율적인 자본 배분은 경제 시스템의 효율성을 높이는 데 중요한 역할을 합니다. 자본 시장은 자금 공급자와 수요자를 연결하여 자본의 효율적인 배분을 돕습니다.",
-            "example": "A씨는 사업 확장을 위해 은행에서 대출을 받아 새로운 공장을 건설했습니다. 이때 대출금과 건설된 공장은 A씨 회사의 자본에 해당합니다. B회사는 직원들의 업무 능력을 향상시키기 위해 교육 프로그램을 운영하고 있습니다. 이는 B회사의 인적 자본을 증진시키는 활동입니다.",
-            "related": ["투자", "생산", "노동", "자본 시장", "금융"]
-        },
-        "노동": {
-            "basic": "사람들이 일하는 모든 활동을 말해요. 육체적인 노동뿐만 아니라 정신적인 노동도 포함됩니다.",
-            "intermediate": "재화나 서비스를 생산하기 위해 인간이 투입하는 모든 노력과 능력을 의미합니다. 노동력은 노동 시장에서 공급되며, 임금은 노동에 대한 대가로 지급됩니다. 노동 생산성은 경제 성장의 중요한 요소입니다.",
-            "advanced": "노동은 숙련 노동과 비숙련 노동, 육체 노동과 정신 노동 등으로 구분될 수 있습니다. 노동 시장의 수요와 공급은 임금 수준과 고용량에 영향을 미치며, 노동 조합은 노동자들의 권익 보호를 위해 활동합니다. 인적 자본 투자는 노동 생산성을 향상시키고 경제 성장에 기여하는 중요한 요소입니다.",
-            "example": "공장에서 제품을 조립하는 노동, 사무실에서 컴퓨터로 업무를 처리하는 노동, 학교에서 학생들을 가르치는 노동 모두 경제 활동에 기여하는 노동에 해당합니다. 숙련된 기술을 가진 노동자는 일반적으로 비숙련 노동자보다 높은 임금을 받습니다.",
-            "related": ["임금", "고용", "실업", "노동 시장", "생산성"]
-        },
-        "생산": {
-            "basic": "사람들이 필요로 하는 물건이나 서비스를 만드는 모든 활동을 말해요. 농사를 짓거나, 물건을 만들거나, 교육 서비스를 제공하는 것 등이 모두 생산 활동입니다.",
-            "intermediate": "자연 자원, 자본, 노동 등의 생산 요소를 투입하여 재화나 서비스를 산출하는 과정을 의미합니다. 생산 활동은 경제 시스템의 핵심이며, 소비자의 욕구를 충족시키고 부가가치를 창출합니다.",
-            "advanced": "생산 과정은 기술 수준, 생산 요소의 효율적 결합, 규모의 경제 등 다양한 요인에 의해 영향을 받습니다. 생산성은 투입된 생산 요소 대비 산출량의 비율로 측정되며, 생산성 향상은 경제 성장과 생활 수준 향상의 중요한 원동력입니다. 기업은 생산 비용을 절감하고 효율성을 높이기 위해 끊임없이 노력합니다.",
-            "example": "농부가 씨앗을 뿌리고 물을 주어 곡식을 수확하는 것은 식량을 생산하는 활동입니다. 공장에서 원자재를 가공하여 자동차를 만드는 것은 공업 제품을 생산하는 활동입니다. 학교에서 교사가 학생들에게 지식을 전달하는 것은 교육 서비스를 생산하는 활동입니다.",
-            "related": ["소비", "자본", "노동", "생산성", "시장"]
-        },
-        "소비": {
-            "basic": "사람들이 물건이나 서비스를 사서 사용하는 모든 활동을 말해요. 우리가 먹고, 입고, 사용하는 모든 것이 소비의 결과입니다.",
-            "intermediate": "개인, 가계, 기업 등이 재화나 서비스를 구매하여 자신의 욕구를 충족시키는 행위를 의미합니다. 소비는 경제 활동의 최종 단계이며, 생산된 재화와 서비스가 사용되는 과정입니다.",
-            "advanced": "소비는 개인의 소득 수준, 선호도, 미래에 대한 기대, 광고 등 다양한 요인에 의해 영향을 받습니다. 총수요의 중요한 구성 요소이며, 소비 지출은 경제 성장률에 큰 영향을 미칩니다. 정부는 경기 부양을 위해 소비를 촉진하는 정책을 시행하기도 합니다.",
-            "example": "A씨가 배가 고파서 빵을 사 먹거나, 추워서 옷을 사는 행위는 모두 소비입니다. 기업이 생산 활동에 필요한 원자재를 구매하거나, 새로운 설비에 투자하는 것도 소비의 한 형태입니다. 소비는 생산 활동의 동기가 되며, 경제 순환의 중요한 부분을 차지합니다.",
-            "related": ["생산", "수요", "개인 소비 지출", "소비자 신뢰 지수", "시장"]
-        },
-        "저축": {
-            "basic": "현재 쓰지 않고 남겨두는 돈을 말해요. 미래에 필요할 때 사용하거나 투자를 할 수 있습니다.",
-            "intermediate": "현재 소득에서 소비하지 않고 남은 부분을 의미합니다. 개인의 미래를 위한 대비, 주택 구입, 노후 자금 마련 등 다양한 목적으로 이루어집니다. 저축은 장기적인 자산 형성의 기본이며, 경제 전체적으로는 투자 재원의 원천이 됩니다.",
-            "advanced": "저축률은 가처분 소득에서 저축이 차지하는 비율로 측정되며, 국가별, 시대별로 큰 차이를 보입니다. 저축은 개인의 재정 안정뿐만 아니라 국가 경제의 성장에도 중요한 역할을 합니다. 높은 저축률은 투자 확대로 이어져 경제 성장을 촉진할 수 있지만, 과도한 저축은 소비 위축을 초래하여 경기 침체를 야기할 수도 있습니다.",
-            "example": "직장인 A씨는 매월 월급의 30%를 저축하고 있습니다. 그는 5년 후 주택 구입 자금을 마련하는 것을 목표로 정기 예금에 가입했습니다. 은퇴를 앞둔 B씨는 노후 생활 자금을 위해 연금 저축에 가입하여 매월 일정 금액을 납입하고 있습니다.",
-            "related": ["투자", "예금", "적금", "자산", "소득"]
-        },
-        "보험": {
-            "basic": "미래에 예상치 못한 사고나 손해가 발생했을 때 경제적인 도움을 받을 수 있도록 미리 돈을 내는 제도예요.",
-            "intermediate": "미래의 불확실한 위험에 대비하기 위해 다수의 사람들이 공동으로 자금을 조성하여 사고 발생 시 약속된 보상을 받는 금융 상품입니다. 위험 분산의 원리에 기반하며, 다양한 종류의 보험 상품이 존재합니다.",
-            "advanced": "보험은 위험 관리의 중요한 수단으로, 개인 및 기업의 재정적 안정성을 확보하는 데 기여합니다. 보험 회사는 보험 계약자로부터 받은 보험료를 기반으로 보험금을 지급하며, 보험료는 위험 발생 가능성, 보장 범위 등에 따라 결정됩니다. 보험 산업은 금융 시스템의 중요한 부분을 차지하며, 사회 안전망 구축에도 기여합니다.",
-            "example": "A씨는 자동차 사고에 대비하기 위해 자동차 보험에 가입했습니다. 사고 발생 시 보험 회사는 A씨의 차량 수리비 및 상대방 피해 보상금을 지급합니다. B씨는 건강 보험에 가입하여 병원 진료비 부담을 줄일 수 있습니다. 기업은 화재 보험에 가입하여 예상치 못한 화재 발생 시 재산 손실을 보상받을 수 있습니다.",
-            "related": ["위험", "보장", "보험료", "보험금", "금융"]
-        },
-        "연금": {
-            "basic": "나이가 들어 일을 할 수 없게 되었을 때 생활비를 받을 수 있도록 미리 준비하는 제도예요. 국민연금, 개인연금 등이 있습니다.",
-            "intermediate": "노후 소득 보장을 위해 가입하는 저축 상품 또는 제도입니다. 일정 기간 동안 보험료를 납입하고 은퇴 후 정기적으로 연금을 수령하는 방식으로 운영됩니다. 국민연금, 퇴직연금, 개인연금 등 다양한 종류가 있습니다.",
-            "advanced": "연금은 노후의 안정적인 소득원을 제공하여 삶의 질을 유지하는 데 중요한 역할을 합니다. 국민연금은 국가가 운영하는 공적 연금으로, 소득 재분배 기능을 수행합니다. 퇴직연금은 기업이 근로자의 퇴직금을 적립하여 운용하는 제도이며, 개인연금은 개인이 자율적으로 가입하는 연금 상품입니다. 연금 제도는 고령화 사회에서 더욱 중요성이 강조되고 있습니다.",
-            "example": "직장인 A씨는 매월 월급에서 국민연금 보험료를 납부하고 있습니다. 그는 은퇴 후 매달 일정 금액의 국민연금을 받게 됩니다. B씨는 노후 준비를 위해 개인연금 보험에 가입하여 매년 세액 공제 혜택을 받고 있습니다. C회사는 직원들의 퇴직 후 생활 안정을 위해 퇴직연금 제도를 운영하고 있습니다.",
-            "related": ["노후", "소득", "국민연금", "퇴직연금", "개인연금"]
-        },
-        "예산": {
-            "basic": "정부나 개인이 앞으로 얼마의 돈을 벌고, 어디에 얼마나 쓸 것인지 미리 계획해 놓은 것을 말해요.",
-            "intermediate": "일정 기간 동안의 예상 수입과 지출을 계획적으로 나타낸 문서입니다. 정부, 기업, 가계 등 모든 경제 주체가 효율적인 자원 관리를 위해 예산을 수립합니다.",
-            "advanced": "정부 예산은 국가의 정책 목표를 달성하기 위한 재정 계획으로, 세입 예산과 세출 예산으로 구성됩니다. 예산 편성 과정은 정부 부처의 요구, 경제 상황, 정책 우선순위 등을 종합적으로 고려하여 이루어집니다. 국회 심의를 거쳐 확정된 예산은 정부의 재정 집행의 근거가 됩니다. 개인 예산은 소득 범위 내에서 합리적인 소비 계획을 수립하고 재정적 안정을 도모하는 데 중요한 역할을 합니다.",
-            "example": "정부는 내년도 예산안을 발표하면서 경제 성장률 전망, 세수 추이, 주요 정책 추진 방향 등을 설명했습니다. 교육 분야 예산은 올해보다 증가했으며, 사회 복지 분야 예산은 감소했습니다. A씨는 매달 가계 예산을 작성하여 소득과 지출을 관리하고 있습니다. 그는 식비, 주거비, 교통비 등 항목별로 예산을 정하고 계획적인 소비를 실천하고 있습니다.",
-            "related": ["정부 지출", "세수", "재정 정책", "소득", "지출"]
-        },
-        "정부 지출": {
-            "basic": "정부가 국민들을 위해 돈을 쓰는 모든 활동을 말해요. 도로를 만들거나, 학교를 짓거나, 복지 정책을 시행하는 데 돈을 쓰는 것이 정부 지출입니다.",
-            "intermediate": "정부가 재화와 서비스를 구매하거나 이전 지출을 하는 모든 행위를 의미합니다. 국방, 교육, 복지, 사회 기반 시설 건설 등 다양한 분야에 걸쳐 이루어지며, 경제 활동에 큰 영향을 미칩니다.",
-            "advanced": "정부 지출은 경제 주체별 기능에 따라 소비 지출, 투자 지출, 이전 지출 등으로 구분됩니다. 정부 지출은 총수요에 직접적인 영향을 미치며, 경기 조절, 소득 재분배, 공공 서비스 제공 등 다양한 정책 목표 달성을 위한 중요한 수단으로 활용됩니다. 정부 지출 규모와 구성은 국가의 경제 상황, 사회적 요구, 정치적 결정 등에 따라 달라집니다.",
-            "example": "정부는 경기 침체 극복을 위해 사회 기반 시설 건설 예산을 확대했습니다. 이는 정부 지출 증가를 통해 일자리를 창출하고 경제 활동을 활성화하려는 정책입니다. 또한, 정부는 저소득층 지원을 위해 복지 예산을 늘리고 있습니다. 이는 소득 불균형을 완화하고 사회 안전망을 강화하기 위한 노력입니다.",
-            "related": ["예산", "세수", "재정 정책", "경제 성장", "복지"]
-        },
-        "세수": {
-            "basic": "정부가 세금을 걷어서 얻는 수입을 말해요. 이 세수로 정부는 여러 가지 공공 서비스를 제공합니다.",
-            "intermediate": "정부가 법률에 따라 개인이나 기업으로부터 징수하는 세금의 총액을 의미합니다. 소득세, 법인세, 부가가치세, 재산세 등 다양한 세목으로 구성되며, 정부 재정의 주요 수입원입니다.",
-            "advanced": "세수는 경제 성장률, 소득 수준, 소비 규모 등 다양한 경제 변수에 영향을 받습니다. 정부는 세수 확보를 위해 세법을 개정하거나 새로운 세목을 신설하기도 합니다. 충분한 세수는 정부가 공공 서비스를 안정적으로 제공하고 재정 정책을 효과적으로 수행하는 데 필수적입니다. 세수 부족은 정부 부채 증가, 공공 서비스 축소 등으로 이어질 수 있습니다.",
-            "example": "경기가 호황일 때는 기업 이익이 늘고 개인 소득이 증가하여 정부의 세수도 증가하는 경향이 있습니다. 반대로 경기 침체 시에는 세수가 감소하여 정부 재정에 어려움이 발생할 수 있습니다. 정부는 세수 전망을 바탕으로 예산을 편성하고 재정 정책 방향을 결정합니다.",
-            "related": ["세금", "예산", "정부 지출", "재정 정책", "경제 성장"]
-        },
-        "통화": {
-            "basic": "나라에서 돈으로 사용하는 것들을 말해요. 우리나라에서는 원(₩)을 사용하고, 미국에서는 달러($)를 사용합니다.",
-            "intermediate": "한 국가 내에서 가치 교환의 매개체, 가치 저장의 수단, 회계의 단위로 사용되는 모든 것을 의미합니다. 지폐, 동전, 수표, 예금 계좌 잔액 등이 포함될 수 있습니다.",
-            "advanced": "통화는 중앙은행에 의해 발행되고 관리되며, 법정 통화와 민간 통화로 구분될 수 있습니다. 통화 정책은 통화량과 신용 조건을 조절하여 물가 안정과 경제 성장을 목표로 합니다. 환율은 한 국가 통화의 가치를 다른 국가 통화로 표시한 비율이며, 국제 무역 및 금융 거래에 중요한 역할을 합니다.",
-            "example": "한국에서는 식료품을 사거나 대중교통을 이용할 때 원화로 결제합니다. 미국 여행 시에는 원화를 달러로 환전하여 사용해야 합니다. 최근에는 디지털 기술 발전에 따라 암호화폐와 같은 새로운 형태의 통화도 등장하고 있습니다.",
-            "related": ["환율", "중앙은행", "통화 정책", "화폐", "암호화폐"]
-        },
-        "금융 위기": {
-            "basic": "나라 전체 또는 전 세계의 금융 시스템이 심각하게 불안정해지는 상황을 말해요. 은행이 문을 닫거나, 주가가 크게 떨어지는 등의 현상이 나타날 수 있습니다.",
-            "intermediate": "금융 시스템의 기능이 심각하게 저해되고 광범위한 경제적 혼란을 야기하는 상황을 의미합니다. 자산 가격 급락, 금융 기관 부실, 신용 경색, 경기 침체 등이 동반될 수 있습니다.",
-            "advanced": "금융 위기는 다양한 원인으로 발생할 수 있으며(예: 자산 버블 붕괴, 과도한 부채, 금융 규제 실패 등), 그 파급 효과는 실물 경제 전반으로 확산될 수 있습니다. 정부와 중앙은행은 금융 시스템 안정을 위해 긴급 유동성 공급, 금리 인하, 부실 자산 정리 등 다양한 정책적 대응을 시도합니다. 주요 금융 위기로는 1997년 아시아 외환 위기, 2008년 글로벌 금융 위기 등이 있습니다.",
-            "example": "2008년 글로벌 금융 위기는 미국의 주택 시장 버블 붕괴에서 시작되어 전 세계 금융 시스템으로 확산되었습니다. 많은 은행과 금융 기관이 파산하거나 큰 손실을 입었고, 주가가 폭락했으며, 실물 경제도 심각한 침체를 겪었습니다. 한국 경제 역시 환율 급등, 수출 감소 등으로 큰 어려움을 겪었습니다.",
-            "related": ["경기 침체", "자산 버블", "신용 경색", "금융 시장", "중앙은행"]
-        },
-        "주가지수": {
-            "basic": "주식 시장 전체의 움직임을 하나의 숫자로 나타낸 거예요. 예를 들어, 코스피나 코스닥 지수가 오르면 전반적으로 주식 가격이 올랐다고 볼 수 있습니다.",
-            "intermediate": "특정 주식 시장 또는 산업군의 주가 변동을 종합적으로 나타내는 지표입니다. 투자자들은 주가지수를 통해 시장 전체의 흐름을 파악하고 투자 성과를 비교하는 기준으로 활용합니다.",
-            "advanced": "주가지수는 산출 방식에 따라 시가총액 가중 방식, 주가 가중 방식, 동일 가중 방식 등으로 구분됩니다. 대표적인 주가지수로는 한국의 코스피, 코스닥, 미국의 다우존스, S&P 500, 나스닥, 일본의 닛케이, 중국의 상하이 종합지수 등이 있습니다. 주가지수는 경기 상황, 기업 실적, 투자 심리 등 다양한 요인에 의해 영향을 받습니다.",
-            "example": "코스피 지수가 3,000을 넘어섰다는 뉴스는 한국 주식 시장에 상장된 기업들의 주가가 전반적으로 상승했다는 것을 의미합니다. 투자자들은 코스피 지수 추이를 보면서 자신의 투자 포트폴리오 성과를 평가하고 향후 투자 전략을 세우는 데 참고합니다.",
-            "related": ["주식 시장", "주가", "시가총액", "투자", "경제 지표"]
-        },
-        "뮤추얼 펀드": {
-            "basic": "여러 사람의 돈을 모아서 전문가가 주식이나 채권 등에 투자하는 펀드의 한 종류예요. 적은 돈으로도 분산 투자를 할 수 있다는 장점이 있습니다.",
-            "intermediate": "투자자로부터 모은 자금을 펀드 매니저가 다양한 자산에 투자하여 수익을 추구하는 펀드입니다. 주식형 펀드, 채권형 펀드, 혼합형 펀드 등 다양한 종류가 있으며, 투자자는 펀드에 투자한 지분에 따라 수익을 배분받습니다.",
-            "advanced": "뮤추얼 펀드는 법적으로 투자 회사 형태로 설립되며, 주식을 발행하여 투자자로부터 자금을 모집합니다. 펀드 매니저는 투자 목표와 전략에 따라 자산을 운용하며, 투자자는 펀드 해지를 통해 투자금을 회수할 수 있습니다. 뮤추얼 펀드는 소액 투자자에게도 전문적인 자산 관리 서비스를 제공하고 분산 투자 기회를 제공한다는 장점이 있습니다. 다만, 운용 보수, 판매 수수료 등의 비용이 발생할 수 있으며, 투자 손실의 위험도 존재합니다.",
-            "example": "A씨는 매월 20만원씩 국내 주식형 뮤추얼 펀드에 투자하고 있습니다. 이 펀드는 여러 종목의 주식에 분산 투자하고 있어 개별 주식 투자보다 위험이 낮습니다. 펀드 매니저는 시장 상황을 분석하여 투자 종목을 변경하고, A씨는 펀드 운용 결과에 따라 수익을 얻거나 손실을 볼 수 있습니다.",
-            "related": ["펀드", "투자", "분산 투자", "펀드 매니저", "수익률"]
-        },
-        "개인 연금": {
-            "basic": "개인이 스스로 노후를 대비하기 위해 가입하는 연금 상품이에요. 세금 혜택을 받을 수 있는 경우가 많습니다.",
-            "intermediate": "개인이 자율적으로 가입하여 노후 자금을 마련하는 사적 연금입니다. 연금저축, 연금보험, 퇴직연금(개인형 IRP) 등 다양한 종류가 있으며, 세액 공제 등 세제 혜택이 주어지는 경우가 많습니다.",
-            "advanced": "개인 연금은 공적 연금(국민연금)의 부족분을 보완하고, 개인의 노후 소득을 안정적으로 확보하는 데 중요한 역할을 합니다. 가입자는 자신의 소득 수준, 투자 성향, 은퇴 목표 등에 따라 적합한 개인 연금 상품을 선택할 수 있으며, 장기적인 관점에서 꾸준히 납입하는 것이 중요합니다. 연금 수령 시에는 연금 소득세가 부과될 수 있습니다.",
-            "example": "직장인 B씨는 노후 준비를 위해 매년 연금저축에 400만원씩 납입하고 세액 공제 혜택을 받고 있습니다. 그는 55세 이후부터 이 연금을 매달 일정 금액씩 수령하여 노후 생활비로 사용할 계획입니다. 자영업자 C씨는 소득이 불규칙하여 퇴직연금(개인형 IRP)에 여유 자금이 있을 때마다 추가 납입하고 있습니다.",
-            "related": ["연금", "노후", "세액 공제", "연금 저축", "퇴직 연금"]
-        },
-        "퇴직 연금": {
-            "basic": "회사가 직원들의 퇴직금을 미리 금융기관에 맡겨서 관리해 주는 제도예요. 직원이 퇴직할 때 이 돈을 연금이나 일시금으로 받을 수 있습니다.",
-            "intermediate": "기업이 근로자의 퇴직금을 외부 금융 기관에 적립하여 운용하고, 근로자가 퇴직 시 연금 또는 일시금 형태로 지급받는 제도입니다. 확정 기여형(DC형)과 확정 급여형(DB형)으로 구분됩니다.",
-            "advanced": "퇴직 연금 제도는 근로자의 노후 소득 보장을 강화하고, 기업의 퇴직금 지급 부담을 완화하는 데 기여합니다. 확정 기여형은 근로자가 직접 투자 상품을 선택하고 운용 성과에 따라 퇴직금이 변동되는 방식이며, 확정 급여형은 퇴직 시 미리 정해진 금액을 지급받는 방식입니다. 퇴직 연금은 세제 혜택이 주어지며, 근로자는 퇴직 후 안정적인 노후 생활을 위한 자금으로 활용할 수 있습니다.",
-            "example": "A회사는 직원들을 위해 확정 기여형(DC형) 퇴직 연금 제도를 운영하고 있습니다. 직원들은 매년 회사에서 지급하는 퇴직금을 자신의 계좌로 받아 다양한 투자 상품에 투자할 수 있습니다. B회사는 확정 급여형(DB형) 퇴직 연금 제도를 운영하고 있으며, 직원이 퇴직할 때 근속 기간과 임금 수준에 따라 미리 정해진 퇴직금을 지급합니다.",
-            "related": ["연금", "퇴직금", "확정 기여형 (DC형)", "확정 급여형 (DB형)", "노후"]
-        },
-        "부동산": {
-            "basic": "땅이나 건물처럼 움직일 수 없는 재산을 말해요. 집, 상가, 토지 등이 부동산에 해당합니다.",
-            "intermediate": "토지 및 그 정착물(건물 등)을 의미하는 유형 자산입니다. 주거, 상업, 공업 등 다양한 용도로 활용되며, 투자 대상으로서도 중요한 역할을 합니다. 부동산 가격은 시장 수급, 정부 정책, 경제 상황 등 다양한 요인에 의해 영향을 받습니다.",
-            "advanced": "부동산은 물리적 특성(부동성, 개별성, 영속성, 용도 다양성)과 경제적 특성(수요 및 공급의 비탄력성, 외부 효과, 높은 가격)을 가지고 있습니다. 부동산 투자는 장기적인 관점에서 안정적인 수익을 기대할 수 있지만, 유동성이 낮고 거래 비용이 높다는 단점도 있습니다. 정부는 부동산 시장 안정을 위해 다양한 규제 정책을 시행합니다.",
-            "example": "A씨는 서울에 있는 아파트를 구입하여 거주하고 있습니다. 이 아파트는 A씨의 중요한 부동산 자산입니다. B회사는 사업 확장을 위해 공장을 지을 수 있는 토지를 매입했습니다. 부동산은 개인의 주거 공간뿐만 아니라 기업의 생산 활동, 상업 활동 등 다양한 경제 활동의 기반이 됩니다.",
-            "related": ["자산", "투자", "주택", "토지", "상가"]
-        },
-        "가상화폐 지갑": {
-            "basic": "암호화폐를 보관하고 관리하는 디지털 공간이에요. 은행 계좌와 비슷한 역할을 하지만, 암호화폐만 보관할 수 있습니다.",
-            "intermediate": "암호화폐를 안전하게 보관, 전송, 수신하기 위해 사용되는 소프트웨어 또는 하드웨어 장치입니다. 개인 키와 공개 키를 관리하며, 거래 내역을 확인하는 기능을 제공합니다.",
-            "advanced": "가상화폐 지갑은 핫 월렛(온라인 연결)과 콜드 월렛(오프라인 보관)으로 구분됩니다. 핫 월렛은 사용 편의성이 높지만 보안에 취약할 수 있으며, 콜드 월렛은 보안성이 높지만 사용이 다소 불편합니다. 개인 키 관리가 매우 중요하며, 키를 분실하면 암호화폐에 접근할 수 없게 됩니다.",
-            "example": "A씨는 비트코인을 구매한 후 보안을 위해 콜드 월렛에 보관하고 있습니다. 그는 필요할 때마다 콜드 월렛을 이용하여 비트코인을 다른 사람에게 전송하거나 온라인 쇼핑몰에서 결제할 수 있습니다. B씨는 스마트폰 앱 형태의 핫 월렛을 사용하여 간편하게 암호화폐를 거래하고 있습니다.",
-            "related": ["암호화폐", "비트코인", "개인 키", "공개 키", "블록체인"]
-        },
-        "스마트 계약": {
-            "basic": "블록체인 기술을 이용해서 계약 내용을 자동으로 실행하도록 만든 디지털 계약이에요. 계약 조건이 충족되면 자동으로 거래가 이루어집니다.",
-            "intermediate": "블록체인 네트워크 상에서 특정 조건이 충족되면 자동으로 실행되도록 프로그래밍된 계약입니다. 계약의 투명성, 보안성, 효율성을 높일 수 있으며, 중개인 없이 개인 간의 거래를 가능하게 합니다.",
-            "advanced": "스마트 계약은 이더리움과 같은 특정 블록체인 플랫폼에서 주로 사용되며, 솔리디티와 같은 프로그래밍 언어로 작성됩니다. 탈중앙화된 애플리케이션(DApp), 탈중앙화 금융(DeFi), 공급망 관리 등 다양한 분야에서 활용될 수 있습니다. 스마트 계약은 계약 당사자 간의 신뢰 없이도 안전하고 투명한 거래를 보장할 수 있다는 장점이 있습니다.",
-            "example": "A씨는 B씨에게 스마트 계약을 통해 부동산 임대 계약을 체결했습니다. 계약 조건에 따라 매달 A씨의 계좌에서 B씨의 계좌로 임대료가 자동으로 이체됩니다. 만약 A씨가 정해진 날짜까지 임대료를 지불하지 않으면 스마트 계약은 자동으로 계약 위반 사실을 기록하고 B씨에게 통보합니다.",
-            "related": ["블록체인", "이더리움", "탈중앙화", "계약", "탈중앙화 애플리케이션 (DApp)"]
-        },
-        "NFT (Non-Fungible Token)": {
-            "basic": "대체 불가능한 토큰이라는 뜻으로, 디지털 자산의 소유권을 증명하는 특별한 암호화폐예요. 그림, 음악, 영상 등 다양한 디지털 콘텐츠의 원본임을 증명하는 데 사용됩니다.",
-            "intermediate": "블록체인 기술을 기반으로 발행되는 고유한 디지털 자산으로, 각각의 토큰이 서로 다른 가치를 지닙니다. 예술 작품, 게임 아이템, 부동산 소유권 등 다양한 형태의 디지털 또는 실물 자산에 대한 소유권을 나타낼 수 있습니다.",
-            "advanced": "NFT는 이더리움 블록체인의 ERC-721 표준 등을 통해 발행되며, 스마트 계약을 통해 소유권, 거래 기록 등이 투명하게 관리됩니다. NFT는 디지털 콘텐츠 창작자에게 새로운 수익 모델을 제공하고, 수집가에게는 희소성 있는 디지털 자산을 소유할 수 있는 기회를 제공합니다. 최근에는 메타버스, 게임 등 다양한 분야에서 NFT의 활용이 확대되고 있습니다.",
-            "example": "디지털 아티스트 A씨는 자신의 그림을 NFT로 발행하여 온라인 경매에서 판매했습니다. 구매자는 이 NFT를 통해 그림의 원본 소유권을 주장할 수 있습니다. 게임 개발사 B는 게임 내 아이템을 NFT로 발행하여 사용자 간의 자유로운 거래를 지원하고 있습니다. 사용자는 자신이 획득한 희귀 아이템 NFT를 다른 사용자에게 판매하여 수익을 얻을 수 있습니다.",
-            "related": ["블록체인", "암호화폐", "디지털 자산", "스마트 계약", "메타버스"]
-        },
-        "중앙은행 디지털 화폐 (CBDC)": {
-            "basic": "나라의 중앙은행이 발행하는 디지털 형태의 돈이에요. 현재 우리가 사용하는 지폐나 동전과 같은 역할을 하지만, 디지털 형태로 발행되고 관리된다는 점이 다릅니다.",
-            "intermediate": "중앙은행이 직접 발행하고 관리하는 디지털 형태의 법정 통화입니다. 기존의 전자 화폐와 달리 중앙은행이 직접 발행 주체가 되며, 지급 결제 시스템의 효율성 향상, 금융 포용성 증대, 통화 정책 효과 제고 등을 목표로 합니다.",
-            "advanced": "CBDC는 계좌 기반 방식과 토큰 기반 방식으로 구분될 수 있으며, 발행 및 유통 방식, 개인 정보 보호 수준, 금융 안정성에 미치는 영향 등 다양한 측면에서 연구가 진행 중입니다. CBDC는 기존 금융 시스템과 상호 운용성을 확보하고, 민간 디지털 화폐와의 경쟁 및 협력 관계를 설정하는 것이 중요한 과제입니다. 여러 나라에서 CBDC 도입을 위한 연구 및 시범 사업을 진행하고 있습니다.",
-            "example": "한국은행은 CBDC 발행 가능성을 연구하고 있으며, 모의 실험을 통해 기술적 및 정책적 이슈를 점검하고 있습니다. 만약 CBDC가 발행된다면 사람들은 스마트폰 앱 등을 통해 디지털 원화를 보유하고 사용할 수 있게 되며, 금융기관을 거치지 않고 개인 간 송금이 가능해질 수 있습니다.",
-            "related": ["중앙은행", "디지털 화폐", "법정 통화", "블록체인", "금융 포용성"]
-        },
-            "펀드": { 
-                "basic": "여러 사람들의 돈을 모아서 전문가가 주식이나 채권 등에 대신 투자해주고, 그 결과를 투자자들에게 나눠주는 금융 상품이에요. 혼자 투자하기 어려울 때 이용하면 편리해요.",
-                "intermediate": "자산운용사가 다수의 투자자로부터 자금을 모아 주식, 채권, 부동산 등 다양한 자산에 분산 투자하고, 그 운용 성과를 투자자에게 배분하는 간접 투자 상품입니다. 투자 대상과 전략에 따라 주식형, 채권형, 혼합형, MMF 등 다양한 종류가 있습니다.",
-                "advanced": "집합투자기구의 일종으로, 투자자들의 자금을 모아 전문 운용인력이 특정 투자 목적(예: 성장주 투자, 가치주 투자, 인덱스 추종)에 따라 운용하는 금융상품입니다. 운용 방식(액티브/패시브), 투자 대상, 환매 가능 여부 등에 따라 분류되며, 운용보수, 판매수수료 등의 비용이 발생합니다. 펀드는 분산투자를 용이하게 하지만, 원금 손실 위험이 있습니다.",
-                "example": "사회초년생 이씨는 매월 30만원씩 국내 주식형 펀드에 적립식으로 투자하고 있습니다. 전문가가 여러 우량 기업 주식에 분산 투자해주므로, 개별 종목 선택의 어려움 없이 주식 시장 성장의 혜택을 기대할 수 있습니다. 3년 후, 코스피 지수가 20% 상승하여 이씨의 펀드 평가액도 약 1,200만원(원금 1,080만원 + 수익 120만원)으로 증가했습니다. (단, 실제 수익률은 운용 성과 및 보수/수수료에 따라 달라짐)",
-                "related": ["주식형펀드", "채권형펀드", "ETF", "운용보수", "간접투자"]
-            } 
-        };  
+    const dictionary = [
+      { key: ["ETF","etf","상장지수펀드"], title: "ETF", desc: ["여러 주식/채권을 한 바구니로 담아 만든 상품이에요.","주식처럼 쉽게 사고팔 수 있어요.","한 번에 분산투자하는 느낌이라 위험을 줄이는 데 도움 돼요."], example: "한 회사 주식만 사기 무서우면, 여러 회사를 한 번에 담은 ETF를 한 주 사는 식으로 시작할 수 있어요." },
+      { key: ["비트코인","Bitcoin","BTC","btc"], title: "비트코인", desc: ["인터넷에서 쓰는 디지털 돈(암호화폐) 중 가장 유명해요.","은행 없이도 사람들끼리 직접 보낼 수 있어요.","가격이 많이 오르내려서 조심해야 해요."], example: "친구에게 ‘비트코인으로 보내줄게’ 하고, 지갑 주소로 바로 보내는 방식이 가능해요(하지만 가격 변동이 커요)." },
+      { key: ["양적완화","QE","Quantitative Easing"], title: "양적완화", desc: ["중앙은행이 시장에 돈을 많이 풀어주는 정책이에요.","경기가 너무 침체될 때 경제를 살리려는 목적이에요.","금리가 내려가거나 자산 가격이 오르는 일이 생길 수 있어요."], example: "경기가 너무 안 좋아서 사람들이 돈을 안 쓰면, 중앙은행이 돈을 풀어 ‘숨통’을 트이게 하려는 거예요." },
+      { key: ["기준금리","기준 금리","policy rate","Policy Rate"], title: "기준금리", desc: ["나라에서 ‘기본 금리’ 역할을 하는 아주 중요한 금리예요.","오르면 대출 이자가 비싸지고, 내리면 싸지는 경향이 있어요.","물가와 경기를 조절하는 손잡이 같은 역할을 해요."], example: "기준금리가 오르면 우리 집 대출 이자가 늘어서, 같은 월급으로 쓸 돈이 줄어들 수 있어요." },
+      { key: ["DSR","dsr","총부채원리금상환비율"], title: "DSR", desc: ["내 소득에 비해 ‘빚 갚는 부담’이 얼마나 큰지 보는 숫자예요.","모든 대출의 원금+이자를 합쳐서 계산해요.","높으면 대출이 더 어려워져요."], example: "용돈이 10만 원인데 매달 갚아야 할 돈이 8만 원이면, 새로 빌리기가 어려운 것처럼 생각하면 돼요." },
+      { key: ["LTV","ltv","주택담보인정비율","담보인정비율"], title: "LTV", desc: ["집값 대비 ‘얼마까지 대출해줄지’ 정한 비율이에요.","집이 1억이고 LTV 70%면 최대 7천만 원 정도까지예요.","집값 과열을 막기 위해 비율을 조절하기도 해요."], example: "1억짜리 집을 살 때, 은행이 ‘최대 7천만 원까지만 빌려줄게’라고 말하는 기준이 LTV예요." },
+      { key: ["PER","per","주가수익비율"], title: "PER", desc: ["주가가 ‘이익의 몇 배’인지 보는 지표예요.","같은 업종끼리 비교할 때 자주 써요.","숫자가 높으면 기대가 크거나 비싼 편일 수 있어요."], example: "친구 가게 A, B가 비슷한데 A는 이익 10만 원에 가격 100만 원(10배), B는 10만 원에 50만 원(5배) 같은 느낌이에요." },
+      { key: ["PBR","pbr","주가순자산비율"], title: "PBR", desc: ["회사가 가진 순자산에 비해 주가가 몇 배인지 보는 지표예요.","1보다 낮으면 ‘자산보다 싸게’ 거래 중일 수도 있어요.","자산이 중요한 업종에서 특히 참고해요."], example: "장난감이 1만 원어치 있는데 8천 원에 팔리면 ‘가치 대비 싸다’고 느끼는 것과 비슷해요." },
+      { key: ["ROE","roe","자기자본이익률"], title: "ROE", desc: ["주인이 넣은 돈(자기자본)으로 얼마나 잘 벌었는지 보여줘요.","높을수록 돈을 효율적으로 굴린다는 뜻이에요.","같은 업종에서 비교하면 더 좋아요."], example: "용돈 10만 원으로 레몬에이드 장사해서 2만 원 남기면, ‘효율이 좋은 편’이라고 생각하면 돼요." },
+      { key: ["물적분할","물적 분할"], title: "물적분할", desc: ["회사 사업을 떼어내서 ‘새 회사’를 만드는 방식이에요.","기존 주주가 새 회사 주식을 바로 못 받을 수도 있어요.","그래서 주주 입장에선 불리하다고 느낄 때도 있어요."], example: "큰 가게에서 ‘치킨 코너’를 따로 떼어 새 가게로 만들었는데, 기존 주인이 새 가게 몫을 바로 못 받는 상황을 떠올리면 돼요." },
+      { key: ["인적분할","인적 분할"], title: "인적분할", desc: ["회사 사업을 나누되, 기존 주주가 새 회사 주식도 함께 받아요.","주주 구성(비율)이 그대로 나뉘는 느낌이에요.","가치가 더 잘 보이게 만들려는 목적이 있어요."], example: "가게를 ‘치킨 가게’와 ‘피자 가게’로 나눴는데, 기존 주인이 두 가게 지분을 비율대로 그대로 받는 상황이에요." },
+      { key: ["배당금","배당","dividend"], title: "배당금", desc: ["회사가 번 돈 일부를 주주에게 나눠주는 돈이에요.","주식을 들고 있으면 정기적으로 받을 수도 있어요.","주가 상승과 별개로 ‘현금 흐름’이 생겨요."], example: "가게 주인이 이익이 나면 ‘주주들한테 용돈 나눠줄게’ 하고 돈을 나눠주는 거예요." },
+      { key: ["채권","bond","BOND"], title: "채권", desc: ["정부나 회사에 돈을 빌려주고, 이자를 받는 약속이에요.","만기에는 원금을 돌려받는 게 기본이에요.","보통 주식보다 안정적이지만 수익도 낮은 편이에요."], example: "친구에게 10만 원 빌려주고 ‘매달 천 원 이자 줄게, 나중에 10만 원 돌려줄게’라고 약속받는 것과 비슷해요." },
+      { key: ["분산투자","분산 투자","diversification"], title: "분산투자", desc: ["돈을 여러 곳에 나눠 넣어 위험을 줄이는 방법이에요.","한 곳이 망가져도 다른 곳이 받쳐줘요.","장기 투자에서 특히 중요한 습관이에요."], example: "한 바구니에 달걀을 다 담지 말고, 여러 바구니에 나눠 담는 것처럼요." },
+      { key: ["달러 인덱스","달러인덱스","DXY","dxy"], title: "달러 인덱스", desc: ["달러가 다른 주요 통화들보다 얼마나 강한지 보여줘요.","오르면 달러가 강해졌다는 뜻이에요.","해외 투자, 수입 물가에 영향을 줄 수 있어요."], example: "달러가 강해지면 해외 여행에서 같은 원화로 바꿀 수 있는 달러가 줄어들 수 있어요." },
+      { key: ["환율","원달러","원/달러","FX"], title: "환율", desc: ["우리 돈과 다른 나라 돈을 바꾸는 ‘교환 가격’이에요.","환율이 오르면 외국 돈(예: 달러)이 더 비싸져요.","수입/수출, 여행, 해외 투자에 크게 영향을 줘요."], example: "원/달러가 1300원→1400원이 되면, 달러 100달러 바꾸는 데 13만 원이 아니라 14만 원이 필요해요." },
+      { key: ["물가상승률","물가 상승률","인플레이션율"], title: "물가상승률", desc: ["물건과 서비스 가격이 평균적으로 얼마나 올랐는지예요.","높으면 같은 돈으로 살 수 있는 게 줄어들어요.","그래서 생활비 부담이 커질 수 있어요."], example: "작년에 1,000원이던 빵이 올해 1,100원이 되면, 물가가 오른 거예요." },
+      { key: ["금리","이자율","interest rate"], title: "금리", desc: ["돈을 빌릴 때 내는 ‘사용료’이고, 맡길 때 받는 ‘보상’이에요.","금리가 오르면 대출 부담은 늘고, 예금 이자는 늘어요.","경제 상황에 따라 중앙은행이 조절해요."], example: "은행에 돈을 맡기면 ‘고마워!’ 하고 이자를 주고, 돈을 빌리면 ‘사용료’로 이자를 내는 거예요." },
+      { key: ["가계부채","가계 부채","household debt"], title: "가계부채", desc: ["가정이 은행 등에서 빌린 돈의 총합이에요.","너무 많으면 이자 때문에 쓸 돈이 줄 수 있어요.","경제 전체에도 위험이 될 수 있어 관리가 중요해요."], example: "월급은 그대로인데 대출 이자가 늘면, 외식이나 여행에 쓸 돈이 줄어드는 것처럼요." },
+      { key: ["액면분할","주식 split","주식 분할","stock split"], title: "액면분할(주식 분할)", desc: ["한 주를 여러 주로 쪼개서 ‘한 주 가격’을 낮추는 거예요.","총가치는 그대로인데 조각이 많아지는 느낌이에요.","사기 쉬워져 거래가 늘길 기대하기도 해요."], example: "피자 1판을 4조각에서 8조각으로 나누면, 한 조각 값은 내려가지만 피자 전체 양은 같아요." },
 
- // DOM 요소 참조
-    const searchInput = document.getElementById('search-input');
-    const clearButton = document.getElementById('clear-button');
-    const searchButton = document.getElementById('search-button');
-    const resultsContainer = document.getElementById('results-container');
-    const noResults = document.getElementById('no-results');
-    const guideSection = document.getElementById('guide-section');
-    const termTitle = document.getElementById('term-title');
-    const basicExplanation = document.getElementById('basic-explanation');
-    const intermediateExplanation = document.getElementById('intermediate-explanation');
-    const advancedExplanation = document.getElementById('advanced-explanation');
-    const exampleExplanation = document.getElementById('example-explanation');
-    const relatedTermsContainer = document.getElementById('related-terms');
-    // 탭
-    const tabBasic = document.getElementById('tab-basic');
-    const tabIntermediate = document.getElementById('tab-intermediate');
-    const tabAdvanced = document.getElementById('tab-advanced');
-    const tabExample = document.getElementById('tab-example');
-    // 탭 콘텐츠
-    const tabBasicContent = document.getElementById('tab-basic-content');
-    const tabIntermediateContent = document.getElementById('tab-intermediate-content');
-    const tabAdvancedContent = document.getElementById('tab-advanced-content');
-    const tabExampleContent = document.getElementById('tab-example-content');
-    // 인기 칩
-    const termChips = document.querySelectorAll('.term-chip');
+      // 구버전 데이터(대표 핵심 용어들 전부 포함)
+      { key: ["인플레이션","inflation","물가상승"], title: "인플레이션", desc: ["물건 값이 전반적으로 계속 오르는 현상이에요.","돈의 ‘사실상 힘(가치)’이 약해지는 거예요.","너무 빠르면 생활비가 힘들어질 수 있어요."], example: "작년에 5,000원이던 음료가 올해 5,500원이 되면 인플레이션 느낌이에요." },
+      { key: ["디플레이션","deflation","물가하락"], title: "디플레이션", desc: ["물건 값이 전반적으로 계속 내려가는 현상이에요.","사람들이 ‘나중에 더 싸지겠지’ 하고 소비를 미루기 쉬워요.","경제가 더 느려지는 악순환이 생길 수 있어요."], example: "노트북이 다음 달 더 싸질 것 같으면, 사람들은 구매를 미루게 돼요." },
+      { key: ["스테이블코인","stablecoin"], title: "스테이블코인(Stablecoin)", desc: ["가격이 크게 흔들리지 않게 만든 암호화폐예요.","보통 1코인=1달러처럼 ‘가치 연동’을 목표로 해요.","송금·결제 같은 용도로 쓰기 편하다고 해요."], example: "비트코인은 출렁이지만, 스테이블코인은 1달러 근처를 유지하려고 노력해요." },
+      { key: ["가치 연동","페그","peg","pegging"], title: "가치 연동(Peg)", desc: ["어떤 값(예: 1달러)에 딱 붙게 만들려는 장치예요.","스테이블코인이 ‘1달러 유지’를 목표로 할 때 자주 나와요.","유지가 깨지면 디페깅 위험이 생겨요."], example: "자석처럼 1달러에 붙어있으려는 느낌이고, 떨어지면(디페깅) 문제가 될 수 있어요." },
+      { key: ["준비금","reserve"], title: "준비금(Reserve)", desc: ["스테이블코인의 가치를 지키려고 따로 쌓아두는 돈/자산이에요.","‘정말 그만큼 있나’가 신뢰의 핵심이에요.","투명한 공개와 점검이 중요해요."], example: "저금통에 동전이 진짜 있어야 쿠폰을 믿을 수 있는 것처럼요." },
+      { key: ["상환","redemption"], title: "상환(Redemption)", desc: ["코인을 발행사에 주고 실제 돈으로 바꾸는 과정이에요.","이 기능이 잘 되면 가치 연동이 더 믿을 만해져요.","상환이 막히면 불안이 커질 수 있어요."], example: "쿠폰을 내면 물건으로 바꿔주는 것처럼, 코인을 돈으로 바꾸는 거예요." },
+      { key: ["블록체인","blockchain"], title: "블록체인", desc: ["거래 기록을 여러 컴퓨터에 나눠 저장하는 기술이에요.","한 번 기록하면 바꾸기 어려워 신뢰에 도움 돼요.","비트코인 같은 암호화폐의 기반이에요."], example: "반 친구들이 모두 같은 공책을 복사해 들고 있으면 한 명이 몰래 바꾸기 어려운 것과 비슷해요." },
+      { key: ["스마트 계약","스마트계약","smart contract"], title: "스마트 계약(Smart Contract)", desc: ["조건이 맞으면 자동으로 실행되는 ‘프로그램 계약’이에요.","중간 관리자 없이도 약속을 지키게 만들 수 있어요.","코드가 안전해야 해요."], example: "‘돈을 갚으면 담보가 자동으로 돌아간다’를 컴퓨터가 자동 처리하는 거예요." },
+      { key: ["디파이","DeFi","defi","탈중앙화 금융"], title: "디파이(DeFi)", desc: ["은행 없이 블록체인 위에서 금융을 하는 서비스들이에요.","예금·대출·교환을 스마트 계약으로 처리해요.","편하지만 위험도 있으니 주의가 필요해요."], example: "앱에서 코인을 맡기고 이자를 받는데, 은행이 아니라 프로그램이 돌리는 방식일 수 있어요." },
+      { key: ["DEX","탈중앙화 거래소","decentralized exchange"], title: "탈중앙화 거래소(DEX)", desc: ["회사 없이 코인을 바꾸는 거래소예요.","내 지갑을 연결해 직접 교환해요.","사용이 어렵거나 위험이 있을 수도 있어요."], example: "사람끼리 바로 교환하는 ‘직거래 장터’ 느낌이에요." },
+      { key: ["CEX","중앙화 거래소","업비트","바이낸스","centralized exchange"], title: "중앙화 거래소(CEX)", desc: ["특정 회사가 운영하는 암호화폐 거래소예요.","사용이 쉽고 입출금이 편한 경우가 많아요.","대신 거래소 자체 위험도 생각해야 해요."], example: "큰 마트처럼 편하지만, 마트가 사고 나면 내 물건도 위험해질 수 있는 느낌이에요." },
+      { key: ["KYC","고객확인제도","고객 확인"], title: "고객확인제도(KYC)", desc: ["금융사가 고객이 누구인지 확인하는 절차예요.","불법 돈을 막기 위해 많이 필요해요.","거래소 가입 때 신분증 인증이 대표예요."], example: "입장할 때 신분 확인하는 것처럼, 거래소도 본인 확인을 해요." },
+      { key: ["AML","자금세탁방지","자금 세탁 방지"], title: "자금세탁방지(AML)", desc: ["불법 돈을 숨기는 걸 막는 규칙이에요.","의심 거래를 감시하고 보고하기도 해요.","금융 시스템 신뢰를 지키는 장치예요."], example: "수상한 큰돈이 오가면 ‘이상한데?’ 하고 확인하는 규칙이라고 보면 돼요." },
+      { key: ["부동산 PF","PF","프로젝트 파이낸싱","project financing"], title: "부동산 PF(프로젝트 파이낸싱)", desc: ["큰 건설 사업을 할 때 ‘사업이 벌 돈’을 보고 돈을 빌리는 방식이에요.","아파트/상가 같은 개발에 많이 쓰여요.","경기 나쁘면 위험이 커질 수 있어요."], example: "아파트를 지어 분양해서 갚겠다고 빌렸는데 분양이 안 되면 갚기 어려울 수 있어요." },
+      { key: ["관세","tariff"], title: "관세", desc: ["외국에서 들어오는 물건에 붙는 세금이에요.","국내 산업을 보호하려고 올리기도 해요.","수입품 가격이 올라 소비자 부담이 늘 수 있어요."], example: "외국 과자에 관세가 붙으면 우리나라에서 더 비싸질 수 있어요." },
+      { key: ["경상수지","경상 수지","current account"], title: "경상수지", desc: ["나라가 외국과 거래한 결과를 종합한 점수판이에요.","수출입뿐 아니라 서비스, 소득도 포함해요.","흑자가 계속되면 외화가 쌓일 수 있어요."], example: "물건 팔기(수출) + 서비스 + 해외 이자까지 합쳐서 총합이 플러스인지 보는 거예요." },
+      { key: ["무역수지","무역 수지","trade balance"], title: "무역수지", desc: ["수출한 돈 − 수입한 돈의 차이예요.","수출이 더 크면 흑자, 수입이 더 크면 적자예요.","환율과 경제에 영향을 줄 수 있어요."], example: "우리 집이 번 돈이 쓴 돈보다 많으면 흑자라고 생각하면 돼요." },
+      { key: ["외환보유액","외환 보유액","FX reserves"], title: "외환보유액", desc: ["나라가 비상시에 쓸 수 있게 모아둔 외국 돈/자산이에요.","환율이 급하게 흔들릴 때 방어에 쓰기도 해요.","너무 적으면 불안이 커질 수 있어요."], example: "비상금 통장처럼 나라가 위기 때 쓸 돈을 모아두는 거예요." },
+      { key: ["콜금리","call rate"], title: "콜금리", desc: ["은행끼리 아주 짧게(하루 등) 돈을 빌릴 때의 금리예요.","단기 자금 사정을 보여주는 신호예요.","기준금리 변화가 빠르게 반영되기도 해요."], example: "친구끼리 하루만 빌려 쓰는 ‘하루 대여료(이자)’ 같은 거예요." },
+      { key: ["회사채","corporate bond"], title: "회사채", desc: ["회사가 돈을 빌리려고 발행하는 채권이에요.","회사가 튼튼할수록 비교적 안전해요.","위험이 높으면 이자도 더 높아지곤 해요."], example: "믿음직한 친구에게는 낮은 이자, 불안한 친구에게는 높은 이자를 요구하는 것과 비슷해요." },
+      { key: ["구축효과","crowding out","crowding-out"], title: "구축효과(크라우딩 아웃)", desc: ["정부가 돈을 많이 빌리면 금리가 오를 수 있어요.","그러면 기업이 돈 빌리기 부담돼 투자가 줄 수 있어요.","민간 투자가 ‘밀려나는’ 현상이에요."], example: "정부가 동네 돈을 다 빌려가면, 가게(기업)는 빌리기 어려워지는 느낌이에요." },
+      { key: ["퇴직연금","퇴직 연금"], title: "퇴직연금", desc: ["퇴직 후를 위해 회사/근로자가 돈을 모아두는 제도예요.","운용 결과에 따라 나중에 받는 돈이 달라질 수 있어요.","노후 준비의 큰 축이에요."], example: "직장에서 ‘노후 저금통’을 만들어 꾸준히 모아두는 느낌이에요." },
+      { key: ["IRP","irp","개인형퇴직연금","개인형 퇴직연금"], title: "IRP(개인형 퇴직연금)", desc: ["내 이름으로 관리하는 퇴직연금 계좌예요.","퇴직금이나 추가 저축을 넣어 굴릴 수 있어요.","세금 혜택이 있어서 노후 준비에 많이 써요."], example: "퇴직금을 ‘내 전용 저금통(IRP)’에 넣어두고, 그 안에서 상품을 고르는 느낌이에요." },
+      { key: ["CBDC","cbdc","중앙은행 디지털화폐","중앙은행 디지털 화폐"], title: "중앙은행 디지털화폐(CBDC)", desc: ["중앙은행이 발행하는 ‘디지털 원화/달러’ 같은 돈이에요.","현금처럼 안전하지만 앱처럼 디지털로 쓸 수 있어요.","나라별로 연구·실험이 진행 중이에요."], example: "지갑의 지폐 대신 휴대폰에 ‘디지털 원화’를 담아 결제하는 모습을 떠올리면 돼요." },
+      { key: ["ESG","환경 사회 지배구조","환경·사회·지배구조"], title: "ESG(환경·사회·지배구조)", desc: ["회사가 환경·사회·경영투명성을 얼마나 잘 지키는지 보는 기준이에요.","요즘 투자자들이 ‘튼튼한 회사’인지 볼 때 참고해요.","장기적으로 회사 평가에 영향을 줄 수 있어요."], example: "쓰레기를 줄이고, 직원 안전을 챙기고, 돈을 투명하게 쓰는 회사가 좋은 점수를 받는 거예요." },
+      { key: ["CBAM","탄소 국경조정제도","탄소국경조정제도"], title: "탄소 국경조정제도(CBAM)", desc: ["탄소를 많이 배출해 만든 물건에 ‘추가 비용’을 붙이는 제도예요.","환경 규제가 약한 나라 제품이 불리할 수 있어요.","수출 기업은 탄소 관리가 더 중요해져요."], example: "연기를 많이 내며 만든 물건은 입장료를 더 내는 것처럼 탄소가 많으면 비용이 붙는 거예요." },
+      { key: ["공급망 재편","공급망","리쇼어링","니어쇼어링","프렌드쇼어링"], title: "공급망 재편", desc: ["부품/원자재를 받는 ‘길’이 바뀌는 거예요.","한 나라에 너무 의존하지 않게 여러 나라로 나누기도 해요.","안정성은 늘 수 있지만 비용이 오를 수도 있어요."], example: "한 가게에서만 재료를 사면 위험하니, 여러 가게로 나눠서 사는 것과 비슷해요." },
+      { key: ["인구 오너스","고령화","저출산","demographic onus"], title: "인구 오너스", desc: ["일할 사람은 줄고, 돌봐야 할 노인은 늘어나는 상황이에요.","경제 성장에 부담이 될 수 있어요.","연금·의료비 같은 지출도 늘 수 있어요."], example: "우리 반에서 일을 하는 친구는 줄고 도와야 할 친구는 늘어나면 부담이 커지는 것과 비슷해요." },
+      { key: ["스태그플레이션","stagflation"], title: "스태그플레이션", desc: ["경기는 안 좋은데 물가는 오르는 어려운 상황이에요.","일자리는 줄고 생활비는 늘 수 있어요.","정책으로 해결하기가 특히 어려워요."], example: "월급은 그대로인데 기름값·장바구니 가격만 계속 오르는 상황을 떠올리면 돼요." },
+      { key: ["GDP","국내총생산","gdp"], title: "GDP", desc: ["한 나라가 일정 기간 동안 만든 ‘상품+서비스’의 총합이에요.","경제의 ‘크기’를 보여주는 대표 숫자예요.","늘면 경제가 커졌다고 볼 수 있어요."], example: "우리 반에서 만든 것들을 돈으로 합친 게 ‘우리 반 GDP’ 같은 느낌이에요." },
+      { key: ["경기불황","경기 침체","불황"], title: "경기불황", desc: ["경제가 위축되어 돈이 잘 안 도는 시기예요.","기업이 덜 벌고 채용이 줄 수 있어요.","사람들도 불안해서 소비를 줄이기 쉬워요."], example: "가게 손님이 줄어 매출이 떨어지면 알바를 줄이는 것처럼요." },
+      { key: ["경기호황","호황","활황"], title: "경기호황", desc: ["경제가 활발해서 돈이 잘 도는 시기예요.","기업 매출과 채용이 늘 수 있어요.","사람들도 소비를 더 하게 돼요."], example: "가게에 손님이 많아지면 직원도 더 뽑고 새 메뉴도 내는 것과 비슷해요." },
+      { key: ["주가","stock price"], title: "주가", desc: ["주식의 현재 가격이에요.","사람들의 기대(미래 전망)가 많이 반영돼요.","좋은 뉴스면 오르고 나쁜 뉴스면 내리기 쉬워요."], example: "새 제품이 대박 날 것 같으면 사고 싶은 사람이 많아져 주가가 오를 수 있어요." },
+      { key: ["베어마켓","bear market"], title: "베어마켓", desc: ["시장 전체가 오래 하락하는 분위기예요.","사람들이 불안해서 투자를 줄이기 쉬워요.","보통 고점 대비 크게 하락했을 때 자주 말해요."], example: "놀이공원 손님이 계속 줄어 분위기가 처지는 것처럼 시장이 내려가는 느낌이에요." },
+      { key: ["불마켓","bull market"], title: "불마켓", desc: ["시장 전체가 오래 상승하는 분위기예요.","사람들이 자신감 있게 투자하는 때가 많아요.","주가가 전반적으로 올라가는 흐름이에요."], example: "놀이공원 손님이 늘고 분위기가 들뜨는 것처럼 시장이 올라가는 느낌이에요." },
+      { key: ["금융시장","금융 시장","financial market"], title: "금융시장", desc: ["주식·채권·환율 같은 ‘돈 관련 상품’을 거래하는 곳이에요.","가격이 여기서 정해지고 돈이 이동해요.","경제 분위기에 따라 크게 흔들릴 수 있어요."], example: "중고마켓에서 물건 값이 정해지듯, 금융시장에서는 금융상품 가격이 정해져요." },
+      { key: ["통화량","money supply","M2","m2"], title: "통화량", desc: ["경제 안에서 돌아다니는 ‘돈의 양’이에요.","너무 늘면 물가가 오를 수 있어요.","중앙은행 정책이 통화량에 영향을 줘요."], example: "동네에서 쿠폰(돈)이 갑자기 2배가 되면 물건 값이 오를 수도 있어요." },
+      { key: ["재정정책","재정 정책","fiscal policy"], title: "재정정책", desc: ["정부가 세금과 지출로 경제를 조절하는 방법이에요.","경기 나쁠 땐 지원금을 주거나 돈을 더 쓰기도 해요.","너무 많이 쓰면 국가부채가 늘 수 있어요."], example: "학교가 행사 예산을 늘리면 준비가 활발해지듯, 정부 지출이 늘면 경제 활동도 늘 수 있어요." },
+      { key: ["통화정책","통화 정책","monetary policy"], title: "통화정책", desc: ["중앙은행이 금리와 돈의 양을 조절하는 정책이에요.","물가 안정과 경기 조절을 목표로 해요.","기준금리·양적완화가 여기에 속해요."], example: "경제가 너무 뜨거우면 식히고, 너무 차가우면 데우는 ‘조절 손잡이’라고 보면 돼요." },
+      { key: ["중앙은행","중앙 은행","central bank","한국은행"], title: "중앙은행", desc: ["나라의 돈과 금리를 관리하는 가장 중요한 은행이에요.","물가 안정과 금융 안정을 중요하게 봐요.","기준금리 결정 같은 일을 해요."], example: "우리 집 가계부 관리자처럼, 나라의 돈 흐름을 관리하는 곳이라고 생각하면 돼요." },
+      { key: ["경기순환","경기 순환","business cycle"], title: "경기순환", desc: ["경제가 좋아졌다가 나빠지는 게 반복되는 현상이에요.","호황→불황→회복처럼 돌아가기도 해요.","소비와 투자에 큰 영향을 줘요."], example: "파도처럼 올라갔다 내려갔다 하는 것처럼 경제도 반복돼요." },
+      { key: ["경제지표","경제 지표","economic indicator"], title: "경제지표", desc: ["경제 상태를 알려주는 숫자들이에요.","GDP, 물가, 실업률 같은 게 대표예요.","정책이나 투자 판단에 힌트를 줘요."], example: "체온계가 몸 상태를 알려주듯, 경제지표는 경제 상태를 알려줘요." },
+      { key: ["유동성","liquidity"], title: "유동성", desc: ["자산을 빨리 현금으로 바꾸기 쉬운 정도예요.","현금은 높고, 집은 낮은 편이에요.","시장에 돈이 넉넉하단 뜻으로도 써요."], example: "큰 가구는 팔기 어렵고(유동성 낮음), 현금은 바로 쓸 수 있어요(유동성 높음)." },
+      { key: ["소비자물가지수","CPI","cpi"], title: "소비자물가지수(CPI)", desc: ["가정이 자주 사는 물건들의 가격 변화를 보여줘요.","오르면 생활비가 늘었다는 뜻일 수 있어요.","인플레이션을 보는 데 많이 써요."], example: "장바구니 목록의 총가격이 작년보다 올라가면 CPI가 오른 거예요." },
+      { key: ["시가총액","시총","market cap"], title: "시가총액", desc: ["회사 전체를 현재 주가로 계산한 총가격이에요.","발행 주식 수 × 주가로 계산해요.","회사 규모 비교에 자주 써요."], example: "쿠폰 조각이 100개, 1개가 1만 원이면 전체는 100만 원 같은 느낌이에요." },
+      { key: ["예금","deposit"], title: "예금", desc: ["은행에 돈을 맡기는 거예요.","대신 은행이 이자를 줘요.","안전한 편이지만 큰 수익은 기대하기 어려워요."], example: "비상금은 예금처럼 안전한 곳에 두면 필요할 때 바로 꺼내 쓰기 좋아요." },
+      { key: ["적금","saving plan"], title: "적금", desc: ["매달 일정 금액을 꾸준히 모으는 저축이에요.","목돈 만들기에 좋아요.","중도 해지하면 이자가 줄 수 있어요."], example: "매달 용돈 1만 원씩 모아 1년 뒤 선물 살 돈을 만드는 습관이에요." },
+      { key: ["대출","loan"], title: "대출", desc: ["은행 등에서 돈을 빌리는 거예요.","이자와 함께 갚아야 해요.","금리가 오르면 부담이 커져요."], example: "집을 살 때 돈을 빌리면 매달 나눠 갚는 식이에요." },
+      { key: ["투자","investment"], title: "투자", desc: ["나중에 더 큰 이익을 기대하며 돈을 쓰는 거예요.","수익이 날 수도 있지만 손실 위험도 있어요.","목표·기간·위험을 정하고 하는 게 좋아요."], example: "씨앗(돈)을 심고 시간이 지나 열매(수익)를 기대하는 것과 비슷해요." },
+      { key: ["포트폴리오","portfolio"], title: "포트폴리오", desc: ["내가 가진 여러 투자 자산의 조합이에요.","주식·채권·현금 등을 섞어 위험을 관리해요.","가끔 비율을 다시 맞추는 게 중요해요."], example: "한 가지 반찬만 먹지 않고 여러 반찬을 섞어 먹듯, 자산도 섞어서 갖는 거예요." },
+      { key: ["리밸런싱","rebalancing"], title: "리밸런싱", desc: ["처음 정한 자산 비율이 바뀌면 다시 맞추는 거예요.","올라 비중이 커진 건 조금 팔고, 줄어든 건 조금 사기도 해요.","위험을 일정하게 유지하는 데 도움 돼요."], example: "주식이 많이 올라 비중이 커지면 일부를 팔아 원래 비율로 돌리는 거예요." },
+      { key: ["헤지","hedge","위험회피"], title: "헤지", desc: ["가격이 떨어질 위험을 줄이는 ‘보험 같은’ 전략이에요.","환율·주가 같은 변동을 대비할 때 써요.","큰 손해를 줄이는 데 도움이 될 수 있어요."], example: "비 올까 봐 우산을 챙기듯, 손해가 날까 봐 미리 대비하는 거예요." },
+      { key: ["투자 수익률","ROI","roi"], title: "투자 수익률(ROI)", desc: ["투자한 돈 대비 얼마나 벌었는지 비율로 보는 거예요.","비교가 쉬워서 많이 써요.","기간/위험은 따로 고려해야 해요."], example: "100만 원을 투자해 10만 원 벌면 ROI는 10%예요." },
+      { key: ["국채","government bond"], title: "국채", desc: ["나라(정부)가 돈을 빌리려고 발행하는 채권이에요.","상대적으로 안전한 투자로 여겨져요.","국채 금리는 기준이 되기도 해요."], example: "정부가 ‘돈 좀 빌릴게, 이자 줄게’라고 약속한 종이가 국채예요." },
+      { key: ["국경 간 결제","국경간 결제","해외송금","cross-border payments"], title: "국경 간 결제", desc: ["나라와 나라 사이로 돈을 보내는 거예요.","기존 방식은 시간과 수수료가 들 수 있어요.","새 기술이 더 빠른 송금을 시도하기도 해요."], example: "해외에 있는 가족에게 송금할 때 며칠 걸리거나 수수료가 비쌀 수 있어요." },
+      { key: ["토큰화","tokenization","STO","sto"], title: "토큰화(Tokenization)", desc: ["자산을 디지털 조각으로 바꿔 거래하는 거예요.","작게 쪼개서 소액으로도 참여할 수 있어요.","법/제도와 안전장치가 중요해요."], example: "10억짜리 건물을 100만 조각으로 나눠 1만 원으로도 조각을 사는 느낌이에요." },
+      { key: ["유틸리티 토큰","utility token"], title: "유틸리티 토큰", desc: ["특정 서비스에서 쓰는 디지털 쿠폰 같은 토큰이에요.","서비스 이용권처럼 쓰이기도 해요.","사용처가 없으면 가치가 떨어질 수 있어요."], example: "게임에서 아이템을 사는 전용 코인처럼 특정 곳에서만 쓸 수 있어요." },
+      { key: ["NFT","nft","대체불가토큰","Non-Fungible Token"], title: "NFT(대체불가토큰)", desc: ["디지털 파일의 ‘고유한 소유권 증표’ 같은 토큰이에요.","그림·음악·아이템 등에 붙어서 거래돼요.","희소성과 수요에 따라 가격이 달라져요."], example: "파일은 복사돼도 ‘원본 증명서(NFT)’는 하나라는 느낌이에요." },
+      { key: ["펀드","fund"], title: "펀드", desc: ["여러 사람 돈을 모아 전문가가 대신 투자하는 상품이에요.","주식/채권 등 여러 자산에 나눠 담을 수 있어요.","수수료와 손실 위험도 함께 봐야 해요."], example: "전문가가 여러 종목에 나눠 투자해주는 ‘공동 투자 바구니’라고 보면 돼요." }
+    ];
 
-    // UI 이벤트
-    searchInput.addEventListener('input', function() {
-      clearButton.style.display = this.value.trim() !== '' ? 'block' : 'none';
-    });
-    searchInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') searchTerm();
-    });
-    searchButton.addEventListener('click', searchTerm);
-    clearButton.addEventListener('click', function() {
-      searchInput.value = '';
-      clearButton.style.display = 'none';
-      searchInput.focus();
-    });
-    termChips.forEach(chip => {
-      chip.addEventListener('click', function() {
-        searchInput.value = this.textContent;
-        searchTerm();
-        termChips.forEach(c=>c.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-    tabBasic.addEventListener('click', ()=>activateTab('basic'));
-    tabIntermediate.addEventListener('click', ()=>activateTab('intermediate'));
-    tabAdvanced.addEventListener('click', ()=>activateTab('advanced'));
-    tabExample.addEventListener('click', ()=>activateTab('example'));
+    const inputEl = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("clearBtn");
+    const resultsListEl = document.getElementById("resultsList");
+    const countBadgeEl = document.getElementById("countBadge");
+    const emptyHintEl = document.getElementById("emptyHint");
+    const detailEmptyEl = document.getElementById("detailEmpty");
+    const detailCardEl = document.getElementById("detailCard");
+    const detailTitleEl = document.getElementById("detailTitle");
+    const detailDescEl = document.getElementById("detailDesc");
+    const detailExampleEl = document.getElementById("detailExample");
+    const detailKeysEl = document.getElementById("detailKeys");
 
-    function searchTerm() {
-      const term = searchInput.value.trim();
-      if(term==='') return;
-      // 정확 일치→표시
-      if (economicTerms[term]) {
-        displayTerm(term, economicTerms[term]);
+    const normalize = (s) => (s ?? "").toString().toLowerCase().replace(/\s+/g, "").replace(/[()··]/g, "");
+
+    // 중복 제목/키 정리
+    const dedupedDictionary = (() => {
+      const byTitle = new Map();
+      for (const item of dictionary) {
+        const t = normalize(item.title);
+        if (!byTitle.has(t)) {
+          byTitle.set(t, {
+            key: Array.isArray(item.key) ? [...item.key] : [item.title],
+            title: item.title,
+            desc: Array.isArray(item.desc) ? item.desc.slice(0, 3) : [String(item.desc || "")].slice(0, 3),
+            example: item.example || "예시를 준비 중이에요."
+          });
+        } else {
+          const merged = byTitle.get(t);
+          const mergedKeys = new Set([...(merged.key || []), ...(Array.isArray(item.key) ? item.key : []), item.title]);
+          merged.key = Array.from(mergedKeys);
+          if ((!merged.example || merged.example === "예시를 준비 중이에요.") && item.example) merged.example = item.example;
+          byTitle.set(t, merged);
+        }
+      }
+      for (const v of byTitle.values()) {
+        const seen = new Set();
+        v.key = (v.key || []).map(x => String(x).trim()).filter(Boolean).filter(x => {
+          const nk = normalize(x);
+          if (seen.has(nk)) return false;
+          seen.add(nk);
+          return true;
+        });
+        v.desc = (v.desc || []).slice(0, 3);
+        while (v.desc.length < 3) v.desc.push("핵심만 아주 쉽게 정리해드릴게요.");
+      }
+      return Array.from(byTitle.values()).sort((a, b) => a.title.localeCompare(b.title, "ko"));
+    })();
+
+    const index = dedupedDictionary.map((item) => {
+      const keys = Array.isArray(item.key) ? item.key : [item.title];
+      const hay = [item.title, ...keys].map(normalize).join("|");
+      return { item, hay, keys };
+    });
+
+    const scoreMatch = (q, entry) => {
+      if (!q) return 1;
+      const nTitle = normalize(entry.item.title);
+      if (nTitle === q) return 1000;
+      if (entry.keys.some(k => normalize(k) === q)) return 900;
+      if (nTitle.startsWith(q)) return 250;
+      if (nTitle.includes(q)) return 180;
+      if (entry.hay.includes(q)) return 120;
+      return 0;
+    };
+
+    const search = (rawQuery) => {
+      const q = normalize(rawQuery);
+      if (!q) return dedupedDictionary.slice(0, 30);
+      const scored = [];
+      for (const entry of index) {
+        const s = scoreMatch(q, entry);
+        if (s > 0) scored.push({ s, item: entry.item });
+      }
+      scored.sort((a, b) => b.s - a.s || a.item.title.localeCompare(b.item.title, "ko"));
+      return scored.slice(0, 60).map(x => x.item);
+    };
+
+    function escapeHtml(s) {
+      return String(s)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+    function escapeAttr(s) { return escapeHtml(s).replaceAll("\n", " "); }
+
+    const setActiveDetail = (item) => {
+      detailEmptyEl.classList.add("hidden");
+      detailCardEl.classList.remove("hidden");
+      detailTitleEl.textContent = item.title;
+      detailDescEl.innerHTML = item.desc.map(line => `
+        <li class="flex gap-3">
+          <span class="mt-2 w-2 h-2 rounded-full bg-gradient-to-r from-emerald-300 via-indigo-300 to-fuchsia-300"></span>
+          <span>${escapeHtml(line)}</span>
+        </li>
+      `).join("");
+      detailExampleEl.textContent = item.example;
+      detailKeysEl.innerHTML = (item.key || []).slice(0, 18).map(k => `
+        <button class="px-3 py-1 rounded-full text-xs sm:text-sm bg-white/5 hover:bg-white/10 border border-white/10 transition" type="button" data-q="${escapeAttr(k)}">
+          ${escapeHtml(k)}
+        </button>
+      `).join("");
+    };
+
+    const renderResults = (items, query) => {
+      countBadgeEl.textContent = `${items.length}개`;
+      if (!items.length) {
+        resultsListEl.innerHTML = "";
+        emptyHintEl.classList.remove("hidden");
         return;
       }
-      // 부분 일치 첫 항목 표시
-      for (const key in economicTerms) {
-        if (key.includes(term) || term.includes(key)) {
-          displayTerm(key, economicTerms[key]);
-          return;
-        }
-      }
-      // 결과 없음
-      resultsContainer.classList.add('hidden');
-      guideSection.classList.add('hidden');
-      noResults.classList.remove('hidden');
-    }
+      emptyHintEl.classList.add("hidden");
+      const q = normalize(query);
+      resultsListEl.innerHTML = items.map((item) => {
+        const isExact = q && (normalize(item.title) === q || (item.key || []).some(k => normalize(k) === q));
+        return `
+          <button type="button"
+            class="w-full text-left px-4 py-3 rounded-2xl border transition ${isExact ? "border-emerald-300/40 bg-emerald-400/10" : "border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20"}"
+            data-title="${escapeAttr(item.title)}"
+          >
+            <div class="flex items-center justify-between gap-3">
+              <span class="font-semibold text-slate-100">${escapeHtml(item.title)}</span>
+              <span class="text-[11px] text-slate-400">${(item.key?.length ?? 0)} keys</span>
+            </div>
+            <div class="mt-1 text-xs text-slate-300/90">
+              ${escapeHtml(item.desc.join(" "))}
+            </div>
+          </button>
+        `;
+      }).join("");
+    };
 
-    function displayTerm(term, data) {
-      termTitle.textContent = term;
-      basicExplanation.textContent = data.basic;
-      intermediateExplanation.textContent = data.intermediate;
-      advancedExplanation.textContent = data.advanced;
-      exampleExplanation.textContent = data.example;
-      // 관련 용어 칩
-      relatedTermsContainer.innerHTML = '';
-      (Array.isArray(data.related)?data.related:[]).forEach((relatedTerm)=>{
-        const chip = document.createElement('span');
-        chip.className = 'term-chip bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-sm cursor-pointer hover:bg-indigo-200 transition font-medium';
-        chip.textContent = relatedTerm;
-        chip.onclick = ()=>{searchInput.value = relatedTerm; searchTerm();};
-        relatedTermsContainer.appendChild(chip);
-      });
-      activateTab('basic');
-      noResults.classList.add('hidden');
-      guideSection.classList.add('hidden');
-      resultsContainer.classList.remove('hidden');
-      window.setTimeout(()=>{resultsContainer.scrollIntoView({behavior:'smooth'});}, 170);
-    }
+    const updateUI = () => {
+      const q = inputEl.value.trim();
+      const items = search(q);
+      renderResults(items, q);
+      const nq = normalize(q);
+      const exact = q ? items.find(x => normalize(x.title) === nq || (x.key || []).some(k => normalize(k) === nq)) : null;
+      if (exact) setActiveDetail(exact);
+      clearBtn.classList.toggle("hidden", !q);
+    };
 
-    function activateTab(tabName) {
-      [tabBasic,tabIntermediate,tabAdvanced,tabExample].forEach(t=>{
-        t.classList.remove('tab-active');
-        t.classList.add('text-gray-500');
-      });
-      [tabBasicContent,tabIntermediateContent,tabAdvancedContent,tabExampleContent].forEach(c=>{
-        c.classList.add('hidden');
-      });
-      // Visible & active tab
-      if(tabName==='basic') {
-        tabBasic.classList.add('tab-active'); tabBasic.classList.remove('text-gray-500');
-        tabBasicContent.classList.remove('hidden');
-      } else if(tabName==='intermediate') {
-        tabIntermediate.classList.add('tab-active'); tabIntermediate.classList.remove('text-gray-500');
-        tabIntermediateContent.classList.remove('hidden');
-      } else if(tabName==='advanced') {
-        tabAdvanced.classList.add('tab-active'); tabAdvanced.classList.remove('text-gray-500');
-        tabAdvancedContent.classList.remove('hidden');
-      } else if(tabName==='example') {
-        tabExample.classList.add('tab-active'); tabExample.classList.remove('text-gray-500');
-        tabExampleContent.classList.remove('hidden');
-      }
-    }
-
-    // 모바일: 자동 입력시 키보드 닫힌 뒤 focus 유지
-    searchInput.addEventListener('blur', function() {
-      setTimeout(()=>{
-        if(document.activeElement!==searchInput &&
-          window.innerWidth<768 &&
-          searchInput.value!=='') {
-          window.scrollTo(0,0);
-        }
-      },250);
+    // chips style
+    [...document.querySelectorAll(".chip")].forEach(el => {
+      el.className = "chip px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition text-slate-200";
     });
 
-    // 최초 로딩시 guide만 보임
-    window.addEventListener('DOMContentLoaded', ()=>{
-      guideSection.classList.remove('hidden');
-      resultsContainer.classList.add('hidden');
-      noResults.classList.add('hidden');
-      clearButton.style.display = 'none';
+    // events
+    inputEl.addEventListener("input", updateUI);
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        inputEl.value = "";
+        updateUI();
+        inputEl.blur();
+      }
     });
+    clearBtn.addEventListener("click", () => {
+      inputEl.value = "";
+      updateUI();
+      inputEl.focus();
+    });
+    resultsListEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-title]");
+      if (!btn) return;
+      const title = btn.getAttribute("data-title");
+      const found = dedupedDictionary.find(x => x.title === title);
+      if (found) setActiveDetail(found);
+    });
+    document.addEventListener("click", (e) => {
+      const chip = e.target.closest("button.chip");
+      if (chip) {
+        inputEl.value = chip.getAttribute("data-q") || "";
+        updateUI();
+        inputEl.focus();
+        return;
+      }
+      const keyBtn = e.target.closest("#detailKeys button[data-q]");
+      if (keyBtn) {
+        inputEl.value = keyBtn.getAttribute("data-q") || "";
+        updateUI();
+        inputEl.focus();
+      }
+    });
+
+    // init
+    updateUI();
   </script>
 </body>
 </html>
