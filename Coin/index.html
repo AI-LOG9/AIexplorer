@@ -3,1750 +3,480 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>코인 차트 기술적 분석 어시스턴트</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <title>라떼로또 AI 코인 분석기 (Pro)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 
     <style>
-        body {
-    background-color: #1E2130;
-    color: #e2e8f0;
-    font-family: 'Inter', 'Noto Sans KR', sans-serif;
-}
-.input-field {
-    background-color: #252A3D;
-    border: 1px solid #2d3748;
-    color: #e2e8f0;
-}
-.btn-primary {
-    background-color: #4F46E5;
-    color: white;
-    transition: all 0.3s;
-}
-.btn-primary:hover {
-    background-color: #4338ca;
-}
-.card {
-    background-color: #252A3D;
-    border: 1px solid #2d3748;
-}
-.signal-very-strong-buy { background-color: #10B981; }
-.signal-strong-buy { background-color: #34D399; }
-.signal-moderate-buy { background-color: #6EE7B7; }
-.signal-weak-buy { background-color: #A7F3D0; }
-.signal-neutral { background-color: #9CA3AF; }
-.signal-weak-sell { background-color: #FECACA; }
-.signal-moderate-sell { background-color: #F87171; }
-.signal-strong-sell { background-color: #EF4444; }
-.signal-very-strong-sell { background-color: #F43F5E; }
+        body { font-family: 'Pretendard', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 240px;
-            background-color: #1a2235;
-            color: #e2e8f0;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -120px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            border: 1px solid #2d3748;
-            font-size: 12px;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         
-        /* GPT Template Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.6);
-        }
-        
-        .modal-content {
-            background-color: #1a2235;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #2d3748;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close:hover,
-        .close:focus {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        
-        .copy-btn {
-            background-color: #4c51bf;
+        /* 타임프레임 버튼 스타일 */
+        .tf-btn.active {
+            background-color: #3b82f6;
             color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .copy-btn:hover {
-            background-color: #434190;
-        }
-        
-        .template-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #212b42;
-            border: 1px solid #2d3748;
+            border-color: #60a5fa;
+            font-weight: bold;
         }
     </style>
 </head>
-<body class="min-h-screen pb-10">
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-indigo-400">라떼로또 코인 차트 기술적 분석 어시스턴트 [Mark3]</h1>
-            <button id="gptTemplateBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-all">
-                GPT 템플릿
-            </button>
+<body class="bg-[#0f172a] text-slate-200 min-h-screen pb-20">
+
+    <div class="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0f172a] to-[#0f172a] -z-10"></div>
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-chart-line text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">라떼로또 코인분석기 <span class="text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded ml-1 align-middle">Pro</span></h1>
+                    <p class="text-xs text-slate-500 mt-0.5">7대 기술적 지표 실시간 알고리즘 분석</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                 <div class="hidden md:flex items-center gap-2 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <span id="status-dot" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span id="status-text" class="text-xs font-bold text-slate-400">시스템 연결중...</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="glass-card rounded-2xl p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <select id="coin-select" class="bg-slate-800 border border-slate-600 text-white rounded-xl px-4 py-2.5 font-bold focus:outline-none focus:border-blue-500 transition-colors w-full md:w-64">
+                    <option value="KRW-BTC">비트코인 (BTC)</option>
+                    <option value="KRW-ETH">이더리움 (ETH)</option>
+                    <option value="KRW-XRP">리플 (XRP)</option>
+                    <option value="KRW-SOL">솔라나 (SOL)</option>
+                    <option value="KRW-DOGE">도지코인 (DOGE)</option>
+                    <option value="KRW-AVAX">아발란체 (AVAX)</option>
+                    <option value="KRW-ADA">에이다 (ADA)</option>
+                    <option value="KRW-SHIB">시바이누 (SHIB)</option>
+                </select>
+                
+                <div class="hidden md:block border-l border-slate-700 pl-4">
+                    <span id="display-price" class="text-lg font-bold text-white">0</span>
+                    <span class="text-xs text-slate-500">KRW</span>
+                    <span id="display-change" class="text-xs font-bold ml-2">0.00%</span>
+                </div>
+            </div>
+
+            <div class="flex bg-slate-800 p-1 rounded-xl w-full md:w-auto">
+                <button class="tf-btn flex-1 md:flex-none px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" data-tf="15">15분</button>
+                <button class="tf-btn flex-1 md:flex-none px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" data-tf="60">1시간</button>
+                <button class="tf-btn flex-1 md:flex-none px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" data-tf="240">4시간</button>
+                <button class="tf-btn flex-1 md:flex-none px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all active" data-tf="D">일봉</button>
+            </div>
         </div>
-        
-        <p class="text-center text-gray-400 mb-8">차트를 보고 기술적 지표들의 상태를 입력하면 종합 분석을 제공합니다.[25.05.09ver]</p>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Left Column - Input Form -->
-            <div class="col-span-1 md:col-span-2">
-                <div class="card rounded-lg p-6 mb-6">
-                    <h2 class="text-xl font-semibold mb-4 text-indigo-300">기본 정보</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">코인명</label>
-                            <div class="relative">
-                                <select id="coin-name" class="input-field w-full py-2 px-3 rounded-md">
-                                    <option value="BTC">비트코인 (BTC)</option>
-                                    <option value="ETH">이더리움 (ETH)</option>
-                                    <option value="BNB">바이낸스 코인 (BNB)</option>
-                                    <option value="XRP">리플 (XRP)</option>
-                                    <option value="SOL">솔라나 (SOL)</option>
-                                    <option value="ADA">카르다노 (ADA)</option>
-                                    <option value="DOGE">도지코인 (DOGE)</option>
-                                    <option value="AVAX">아발란체 (AVAX)</option>
-                                    <option value="DOT">폴카닷 (DOT)</option>
-                                    <option value="MATIC">폴리곤 (MATIC)</option>
-                                    <option value="CUSTOM">직접 입력</option>
-                                </select>
-                                <input id="custom-coin" type="text" placeholder="코인명 직접 입력" class="input-field w-full py-2 px-3 rounded-md mt-2 hidden">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <div class="lg:col-span-8 space-y-6">
+                
+                <div class="glass-card rounded-2xl p-1 overflow-hidden h-[500px] relative">
+                    <div class="tradingview-widget-container" style="height:100%;width:100%">
+                        <div id="tradingview_chart" style="height:100%;width:100%"></div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6">
+                    <h3 class="text-sm font-bold text-slate-400 mb-4 uppercase tracking-wider">Indicator Details</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-slate-400">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-800/50">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-lg">지표명</th>
+                                    <th class="px-4 py-3">현재 상태값</th>
+                                    <th class="px-4 py-3">분석 결과</th>
+                                    <th class="px-4 py-3 rounded-r-lg text-right">판단</th>
+                                </tr>
+                            </thead>
+                            <tbody id="indicator-table-body" class="divide-y divide-slate-700/50">
+                                <tr><td colspan="4" class="text-center py-4">데이터 분석중...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 space-y-6">
+                
+                <div class="glass-card rounded-2xl p-8 text-center">
+                    <h2 class="text-sm font-bold text-slate-400 mb-2 uppercase">AI 상승 확률 예측</h2>
+                    
+                    <div class="relative h-56 w-full flex justify-center items-center">
+                        <canvas id="probabilityChart"></canvas>
+                        <div class="absolute flex flex-col items-center justify-center transform translate-y-2">
+                            <span id="prob-percent" class="text-6xl font-bold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">--%</span>
+                            <span id="prob-label" class="text-sm font-bold mt-2 bg-slate-800 px-3 py-1 rounded-full text-slate-400 border border-slate-700">분석중</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-500 mt-2 text-center">
+                        * 위 확률은 7대 기술적 지표의 가중치 합산 결과이며,<br>100% 미래를 보장하지 않습니다.
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                    <h3 class="text-blue-400 font-bold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-file-waveform"></i> AI 분석 요약
+                    </h3>
+                    <div id="ai-summary-text" class="space-y-3 text-sm text-slate-300 leading-relaxed">
+                        <div class="animate-pulse flex space-x-4">
+                            <div class="flex-1 space-y-4 py-1">
+                                <div class="h-4 bg-slate-700 rounded w-3/4"></div>
+                                <div class="h-4 bg-slate-700 rounded"></div>
+                                <div class="h-4 bg-slate-700 rounded w-5/6"></div>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">타임프레임</label>
-                            <select id="timeframe" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="15m">15분봉</option>
-                                <option value="30m">30분봉</option>
-                                <option value="1h" selected>1시간봉</option>
-                                <option value="4h">4시간봉</option>
-                                <option value="1d">일봉</option>
-                                <option value="1w">주봉</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">현재 가격 (USD)</label>
-                            <input id="current-price" type="number" step="0.00000001" class="input-field w-full py-2 px-3 rounded-md" placeholder="예: 30000">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">과거 고점 (USD, 선택사항)</label>
-                            <input id="historical-high" type="number" step="0.00000001" class="input-field w-full py-2 px-3 rounded-md" placeholder="예: 68000">
-                        </div>
                     </div>
                 </div>
 
-                <div class="card rounded-lg p-6 mb-6">
-                    <h2 class="text-xl font-semibold mb-4 text-indigo-300">기술적 지표 상태</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- RSI -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                RSI 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        상대강도지수(RSI)는 0-100 사이 값으로 과매수/과매도 상태를 나타냅니다.<br>
-                                        70 이상: 과매수 상태<br>
-                                        30-70: 중립 상태<br>
-                                        30 이하: 과매도 상태
-                                    </span>
-                                </span>
-                            </label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <select id="rsi-state" class="input-field py-2 px-3 rounded-md">
-                                    <option value="very-oversold">심한 과매도 (20 이하)</option>
-                                    <option value="oversold">과매도 (20-30)</option>
-                                    <option value="neutral-low">중립-낮음 (30-40)</option>
-                                    <option value="neutral" selected>중립 (40-60)</option>
-                                    <option value="neutral-high">중립-높음 (60-70)</option>
-                                    <option value="overbought">과매수 (70-80)</option>
-                                    <option value="very-overbought">심한 과매수 (80 이상)</option>
-                                </select>
-                                <input id="rsi-value" type="number" min="0" max="100" class="input-field py-2 px-3 rounded-md" placeholder="정확한 RSI 값 (옵션)">
-                            </div>
-                        </div>
-                        
-                        <!-- Bollinger Bands -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                볼린저밴드 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        볼린저밴드는 가격의 상대적 고저를 판단합니다.<br>
-                                        상단 접촉: 고가 상태<br>
-                                        중앙선 근처: 중립 상태<br>
-                                        하단 접촉: 저가 상태
-                                    </span>
-                                </span>
-                            </label>
-                            <select id="bollinger-state" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="above-upper">상단밴드 위로 돌파</option>
-                                <option value="touching-upper">상단밴드 접촉</option>
-                                <option value="upper-half">상단밴드-중앙밴드 사이</option>
-                                <option value="middle" selected>중앙밴드 근처</option>
-                                <option value="lower-half">중앙밴드-하단밴드 사이</option>
-                                <option value="touching-lower">하단밴드 접촉</option>
-                                <option value="below-lower">하단밴드 아래로 돌파</option>
-                            </select>
-                        </div>
-                        
-                        <!-- MACD -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                MACD 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        MACD는 추세의 방향과 모멘텀을 나타냅니다.<br>
-                                        골든크로스: MACD선이 시그널선을 상향 돌파 (강세 신호)<br>
-                                        데드크로스: MACD선이 시그널선을 하향 돌파 (약세 신호)<br>
-                                        다이버전스: 가격과 MACD 방향이 불일치 (추세 전환 가능성)
-                                    </span>
-                                </span>
-                            </label>
-                            <select id="macd-state" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="strong-golden-cross">강한 골든크로스 (확실한 상향 교차)</option>
-                                <option value="golden-cross">골든크로스 (MACD > 시그널)</option>
-                                <option value="weak-golden-cross">약한 골든크로스 (교차 시작)</option>
-                                <option value="neutral" selected>중립 (교차 임박)</option>
-                                <option value="weak-death-cross">약한 데드크로스 (교차 시작)</option>
-                                <option value="death-cross">데드크로스 (MACD < 시그널)</option>
-                                <option value="strong-death-cross">강한 데드크로스 (확실한 하향 교차)</option>
-                                <option value="bullish-divergence">강세 다이버전스 (가격↓ MACD↑)</option>
-                                <option value="bearish-divergence">약세 다이버전스 (가격↑ MACD↓)</option>
-                            </select>
-                        </div>
-                        
-                        <!-- EMA -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                이동평균선(EMA) 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        일반적으로 단기 EMA(20, 50)와 장기 EMA(100, 200)의 교차를 분석합니다.<br>
-                                        단기선이 장기선 위: 상승 추세<br>
-                                        단기선이 장기선 아래: 하락 추세<br>
-                                        골든크로스: 단기선이 장기선을 상향 돌파 (강세 신호)<br>
-                                        데드크로스: 단기선이 장기선을 하향 돌파 (약세 신호)
-                                    </span>
-                                </span>
-                            </label>
-                            <select id="ema-state" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="strong-uptrend">강한 상승추세 (단기 > 장기, 격차 확대)</option>
-                                <option value="uptrend">상승추세 (단기 > 장기)</option>
-                                <option value="golden-cross">골든크로스 (단기선이 장기선 상향 돌파)</option>
-                                <option value="neutral" selected>중립 (교차 임박)</option>
-                                <option value="death-cross">데드크로스 (단기선이 장기선 하향 돌파)</option>
-                                <option value="downtrend">하락추세 (단기 < 장기)</option>
-                                <option value="strong-downtrend">강한 하락추세 (단기 < 장기, 격차 확대)</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Volume -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                거래량 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        거래량은 추세의 강도를 확인하는 지표입니다.<br>
-                                        가격 상승 + 거래량 증가: 강한 상승 신호<br>
-                                        가격 하락 + 거래량 증가: 강한 하락 신호<br>
-                                        거래량이 적으면 추세의 지속성이 약할 수 있습니다.
-                                    </span>
-                                </span>
-                            </label>
-                            <select id="volume-state" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="high-increasing">매우 높은 거래량 (급증)</option>
-                                <option value="increasing">증가하는 거래량</option>
-                                <option value="average" selected>평균 거래량</option>
-                                <option value="decreasing">감소하는 거래량</option>
-                                <option value="low">낮은 거래량</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Ichimoku Cloud -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                일목구름 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        일목균형표(일목구름)는 추세와 지지/저항을 종합적으로 분석합니다.<br>
-                                        가격이 구름 위: 상승 추세<br>
-                                        가격이 구름 안: 중립/불확실<br>
-                                        가격이 구름 아래: 하락 추세<br>
-                                        전환선과 기준선의 관계, 선행스팬A와 B의 관계도 중요합니다.
-                                    </span>
-                                </span>
-                            </label>
-                            <select id="ichimoku-state" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="strong-above-cloud">강한 상승세 (구름 위, 전환선>기준선)</option>
-                                <option value="above-cloud">구름 위 (상승 추세)</option>
-                                <option value="entering-cloud-above">구름 진입중 (위에서 아래로)</option>
-                                <option value="in-cloud" selected>구름 내부 (불확실성)</option>
-                                <option value="entering-cloud-below">구름 진입중 (아래서 위로)</option>
-                                <option value="below-cloud">구름 아래 (하락 추세)</option>
-                                <option value="strong-below-cloud">강한 하락세 (구름 아래, 전환선<기준선)</option>
-                            </select>
-                        </div>
-                        
-                        <!-- OBV -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-1">
-                                OBV (On-Balance Volume) 
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500 text-xs ml-1"></i>
-                                    <span class="tooltiptext">
-                                        OBV는 누적 거래량 지표로, 수급의 방향을 보여줍니다.<br>
-                                        상승추세: 매수세력 우세<br>
-                                        하락추세: 매도세력 우세<br>
-                                        다이버전스: 가격과 OBV 방향이 다르면 추세 전환 가능성
-                                    </span>
-                                </span>
-                            </label>
-                            <select id="obv-state" class="input-field w-full py-2 px-3 rounded-md">
-                                <option value="strong-uptrend">강한 상승추세</option>
-                                <option value="uptrend">상승추세</option>
-                                <option value="neutral" selected>중립</option>
-                                <option value="downtrend">하락추세</option>
-                                <option value="strong-downtrend">강한 하락추세</option>
-                                <option value="bullish-divergence">강세 다이버전스 (가격↓ OBV↑)</option>
-                                <option value="bearish-divergence">약세 다이버전스 (가격↑ OBV↓)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-400 mb-1">추가 참고사항 (선택사항)</label>
-                        <textarea id="additional-notes" class="input-field w-full py-2 px-3 rounded-md" rows="2" placeholder="차트에서 보이는 추가적인 특이사항이나 패턴을 입력하세요."></textarea>
-                    </div>
-                    
-                    <div class="mt-6">
-                        <button id="analyze-button" class="btn-primary w-full py-3 px-4 rounded-md font-medium">
-                            기술적 분석 실행
-                        </button>
+                 <div class="glass-card rounded-2xl p-6">
+                    <h3 class="text-emerald-400 font-bold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chess-board"></i> 추천 전략
+                    </h3>
+                    <div id="strategy-text" class="text-sm text-slate-300 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                        데이터 수집 대기중...
                     </div>
                 </div>
-            </div>
-            
-            <!-- Right Column - Results -->
-            <div class="col-span-1">
-              <div id="results-container" class="card rounded-lg p-6 mb-6 hidden">
-    <h2 class="text-xl font-semibold mb-4 text-indigo-300">분석 결과</h2>
-    
-    <div class="mb-4">
-        <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-400">분석 대상</span>
-            <span id="result-coin" class="font-semibold"></span>
-        </div>
-        <div class="flex justify-between items-center mt-1">
-            <span class="text-sm text-gray-400">타임프레임</span>
-            <span id="result-timeframe" class="font-semibold"></span>
-        </div>
-        <div class="flex justify-between items-center mt-1">
-            <span class="text-sm text-gray-400">분석 시각</span>
-            <span id="result-timestamp" class="font-semibold"></span>
-        </div>
-    </div>
-    
-    <!-- 탭 메뉴 -->
-    <div class="flex border-b border-gray-700 mb-4">
-        <button id="tab-overview" class="px-4 py-2 font-medium text-sm border-b-2 border-indigo-500">종합 분석</button>
-        <button id="tab-charts" class="px-4 py-2 font-medium text-sm text-gray-400">차트 시각화</button>
-        <button id="tab-scenarios" class="px-4 py-2 font-medium text-sm text-gray-400">시나리오 분석</button>
-        <button id="tab-details" class="px-4 py-2 font-medium text-sm text-gray-400">지표별 상세</button>
-    </div>
-    
-    <!-- 탭 1: 종합 분석 -->
-    <div id="content-overview" class="tab-content">
-        <div class="mb-6">
-            <div class="text-center p-3 rounded-lg bg-gray-800 mb-3">
-                <h3 class="text-lg font-semibold text-center mb-2">종합 신호</h3>
-                <div id="overall-signal-container" class="flex items-center justify-center">
-                    <div id="overall-signal" class="w-48 h-12 rounded-full flex items-center justify-center font-bold text-gray-900"></div>
-                </div>
-                <div class="flex justify-between mt-3 text-xs text-gray-500">
-                    <span>강한 매도</span>
-                    <span>매도</span>
-                    <span>중립</span>
-                    <span>매수</span>
-                    <span>강한 매수</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="mb-4">
-            <h3 class="text-md font-semibold mb-2 text-gray-300">단기 전망 (6-24시간)</h3>
-            <p id="short-term-outlook" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-        </div>
-        
-        <div class="mb-4">
-            <h3 class="text-md font-semibold mb-2 text-gray-300">중기 전망 (1-7일)</h3>
-            <p id="mid-term-outlook" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-        </div>
-        
-        <div class="mb-4">
-            <h3 class="text-md font-semibold mb-2 text-gray-300">지지/저항 레벨</h3>
-            <p id="support-resistance" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-        </div>
-        
-        <div class="mb-4">
-            <h3 class="text-md font-semibold mb-2 text-gray-300">주의 신호</h3>
-            <p id="warning-signals" class="text-sm text-gray-400 bg-gray-800 p-3 rounded-md"></p>
-        </div>
-    </div>
-    
-    <!-- 탭 2: 차트 시각화 -->
-    <div id="content-charts" class="tab-content hidden">
-        <div class="mb-6">
-            <h3 class="text-md font-semibold mb-2 text-gray-300">종합 신호 게이지</h3>
-            <div class="chart-container bg-gray-800 rounded-lg p-3">
-                <canvas id="signal-gauge-chart"></canvas>
-            </div>
-        </div>
-        
-        <div class="mb-6">
-            <h3 class="text-md font-semibold mb-2 text-gray-300">지표별 신호 강도</h3>
-            <div class="chart-container bg-gray-800 rounded-lg p-3">
-                <canvas id="indicator-radar-chart"></canvas>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 탭 3: 시나리오 분석 -->
-    <div id="content-scenarios" class="tab-content hidden">
-        <div class="scenario-container">
-            <div class="scenario-header bullish" id="bullish-header">
-                <span class="text-green-400 font-medium">강세 시나리오</span>
-                <i class="fas fa-chevron-down text-gray-400"></i>
-            </div>
-            <div class="scenario-content" id="bullish-content">
-                <p id="bull-scenario-text" class="text-sm"></p>
-            </div>
-        </div>
-        
-        <div class="scenario-container">
-            <div class="scenario-header neutral" id="neutral-header">
-                <span class="text-gray-400 font-medium">중립 시나리오</span>
-                <i class="fas fa-chevron-down text-gray-400"></i>
-            </div>
-            <div class="scenario-content" id="neutral-content">
-                <p id="neutral-scenario-text" class="text-sm"></p>
-            </div>
-        </div>
-        
-        <div class="scenario-container">
-            <div class="scenario-header bearish" id="bearish-header">
-                <span class="text-red-400 font-medium">약세 시나리오</span>
-                <i class="fas fa-chevron-down text-gray-400"></i>
-            </div>
-            <div class="scenario-content" id="bearish-content">
-                <p id="bear-scenario-text" class="text-sm"></p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 탭 4: 지표별 상세 -->
-    <div id="content-details" class="tab-content hidden">
-        <div class="mb-4">
-            <div class="flex justify-between items-center mb-2">
-                <span class="font-medium text-indigo-300">RSI 분석</span>
-                <span id="rsi-value-display" class="text-sm bg-gray-700 px-2 py-1 rounded">값: --</span>
-            </div>
-            <p id="rsi-analysis" class="text-sm bg-gray-800 p-3 rounded-md"></p>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-2 text-xs mt-4">
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>RSI</span>
-                <span id="rsi-signal" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>볼린저밴드</span>
-                <span id="bollinger-signal" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>MACD</span>
-                <span id="macd-signal" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>EMA</span>
-                <span id="ema-signal" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>거래량</span>
-                <span id="volume-signal" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>일목구름</span>
-                <span id="ichimoku-signal" class="font-semibold"></span>
-            </div>
-            <div class="flex justify-between bg-gray-800 p-2 rounded-md">
-                <span>OBV</span>
-                <span id="obv-signal" class="font-semibold"></span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="mt-6">
-        <div class="grid grid-cols-2 gap-3">
-            <button id="share-button" class="btn-primary py-2 px-4 rounded-md font-medium text-sm">
-                <i class="fas fa-share-alt mr-1"></i> 결과 공유
-            </button>
-            <button id="save-button" class="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-md font-medium text-sm transition-all">
-                <i class="fas fa-save mr-1"></i> 결과 저장
-            </button>
-        </div>
-    </div>
-</div>
 
-
-
-                <div class="card rounded-lg p-6">
-                    <h2 class="text-xl font-semibold mb-4 text-indigo-300">도움말</h2>
-                    <div class="text-sm text-gray-400">
-                        <p class="mb-2"><i class="fas fa-info-circle text-indigo-400 mr-2"></i> 차트를 보면서 각 기술적 지표의 상태를 입력하세요.</p>
-                        <p class="mb-2"><i class="fas fa-info-circle text-indigo-400 mr-2"></i> 각 지표에 대한 설명은 정보 아이콘에 마우스를 올리면 확인할 수 있습니다.</p>
-                        <p class="mb-2"><i class="fas fa-info-circle text-indigo-400 mr-2"></i> 분석 결과는 참고용이며, 실제 투자 결정은 본인의 판단에 따라 신중하게 내려야 합니다.</p>
-                        <p class="mb-6"><i class="fas fa-info-circle text-indigo-400 mr-2"></i> 결과는 입력한 지표 상태에 기반한 알고리즘 분석으로, 실제 시장 상황과 다를 수 있습니다.</p>
-                        
-                        <div class="p-3 bg-gray-800 rounded-md mb-4">
-                            <h3 class="font-semibold text-indigo-300 mb-1">볼린저밴드 패턴</h3>
-                            <p class="text-xs mb-1">상단 돌파 + 거래량 증가 = 강한 상승 또는 과매수</p>
-                            <p class="text-xs mb-1">하단 돌파 + 거래량 증가 = 강한 하락 또는 과매도</p>
-                            <p class="text-xs">하단/상단 접촉 후 중앙선으로 회귀 = 반전 신호</p>
-                        </div>
-                        
-                        <div class="p-3 bg-gray-800 rounded-md">
-                            <h3 class="font-semibold text-indigo-300 mb-1">지표 조합 팁</h3>
-                            <p class="text-xs mb-1">RSI 과매도 + 볼린저 하단 돌파 + 양봉 = 강한 매수 신호</p>
-                            <p class="text-xs mb-1">MACD 골든크로스 + EMA 골든크로스 = 중기 상승 추세 시작</p>
-                            <p class="text-xs">다이버전스 발생 시 기존 추세 전환 가능성 높음</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="saved-analyses" class="card rounded-lg p-6 mt-6">
-                    <h2 class="text-xl font-semibold mb-4 text-indigo-300">저장된 분석</h2>
-                    <div id="saved-analyses-list" class="text-sm">
-                        <!-- Saved analyses will be inserted here -->
-                    </div>
-                </div>
-            </div>
-       
-    <!-- Share Modal -->
-    <div id="share-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-indigo-300">분석 결과 공유</h3>
-            <p class="text-sm text-gray-400 mb-4">아래 링크를 복사하여 분석 결과를 공유하세요.</p>
-            <div class="flex">
-                <input id="share-link" type="text" class="input-field w-full py-2 px-3 rounded-l-md" readonly>
-                <button id="copy-link-button" class="btn-primary py-2 px-4 rounded-r-md">복사</button>
-            </div>
-            <div class="mt-4 flex justify-end">
-                <button id="close-share-modal" class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-md font-medium">닫기</button>
             </div>
         </div>
     </div>
 
-    <!-- GPT Template Modal -->
-    <div id="gptTemplateModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeTemplateModal">&times;</span>
-            <h2 class="text-2xl font-bold text-indigo-300 mb-4">GPT 분석 템플릿</h2>
-            <p class="text-gray-400 mb-6">아래 템플릿을 복사하여 ChatGPT에게 코인 분석을 요청하세요.</p>
-            
-            <div class="mb-4">
-                <button id="copyAllTemplateBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition-all">
-                    전체 템플릿 복사
-                </button>
-            </div>
-            
-            <div id="templateContent">
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-lg font-semibold text-indigo-300">전체 분석 요청 예시</h3>
-                        <button class="copy-btn" data-content="templateExample">복사</button>
-                    </div>
-                    <div id="templateExample" class="text-gray-300 text-sm">
-                        다음 기술적 지표 상태를 분석해주세요:
-
-▶️ RSI: 중립-높음 (60~70)
-▶️ MACD: 골든크로스 (MACD > 시그널)
-▶️ EMA: 상승추세 (단기 > 장기)
-▶️ 볼린저밴드: 상단밴드-중앙밴드 사이
-▶️ 거래량: 증가하는 거래량
-▶️ 일목균형표: 구름 위 (상승 추세)
-▶️ OBV: 상승추세
-
-코인명: 비트코인
-현재가: 137,175,000원
-타임프레임: 1시간봉
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">RSI</h3>
-                        <button class="copy-btn" data-content="rsiTemplate">복사</button>
-                    </div>
-                    <div id="rsiTemplate" class="text-gray-300 text-sm">
-▶️ RSI
-
-심한 과매도 (20 이하)
-과매도 (20~30)
-중립-낮음 (30~40)
-중립 (40~60)
-중립-높음 (60~70)
-과매수 (70~80)
-심한 과매수 (80 이상)
-
-→ RSI는 과매수/과매도 여부에 따라 매수 타이밍 분석에 중요합니다.
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">MACD</h3>
-                        <button class="copy-btn" data-content="macdTemplate">복사</button>
-                    </div>
-                    <div id="macdTemplate" class="text-gray-300 text-sm">
-▶️ MACD
-
-강한 골든크로스 (확실한 상승 교차)
-골든크로스 (MACD > 시그널)
-약한 골든크로스 (교차 시작)
-중립 (교차 임박)
-약한 데드크로스 (교차 시작)
-데드크로스 (MACD < 시그널)
-강한 데드크로스 (확실한 하락 교차)
-강세 다이버전스 (가격↓, MACD↑)
-약세 다이버전스 (가격↑, MACD↓)
-
-→ MACD는 추세 전환의 신호로, 매수·매도 타이밍 포착에 활용됩니다.
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">EMA (이동평균선)</h3>
-                        <button class="copy-btn" data-content="emaTemplate">복사</button>
-                    </div>
-                    <div id="emaTemplate" class="text-gray-300 text-sm">
-▶️ EMA (이동평균선)
-
-강한 상승추세 (단기 > 장기, 격차 확대)
-상승추세 (단기 > 장기)
-골든크로스 (단기선이 장기선 상향 돌파)
-중립 (교차 임박)
-데드크로스 (단기선이 장기선 하향 돌파)
-하락추세 (단기 < 장기)
-강한 하락추세 (단기 < 장기, 격차 확대)
-
-→ EMA는 장기적 추세 흐름 판단에 중요합니다.
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">볼린저밴드</h3>
-                        <button class="copy-btn" data-content="bbTemplate">복사</button>
-                    </div>
-                    <div id="bbTemplate" class="text-gray-300 text-sm">
-▶️ 볼린저밴드
-
-상단밴드 위로 돌파
-상단밴드 접촉
-상단밴드-중앙밴드 사이
-중앙밴드 근처
-중앙밴드-하단밴드 사이
-하단밴드 접촉
-하단밴드 아래로 돌파
-
-→ BB는 가격의 과열/침체 구간을 판단하며, 급등락 예상에 사용됩니다.
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">거래량</h3>
-                        <button class="copy-btn" data-content="volumeTemplate">복사</button>
-                    </div>
-                    <div id="volumeTemplate" class="text-gray-300 text-sm">
-▶️ 거래량
-
-매우 높은 거래량 (급증)
-증가하는 거래량
-평균 거래량
-감소하는 거래량
-낮은 거래량
-
-→ 거래량은 추세 지속 여부와 세력 개입 여부 판단에 중요합니다.
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">일목균형표</h3>
-                        <button class="copy-btn" data-content="ichimokuTemplate">복사</button>
-                    </div>
-                    <div id="ichimokuTemplate" class="text-gray-300 text-sm">
-▶️ 일목균형표
-
-강한 상승세 (구름 위, 전환선 > 기준선)
-구름 위 (상승 추세)
-구름 진입중 (위에서 아래로)
-구름 내부 (불확실성)
-구름 진입중 (아래에서 위로)
-구름 아래 (하락 추세)
-강한 하락세 (구름 아래, 전환선 < 기준선)
-
-→ 일목은 흐름의 강도와 방향성 판단에 유리합니다.
-                    </div>
-                </div>
-                
-                <div class="template-section">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-md font-semibold text-indigo-300">OBV</h3>
-                        <button class="copy-btn" data-content="obvTemplate">복사</button>
-                    </div>
-                    <div id="obvTemplate" class="text-gray-300 text-sm">
-▶️ OBV
-
-강한 상승추세
-상승추세
-중립
-하락추세
-강한 하락추세
-강세 다이버전스 (가격↓, OBV↑)
-약세 다이버전스 (가격↑, OBV↓)
-
-→ OBV는 매집/이탈 추정에 활용되며, 세력 동향 확인용입니다.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show/hide custom coin input
-            document.getElementById('coin-name').addEventListener('change', function() {
-                if (this.value === 'CUSTOM') {
-                    document.getElementById('custom-coin').classList.remove('hidden');
-                } else {
-                    document.getElementById('custom-coin').classList.add('hidden');
-                }
+        // === 1. 상태 관리 ===
+        const state = {
+            market: 'KRW-BTC',  // 업비트 코드
+            symbol: 'BTCKRW',   // 트레이딩뷰 코드 (KRW-BTC -> BTCKRW)
+            timeframe: 'D',     // 기본 일봉 (15, 60, 240, D)
+            candles: [],
+            indicators: {},
+            scorePercent: 50    // 0~100%
+        };
+
+        // === 2. 초기화 ===
+        document.addEventListener('DOMContentLoaded', () => {
+            initTradingView();
+            initTimeframeButtons();
+            
+            const select = document.getElementById('coin-select');
+            
+            // 초기 실행
+            updateAnalysis();
+
+            // 코인 변경 이벤트
+            select.addEventListener('change', (e) => {
+                state.market = e.target.value;
+                state.symbol = e.target.value.replace('KRW-', '') + 'KRW'; // KRW-BTC -> BTCKRW
+                updateAnalysis();
+                initTradingView(); // 차트도 변경
             });
-            
-            // Analyze button click handler
-            document.getElementById('analyze-button').addEventListener('click', performAnalysis);
-            
-            // Share button click handler
-            document.getElementById('share-button').addEventListener('click', function() {
-                // Generate shareable link (here we're just encoding the current state to JSON)
-                const analysisState = gatherAnalysisState();
-                const shareLink = window.location.href.split('?')[0] + '?data=' + 
-                                  encodeURIComponent(btoa(JSON.stringify(analysisState)));
-                
-                document.getElementById('share-link').value = shareLink;
-                document.getElementById('share-modal').classList.remove('hidden');
-            });
-            
-            // Copy link button
-            document.getElementById('copy-link-button').addEventListener('click', function() {
-                const shareLink = document.getElementById('share-link');
-                shareLink.select();
-                document.execCommand('copy');
-                this.textContent = '복사됨!';
-                setTimeout(() => {
-                    this.textContent = '복사';
-                }, 2000);
-            });
-            
-            // Close share modal
-            document.getElementById('close-share-modal').addEventListener('click', function() {
-                document.getElementById('share-modal').classList.add('hidden');
-            });
-            
-            // Save button click handler
-            document.getElementById('save-button').addEventListener('click', function() {
-                saveCurrentAnalysis();
-                displaySavedAnalyses();
-            });
-            
-            // GPT Template modal handlers
-            const gptTemplateBtn = document.getElementById('gptTemplateBtn');
-            const gptTemplateModal = document.getElementById('gptTemplateModal');
-            const closeTemplateModal = document.getElementById('closeTemplateModal');
-            
-            gptTemplateBtn.addEventListener('click', function() {
-                gptTemplateModal.style.display = 'block';
-            });
-            
-            closeTemplateModal.addEventListener('click', function() {
-                gptTemplateModal.style.display = 'none';
-            });
-            
-            window.addEventListener('click', function(event) {
-                if (event.target === gptTemplateModal) {
-                    gptTemplateModal.style.display = 'none';
-                }
-            });
-            
-            // Copy template buttons
-            document.querySelectorAll('.copy-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const contentId = this.getAttribute('data-content');
-                    const content = document.getElementById(contentId).innerText;
-                    
-                    const textarea = document.createElement('textarea');
-                    textarea.value = content;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    
-                    const originalText = this.textContent;
-                    this.textContent = '복사됨!';
-                    setTimeout(() => {
-                        this.textContent = originalText;
-                    }, 2000);
-                });
-            });
-            
-            // Copy all template button
-            document.getElementById('copyAllTemplateBtn').addEventListener('click', function() {
-                const allTemplates = document.querySelectorAll('#templateContent .template-section');
-                let combinedContent = '';
-                
-                allTemplates.forEach((template, index) => {
-                    // Skip the first template which is the example
-                    if (index > 0) {
-                        const content = template.querySelector('[id]').innerText;
-                        combinedContent += content + '\n\n';
-                    }
-                });
-                
-                const textarea = document.createElement('textarea');
-                textarea.value = combinedContent.trim();
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                
-                this.textContent = '전체 템플릿 복사됨!';
-                setTimeout(() => {
-                    this.textContent = '전체 템플릿 복사';
-                }, 2000);
-            });
-            
-            // Check for shared analysis in URL
-            checkForSharedAnalysis();
-            
-            // Display saved analyses if any
-            displaySavedAnalyses();
+
+            // 1분 자동 갱신
+            setInterval(updateAnalysis, 60000);
         });
-        
-        function gatherAnalysisState() {
-            const coinName = document.getElementById('coin-name').value;
-            const customCoin = document.getElementById('custom-coin').value;
-            const finalCoinName = coinName === 'CUSTOM' ? customCoin : coinName;
-            
-            return {
-                coin: finalCoinName,
-                timeframe: document.getElementById('timeframe').value,
-                currentPrice: document.getElementById('current-price').value,
-                historicalHigh: document.getElementById('historical-high').value,
-                rsiState: document.getElementById('rsi-state').value,
-                rsiValue: document.getElementById('rsi-value').value,
-                bollingerState: document.getElementById('bollinger-state').value,
-                macdState: document.getElementById('macd-state').value,
-                emaState: document.getElementById('ema-state').value,
-                volumeState: document.getElementById('volume-state').value,
-                ichimokuState: document.getElementById('ichimoku-state').value,
-                obvState: document.getElementById('obv-state').value,
-                additionalNotes: document.getElementById('additional-notes').value
+
+        function initTimeframeButtons() {
+            const btns = document.querySelectorAll('.tf-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // UI 변경
+                    btns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // 상태 변경 및 재분석
+                    state.timeframe = btn.dataset.tf;
+                    updateAnalysis();
+                });
+            });
+        }
+
+        function initTradingView() {
+            // 트레이딩뷰 위젯 생성
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "UPBIT:" + state.symbol,
+                "interval": state.timeframe === '60' ? '1H' : state.timeframe === '240' ? '4H' : state.timeframe,
+                "timezone": "Asia/Seoul",
+                "theme": "dark",
+                "style": "1",
+                "locale": "kr",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_top_toolbar": false,
+                "save_image": false,
+                "container_id": "tradingview_chart",
+                "backgroundColor": "rgba(15, 23, 42, 1)" // 배경색 일치
+            });
+        }
+
+        // === 3. 데이터 분석 파이프라인 ===
+        async function updateAnalysis() {
+            updateStatus('데이터 분석중...', 'yellow');
+
+            try {
+                // API 호출 URL 결정 (분봉/일봉)
+                let url = '';
+                let count = 200;
+                
+                if (state.timeframe === 'D') {
+                    url = `https://api.upbit.com/v1/candles/days?market=${state.market}&count=${count}`;
+                } else {
+                    url = `https://api.upbit.com/v1/candles/minutes/${state.timeframe}?market=${state.market}&count=${count}`;
+                }
+
+                const res = await fetch(url);
+                const json = await res.json();
+                state.candles = json.reverse(); // 과거 -> 현재 순
+
+                // 가격 표시
+                const current = state.candles[state.candles.length-1];
+                updatePriceUI(current.trade_price, (current.trade_price - current.opening_price)/current.opening_price*100);
+
+                // 지표 계산
+                calculateIndicators();
+                
+                // 점수 -> 확률 변환
+                calculateProbability();
+
+                // UI 렌더링
+                renderDashboard();
+                updateStatus('실시간 분석 완료', 'green');
+
+            } catch (err) {
+                console.error(err);
+                updateStatus('데이터 오류', 'red');
+            }
+        }
+
+        // === 4. 지표 계산 (핵심 알고리즘) ===
+        function calculateIndicators() {
+            const c = state.candles;
+            const closes = c.map(k => k.trade_price);
+            const highs = c.map(k => k.high_price);
+            const lows = c.map(k => k.low_price);
+            const volumes = c.map(k => k.candle_acc_trade_volume);
+
+            state.indicators = {
+                rsi: calcRSI(closes, 14),
+                bb: calcBB(closes, 20, 2),
+                macd: calcMACD(closes, 12, 26, 9),
+                ema: { short: calcEMA(closes, 20), long: calcEMA(closes, 60) },
+                ichimoku: calcIchimoku(highs, lows, closes),
+                volume: calcVolumeProfile(volumes),
+                obv: calcOBV(closes, volumes)
             };
         }
-        
-        function performAnalysis() {
-            const state = gatherAnalysisState();
+
+        // --- 수학 공식 (이전과 동일하지만 중요함) ---
+        function calcRSI(prices, period) {
+            let gains = 0, losses = 0;
+            for(let i=1; i<=period; i++) {
+                let diff = prices[prices.length-i] - prices[prices.length-i-1];
+                if(diff >= 0) gains += diff; else losses -= diff;
+            }
+            return 100 - (100 / (1 + (gains/period)/(losses/period)));
+        }
+        function calcBB(prices, p, std) {
+            const slice = prices.slice(-p);
+            const mean = slice.reduce((a,b)=>a+b,0)/p;
+            const dev = Math.sqrt(slice.reduce((a,b)=>a+Math.pow(b-mean,2),0)/p);
+            return { upper: mean+(dev*std), lower: mean-(dev*std), current: prices[prices.length-1] };
+        }
+        function calcEMA(prices, p) {
+            const k = 2/(p+1);
+            let ema = prices[0];
+            for(let i=1; i<prices.length; i++) ema = prices[i]*k + ema*(1-k);
+            return ema;
+        }
+        function calcMACD(prices, s, l, sig) {
+            const ema12 = calcEMA_Array(prices, 12);
+            const ema26 = calcEMA_Array(prices, 26);
+            const macdLine = ema12.map((v,i) => v - ema26[i]);
+            const signalLine = calcEMA_Array(macdLine, 9); // 약식
+            return { hist: macdLine[macdLine.length-1] - signalLine[signalLine.length-1] };
+        }
+        function calcEMA_Array(arr, p) {
+            const k = 2/(p+1);
+            let ema = arr[0];
+            const res = [ema];
+            for(let i=1; i<arr.length; i++) { ema = arr[i]*k + ema*(1-k); res.push(ema); }
+            return res;
+        }
+        function calcIchimoku(highs, lows, closes) {
+            const getHL = (p) => (Math.max(...highs.slice(-p)) + Math.min(...lows.slice(-p)))/2;
+            const kijun = getHL(26);
+            return { price: closes[closes.length-1], kijun, above: closes[closes.length-1] > kijun };
+        }
+        function calcVolumeProfile(vols) {
+            const cur = vols[vols.length-1];
+            const avg = vols.slice(-20).reduce((a,b)=>a+b,0)/20;
+            return { ratio: cur/avg };
+        }
+        function calcOBV(closes, vols) {
+            let obv = 0; 
+            const arr = [0];
+            for(let i=1; i<closes.length; i++) {
+                if(closes[i]>closes[i-1]) obv += vols[i];
+                else if(closes[i]<closes[i-1]) obv -= vols[i];
+                arr.push(obv);
+            }
+            const recent = arr.slice(-5).reduce((a,b)=>a+b,0)/5;
+            const past = arr.slice(-10,-5).reduce((a,b)=>a+b,0)/5;
+            return { trend: recent > past };
+        }
+
+        // === 5. 확률 계산 (Scoring -> Percentage) ===
+        function calculateProbability() {
+            const i = state.indicators;
+            let score = 0;
+            // 가중치: 총점 약 14점 만점 기준
+            if(i.rsi < 30) score += 2; else if(i.rsi > 70) score -= 2;
+            if(i.bb.current < i.bb.lower) score += 2; else if(i.bb.current > i.bb.upper) score -= 2;
+            if(i.macd.hist > 0) score += 2; else score -= 2;
+            if(i.ema.short > i.ema.long) score += 2; else score -= 2;
+            if(i.ichimoku.above) score += 1; else score -= 1;
+            if(i.volume.ratio > 1.5) score += 0; // 거래량은 방향성 확인용 (중립)
+            if(i.obv.trend) score += 1; else score -= 1;
+
+            // Score(-10 ~ +10) -> Percent(0 ~ 100)
+            // 0점일 때 50%, +10점일 때 95%, -10점일 때 5%
+            // 공식: 50 + (score * 4.5)
+            let percent = 50 + (score * 4.5);
+            percent = Math.min(Math.max(percent, 5), 95); // 5%~95% 제한
+            state.scorePercent = Math.round(percent);
+        }
+
+        // === 6. UI 렌더링 ===
+        function renderDashboard() {
+            updateGaugeChart(state.scorePercent);
+            renderTable();
+            renderSummary();
+        }
+
+        function renderTable() {
+            const i = state.indicators;
+            const tbody = document.getElementById('indicator-table-body');
             
-            // Calculate individual signals
-            const rsiSignal = analyzeRSI(state.rsiState);
-            const bollingerSignal = analyzeBollinger(state.bollingerState);
-            const macdSignal = analyzeMACD(state.macdState);
-            const emaSignal = analyzeEMA(state.emaState);
-            const volumeSignal = analyzeVolume(state.volumeState);
-            const ichimokuSignal = analyzeIchimoku(state.ichimokuState);
-            const obvSignal = analyzeOBV(state.obvState);
-            
-            // Calculate overall signal (weighted average)
-            const signals = [
-                { signal: rsiSignal, weight: 1.5 },
-                { signal: bollingerSignal, weight: 1.0 },
-                { signal: macdSignal, weight: 2.0 },
-                { signal: emaSignal, weight: 1.5 },
-                { signal: volumeSignal, weight: 1.0 },
-                { signal: ichimokuSignal, weight: 1.5 },
-                { signal: obvSignal, weight: 1.5 }
+            const rows = [
+                { name: 'RSI', val: i.rsi.toFixed(2), res: i.rsi>70?'과매수':i.rsi<30?'과매도':'중립', col: i.rsi>70?'red':i.rsi<30?'green':'gray' },
+                { name: 'MACD', val: i.macd.hist>0?'양봉':'음봉', res: i.macd.hist>0?'상승 추세':'하락 추세', col: i.macd.hist>0?'green':'red' },
+                { name: '볼린저밴드', val: Math.round(i.bb.current).toLocaleString(), res: i.bb.current>i.bb.upper?'상단 돌파':i.bb.current<i.bb.lower?'하단 터치':'밴드 내', col: i.bb.current>i.bb.upper?'red':i.bb.current<i.bb.lower?'green':'gray' },
+                { name: '이평선(EMA)', val: i.ema.short>i.ema.long?'정배열':'역배열', res: i.ema.short>i.ema.long?'상승장':'하락장', col: i.ema.short>i.ema.long?'green':'red' },
+                { name: '일목균형표', val: i.ichimoku.above?'구름 위':'구름 아래', res: i.ichimoku.above?'매수 우위':'매도 우위', col: i.ichimoku.above?'green':'red' },
+                { name: 'OBV', val: i.obv.trend?'상승':'하락', res: i.obv.trend?'매집 중':'이탈 중', col: i.obv.trend?'green':'red' },
+                { name: '거래량', val: (i.volume.ratio*100).toFixed(0)+'%', res: i.volume.ratio>1.5?'거래 급증':'평균', col: i.volume.ratio>1.5?'blue':'gray' }
             ];
-            
-            let totalWeight = 0;
-            let weightedSum = 0;
-            signals.forEach(item => {
-                weightedSum += item.signal.value * item.weight;
-                totalWeight += item.weight;
-            });
-            
-            const overallValue = Math.round((weightedSum / totalWeight) * 10) / 10;
-            const overallSignal = getSignalLabel(overallValue);
-            
-            // Generate text analyses
-            const shortTermOutlook = generateShortTermOutlook(signals, state);
-            const midTermOutlook = generateMidTermOutlook(signals, state);
-            const supportResistance = generateSupportResistance(signals, state);
-            const warningSignals = generateWarningSignals(signals, state);
-            
-            // Display results
-            displayResults({
-                coin: state.coin,
-                timeframe: state.timeframe,
-                timestamp: new Date().toLocaleString(),
-                overallSignal: { value: overallValue, label: overallSignal },
-                shortTermOutlook,
-                midTermOutlook,
-                supportResistance,
-                warningSignals,
-                individualSignals: {
-                    rsi: rsiSignal,
-                    bollinger: bollingerSignal,
-                    macd: macdSignal,
-                    ema: emaSignal,
-                    volume: volumeSignal,
-                    ichimoku: ichimokuSignal,
-                    obv: obvSignal
-                }
-            });
-        }
-        
-        function analyzeRSI(rsiState) {
-            // -5: Very Strong Sell, -4: Strong Sell, -3: Sell, -2: Weak Sell, -1: Very Weak Sell
-            // 0: Neutral
-            // 1: Very Weak Buy, 2: Weak Buy, 3: Buy, 4: Strong Buy, 5: Very Strong Buy
-            switch(rsiState) {
-                case 'very-overbought': return { value: -4, label: '강한 매도' };
-                case 'overbought': return { value: -3, label: '매도' };
-                case 'neutral-high': return { value: -1, label: '약한 매도' };
-                case 'neutral': return { value: 0, label: '중립' };
-                case 'neutral-low': return { value: 1, label: '약한 매수' };
-                case 'oversold': return { value: 3, label: '매수' };
-                case 'very-oversold': return { value: 4, label: '강한 매수' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function analyzeBollinger(bollingerState) {
-            switch(bollingerState) {
-                case 'above-upper': return { value: -4, label: '강한 매도' };
-                case 'touching-upper': return { value: -3, label: '매도' };
-                case 'upper-half': return { value: -1, label: '약한 매도' };
-                case 'middle': return { value: 0, label: '중립' };
-                case 'lower-half': return { value: 1, label: '약한 매수' };
-                case 'touching-lower': return { value: 3, label: '매수' };
-                case 'below-lower': return { value: 4, label: '강한 매수' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function analyzeMACD(macdState) {
-            switch(macdState) {
-                case 'strong-golden-cross': return { value: 5, label: '매우 강한 매수' };
-                case 'golden-cross': return { value: 4, label: '강한 매수' };
-                case 'weak-golden-cross': return { value: 2, label: '약한 매수' };
-                case 'neutral': return { value: 0, label: '중립' };
-                case 'weak-death-cross': return { value: -2, label: '약한 매도' };
-                case 'death-cross': return { value: -4, label: '강한 매도' };
-                case 'strong-death-cross': return { value: -5, label: '매우 강한 매도' };
-                case 'bullish-divergence': return { value: 3, label: '매수' };
-                case 'bearish-divergence': return { value: -3, label: '매도' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function analyzeEMA(emaState) {
-            switch(emaState) {
-                case 'strong-uptrend': return { value: 5, label: '매우 강한 매수' };
-                case 'uptrend': return { value: 3, label: '매수' };
-                case 'golden-cross': return { value: 4, label: '강한 매수' };
-                case 'neutral': return { value: 0, label: '중립' };
-                case 'death-cross': return { value: -4, label: '강한 매도' };
-                case 'downtrend': return { value: -3, label: '매도' };
-                case 'strong-downtrend': return { value: -5, label: '매우 강한 매도' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function analyzeVolume(volumeState) {
-            switch(volumeState) {
-                case 'high-increasing': return { value: 3, label: '매수' };
-                case 'increasing': return { value: 2, label: '약한 매수' };
-                case 'average': return { value: 0, label: '중립' };
-                case 'decreasing': return { value: -1, label: '약한 매도' };
-                case 'low': return { value: -2, label: '약한 매도' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function analyzeIchimoku(ichimokuState) {
-            switch(ichimokuState) {
-                case 'strong-above-cloud': return { value: 5, label: '매우 강한 매수' };
-                case 'above-cloud': return { value: 4, label: '강한 매수' };
-                case 'entering-cloud-above': return { value: -1, label: '약한 매도' };
-                case 'in-cloud': return { value: 0, label: '중립' };
-                case 'entering-cloud-below': return { value: 1, label: '약한 매수' };
-                case 'below-cloud': return { value: -4, label: '강한 매도' };
-                case 'strong-below-cloud': return { value: -5, label: '매우 강한 매도' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function analyzeOBV(obvState) {
-            switch(obvState) {
-                case 'strong-uptrend': return { value: 4, label: '강한 매수' };
-                case 'uptrend': return { value: 3, label: '매수' };
-                case 'neutral': return { value: 0, label: '중립' };
-                case 'downtrend': return { value: -3, label: '매도' };
-                case 'strong-downtrend': return { value: -4, label: '강한 매도' };
-                case 'bullish-divergence': return { value: 3, label: '매수' };
-                case 'bearish-divergence': return { value: -3, label: '매도' };
-                default: return { value: 0, label: '중립' };
-            }
-        }
-        
-        function getSignalLabel(value) {
-            if (value >= 4) return '매우 강한 매수';
-            if (value >= 2.5) return '강한 매수';
-            if (value >= 1.5) return '매수';
-            if (value >= 0.5) return '약한 매수';
-            if (value > -0.5) return '중립';
-            if (value > -1.5) return '약한 매도';
-            if (value > -2.5) return '매도';
-            if (value > -4) return '강한 매도';
-            return '매우 강한 매도';
-        }
-        
-        function getSignalClass(value) {
-            if (value >= 4) return 'signal-very-strong-buy';
-            if (value >= 2.5) return 'signal-strong-buy';
-            if (value >= 1.5) return 'signal-moderate-buy';
-            if (value >= 0.5) return 'signal-weak-buy';
-            if (value > -0.5) return 'signal-neutral';
-            if (value > -1.5) return 'signal-weak-sell';
-            if (value > -2.5) return 'signal-moderate-sell';
-            if (value > -4) return 'signal-strong-sell';
-            return 'signal-very-strong-sell';
-        }
-        
-        function generateShortTermOutlook(signals, state) {
-            const overallValue = calculateOverallValue(signals);
-            
-            if (overallValue >= 3) {
-                return `강한 상승 추세가 예상됩니다. RSI와 MACD 지표가 강한 매수 신호를 보이고 있으며, 단기적으로 추가 상승 모멘텀이 형성될 가능성이 높습니다. 볼륨 증가 시 추세가 확인될 것입니다.`;
-            } else if (overallValue >= 1) {
-                return `완만한 상승 추세가 예상됩니다. 기술적 지표들이 대체로 긍정적이나, 상승 강도는 제한적일 수 있습니다. 추가 매수 신호 확인 후 진입을 고려해 볼 수 있습니다.`;
-            } else if (overallValue > -1) {
-                return `횡보장이 예상됩니다. 현재 지표들이 혼합된 신호를 보이고 있어 뚜렷한 방향성을 확인하기 어렵습니다. 추세 확립 전까지 관망하는 것이 좋습니다.`;
-            } else if (overallValue > -3) {
-                return `약세장이 예상됩니다. 기술적 지표들이 매도 신호를 보이고 있어 단기적으로 하락 압력이 지속될 수 있습니다. 추가 진입은 지표 개선 후에 고려하시기 바랍니다.`;
-            } else {
-                return `강한 하락 추세가 예상됩니다. 대부분의 지표가 강한 매도 신호를 보이고 있으며, 추가 하락 가능성이 높습니다. 반등 신호가 확인될 때까지 신규 진입은 자제하는 것이 좋습니다.`;
-            }
-        }
-        
-        function generateMidTermOutlook(signals, state) {
-            // Focus more on EMA, Ichimoku, and OBV for mid-term
-            const emaWeight = 2.5;
-            const ichimokuWeight = 2.0;
-            const obvWeight = 2.0;
-            const macdWeight = 1.5;
-            const rsiWeight = 1.0;
-            const bollingerWeight = 0.8;
-            const volumeWeight = 0.8;
-            
-            const emaValue = findSignalValue(signals, 'ema') * emaWeight;
-            const ichimokuValue = findSignalValue(signals, 'ichimoku') * ichimokuWeight;
-            const obvValue = findSignalValue(signals, 'obv') * obvWeight;
-            const macdValue = findSignalValue(signals, 'macd') * macdWeight;
-            const rsiValue = findSignalValue(signals, 'rsi') * rsiWeight;
-            const bollingerValue = findSignalValue(signals, 'bollinger') * bollingerWeight;
-            const volumeValue = findSignalValue(signals, 'volume') * volumeWeight;
-            
-            const totalWeight = emaWeight + ichimokuWeight + obvWeight + macdWeight + rsiWeight + bollingerWeight + volumeWeight;
-            const midTermValue = (emaValue + ichimokuValue + obvValue + macdValue + rsiValue + bollingerValue + volumeValue) / totalWeight;
-            
-            if (midTermValue >= 3) {
-                return `중기적으로 강한 상승 추세가 예상됩니다. 이동평균선(EMA)과 일목구름이 강한 매수 신호를 보이고 있으며, OBV도 매수세가 강함을 시사합니다. 상승 추세가 1-2주 이상 지속될 가능성이 높습니다.`;
-            } else if (midTermValue >= 1) {
-                return `중기적으로 완만한 상승 추세가 예상됩니다. 주요 지표들이 대체로 긍정적이지만, 일부 지표에서 혼합된 신호가 있어 상승 속도가 제한될 수 있습니다. 단계적인 매수 전략을 고려해볼 수 있습니다.`;
-            } else if (midTermValue > -1) {
-                return `중기 방향성이 불확실합니다. 지표들이 혼합된 신호를 보이고 있어 추세 확립을 위한 추가 데이터가 필요합니다. 시장 방향이 확실해질 때까지 신중한 접근이 필요합니다.`;
-            } else if (midTermValue > -3) {
-                return `중기적으로 하락 추세가 예상됩니다. 이동평균선 하향 배열과 일목구름 아래에서의 움직임이 관찰되며, 추가 하락 압력이 있을 수 있습니다. 반등 신호 확인 전까지 신규 매수는 신중히 접근하세요.`;
-            } else {
-                return `중기적으로 강한 하락 추세가 예상됩니다. 대부분의 장기 지표가 명확한 매도 신호를 보이고 있으며, 추세 전환 없이는 회복이 어려울 수 있습니다. 추세 반전 신호가 확인될 때까지 관망하는 것이 좋습니다.`;
-            }
-        }
-        
-        function findSignalValue(signals, type) {
-            for (let signal of signals) {
-                if (signal.signal && signal.signal.type === type) {
-                    return signal.signal.value;
-                }
-            }
-            
-            // Try to find by matching part of the key in individual signals
-            for (let i = 0; i < signals.length; i++) {
-                const item = signals[i];
-                if (item.signal && typeof item.signal === 'object') {
-                    // Check if signal has a type property or try to infer from item keys
-                    if (item.signal[type] || String(item.signal).toLowerCase().includes(type.toLowerCase())) {
-                        return item.signal.value;
-                    }
-                }
-            }
-            
-            return 0; // Default value if not found
-        }
-        
-        function calculateOverallValue(signals) {
-            let totalWeight = 0;
-            let weightedSum = 0;
-            
-            signals.forEach(item => {
-                if (item && item.signal && typeof item.signal.value !== 'undefined') {
-                    weightedSum += item.signal.value * item.weight;
-                    totalWeight += item.weight;
-                }
-            });
-            
-            if (totalWeight === 0) return 0;
-            return weightedSum / totalWeight;
-        }
-        
-        function generateSupportResistance(signals, state) {
-            // Use current price as basis for support/resistance calculation
-            const currentPrice = parseFloat(state.currentPrice) || 1000; // Default value if not provided
-            const historicalHigh = parseFloat(state.historicalHigh) || currentPrice * 1.5;
-            
-            // Generate fictional support/resistance levels based on typical Fibonacci ratios
-            const majorResistance = Math.round(currentPrice * 1.236 * 100) / 100;
-            const minorResistance = Math.round(currentPrice * 1.1 * 100) / 100;
-            const majorSupport = Math.round(currentPrice * 0.786 * 100) / 100;
-            const minorSupport = Math.round(currentPrice * 0.9 * 100) / 100;
-            
-            // Add psychological levels
-            const psychologicalResistance = Math.ceil(currentPrice / 1000) * 1000;
-            const psychologicalSupport = Math.floor(currentPrice / 1000) * 1000;
-            
-            // Add historical reference
-            const historicalReference = Math.round(historicalHigh * 0.618 * 100) / 100;
-            
-            let supportResistanceText = `주요 저항 레벨: $${majorResistance} (현재가 대비 +${Math.round((majorResistance/currentPrice-1)*100)}%)\n`;
-            supportResistanceText += `단기 저항 레벨: $${minorResistance} (현재가 대비 +${Math.round((minorResistance/currentPrice-1)*100)}%)\n`;
-            
-            if (psychologicalResistance > currentPrice && psychologicalResistance < majorResistance) {
-                supportResistanceText += `심리적 저항 레벨: $${psychologicalResistance}\n`;
-            }
-            
-            if (historicalReference > currentPrice) {
-                supportResistanceText += `과거 고점 기준 피보나치 저항: $${historicalReference}\n`;
-            }
-            
-            supportResistanceText += `\n주요 지지 레벨: $${majorSupport} (현재가 대비 ${Math.round((majorSupport/currentPrice-1)*100)}%)\n`;
-            supportResistanceText += `단기 지지 레벨: $${minorSupport} (현재가 대비 ${Math.round((minorSupport/currentPrice-1)*100)}%)\n`;
-            
-            if (psychologicalSupport < currentPrice && psychologicalSupport > majorSupport) {
-                supportResistanceText += `심리적 지지 레벨: $${psychologicalSupport}`;
-            }
-            
-            return supportResistanceText;
-        }
-        
-        function generateWarningSignals(signals, state) {
-            let warnings = [];
-            
-            // Check for overbought conditions
-            if (signals.find(s => s.signal && s.signal.value <= -3 && s.signal.label && s.signal.label.includes('매도'))) {
-                warnings.push("RSI가 과매수 구간에 있어 단기 조정 가능성이 있습니다.");
-            }
-            
-            // Check for oversold conditions
-            if (signals.find(s => s.signal && s.signal.value >= 3 && s.signal.label && s.signal.label.includes('매수'))) {
-                warnings.push("RSI가 과매도 구간에 있어 반등 가능성이 있습니다.");
-            }
-            
-            // Check for bollinger band warnings
-            if (signals.find(s => s.signal && s.signal.value <= -3 && String(s).includes('bollinger'))) {
-                warnings.push("볼린저밴드 상단에 접근/돌파하여 조정 위험이 있습니다.");
-            }
-            
-            // Check for divergence
-            const macdState = state.macdState;
-            if (macdState === 'bullish-divergence') {
-                warnings.push("MACD 강세 다이버전스가 관찰되어 추세 전환 가능성이 있습니다.");
-            } else if (macdState === 'bearish-divergence') {
-                warnings.push("MACD 약세 다이버전스가 관찰되어 추세 전환 가능성이 있습니다.");
-            }
-            
-            // Check for volume issues
-            if (state.volumeState === 'low') {
-                warnings.push("거래량이 낮아 현재 추세의 지속성이 의심됩니다.");
-            }
-            
-            // Check for conflicting signals
-            const emaSignal = signals.find(s => s.signal && String(s).includes('ema'))?.signal?.value || 0;
-            const macdSignal = signals.find(s => s.signal && String(s).includes('macd'))?.signal?.value || 0;
-            
-            if ((emaSignal > 2 && macdSignal < -2) || (emaSignal < -2 && macdSignal > 2)) {
-                warnings.push("EMA와 MACD가 상충된 신호를 보이고 있어 신중한 접근이 필요합니다.");
-            }
-            
-            // Add general market warning based on overall signal
-            const overallValue = calculateOverallValue(signals);
-            if (overallValue >= 3) {
-                warnings.push("강한 매수 신호에도 불구하고 급등 후 조정 가능성을 염두에 두세요.");
-            } else if (overallValue <= -3) {
-                warnings.push("강한 매도 신호에도 불구하고 급락 후 반등 가능성을 염두에 두세요.");
-            }
-            
-            if (warnings.length === 0) {
-                warnings.push("현재 특별한 경고 신호가 관찰되지 않습니다. 그러나 암호화폐 시장의 높은 변동성을 항상 고려하세요.");
-            }
-            
-            return warnings.join("\n");
-        }
-        
-        function displayResults(results) {
-            // Display basic info
-            document.getElementById('result-coin').textContent = results.coin;
-            document.getElementById('result-timeframe').textContent = getTimeframeLabel(results.timeframe);
-            document.getElementById('result-timestamp').textContent = results.timestamp;
-            
-            // Display overall signal
-            const overallSignalElement = document.getElementById('overall-signal');
-            overallSignalElement.textContent = results.overallSignal.label;
-            overallSignalElement.className = getSignalClass(results.overallSignal.value);
-            
-            // Display text analyses
-            document.getElementById('short-term-outlook').textContent = results.shortTermOutlook;
-            document.getElementById('mid-term-outlook').textContent = results.midTermOutlook;
-            document.getElementById('support-resistance').innerHTML = results.supportResistance.replace(/\n/g, '<br>');
-            document.getElementById('warning-signals').innerHTML = results.warningSignals.replace(/\n/g, '<br>');
-            
-            // Display individual signals
-            document.getElementById('rsi-signal').textContent = results.individualSignals.rsi.label;
-            document.getElementById('bollinger-signal').textContent = results.individualSignals.bollinger.label;
-            document.getElementById('macd-signal').textContent = results.individualSignals.macd.label;
-            document.getElementById('ema-signal').textContent = results.individualSignals.ema.label;
-            document.getElementById('volume-signal').textContent = results.individualSignals.volume.label;
-            document.getElementById('ichimoku-signal').textContent = results.individualSignals.ichimoku.label;
-            document.getElementById('obv-signal').textContent = results.individualSignals.obv.label;
-            
-            // Show results container
-            document.getElementById('results-container').classList.remove('hidden');
-            
-            // Scroll to results
-            document.getElementById('results-container').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function getTimeframeLabel(timeframe) {
-            const labels = {
-                '15m': '15분봉',
-                '30m': '30분봉',
-                '1h': '1시간봉',
-                '4h': '4시간봉',
-                '1d': '일봉',
-                '1w': '주봉'
-            };
-            return labels[timeframe] || timeframe;
-        }
-        
-        function saveCurrentAnalysis() {
-            // Get current analysis state
-            const state = gatherAnalysisState();
-            const timestamp = new Date().toISOString();
-            const analysisId = 'analysis_' + timestamp;
-            
-            // Get existing saved analyses
-            let savedAnalyses = JSON.parse(localStorage.getItem('cryptoAnalyses') || '{}');
-            
-            // Add this analysis
-            savedAnalyses[analysisId] = {
-                state: state,
-                timestamp: timestamp,
-                displayTime: new Date().toLocaleString()
-            };
-            
-            // Save back to localStorage
-            localStorage.setItem('cryptoAnalyses', JSON.stringify(savedAnalyses));
-            
-            alert('분석이 저장되었습니다!');
-        }
-        
-        function displaySavedAnalyses() {
-            const savedAnalyses = JSON.parse(localStorage.getItem('cryptoAnalyses') || '{}');
-            const analysesList = document.getElementById('saved-analyses-list');
-            
-            // Clear current list
-            analysesList.innerHTML = '';
-            
-            // If no saved analyses, hide the container
-            if (Object.keys(savedAnalyses).length === 0) {
-                document.getElementById('saved-analyses').classList.add('hidden');
-                return;
-            }
-            
-            // Show the container
-            document.getElementById('saved-analyses').classList.remove('hidden');
-            
-            // Add saved analyses to list (most recent first)
-            Object.keys(savedAnalyses)
-                .sort((a, b) => new Date(savedAnalyses[b].timestamp) - new Date(savedAnalyses[a].timestamp))
-                .forEach(id => {
-                    const analysis = savedAnalyses[id];
-                    const li = document.createElement('div');
-                    li.className = 'p-2 hover:bg-gray-700 rounded-md mb-2';
-                    
-                    const coinName = analysis.state.coin;
-                    const timeframe = getTimeframeLabel(analysis.state.timeframe);
-                    const displayTime = analysis.displayTime;
-                    
-                    li.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium">${coinName} (${timeframe})</span>
-                            <div class="flex space-x-2">
-                                <button class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded" 
-                                        onclick="loadSavedAnalysis('${id}')">불러오기</button>
-                                <button class="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
-                                        onclick="deleteSavedAnalysis('${id}')">삭제</button>
-                            </div>
-                        </div>
-                        <div class="text-xs text-gray-400">${displayTime}</div>
-                    `;
-                    
-                    analysesList.appendChild(li);
-                });
-        }
-        
-        function loadSavedAnalysis(id) {
-            const savedAnalyses = JSON.parse(localStorage.getItem('cryptoAnalyses') || '{}');
-            
-            if (!savedAnalyses[id]) {
-                alert('저장된 분석을 찾을 수 없습니다.');
-                return;
-            }
-            
-            const analysis = savedAnalyses[id];
-            
-            // Load values into form
-            const state = analysis.state;
-            
-            if (state.coin) {
-                if (['BTC', 'ETH', 'BNB', 'XRP', 'SOL', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC'].includes(state.coin)) {
-                    document.getElementById('coin-name').value = state.coin;
-                    document.getElementById('custom-coin').classList.add('hidden');
-                } else {
-                    document.getElementById('coin-name').value = 'CUSTOM';
-                    document.getElementById('custom-coin').value = state.coin;
-                    document.getElementById('custom-coin').classList.remove('hidden');
-                }
-            }
-            
-            document.getElementById('timeframe').value = state.timeframe || '1h';
-            document.getElementById('current-price').value = state.currentPrice || '';
-            document.getElementById('historical-high').value = state.historicalHigh || '';
-            document.getElementById('rsi-state').value = state.rsiState || 'neutral';
-            document.getElementById('rsi-value').value = state.rsiValue || '';
-            document.getElementById('bollinger-state').value = state.bollingerState || 'middle';
-            document.getElementById('macd-state').value = state.macdState || 'neutral';
-            document.getElementById('ema-state').value = state.emaState || 'neutral';
-            document.getElementById('volume-state').value = state.volumeState || 'average';
-            document.getElementById('ichimoku-state').value = state.ichimokuState || 'in-cloud';
-            document.getElementById('obv-state').value = state.obvState || 'neutral';
-            document.getElementById('additional-notes').value = state.additionalNotes || '';
-            
-            // Run analysis
-            performAnalysis();
-            
-            alert('저장된 분석을 불러왔습니다.');
-        }
-        
-        function deleteSavedAnalysis(id) {
-            if (!confirm('이 분석을 삭제하시겠습니까?')) {
-                return;
-            }
-            
-            let savedAnalyses = JSON.parse(localStorage.getItem('cryptoAnalyses') || '{}');
-            delete savedAnalyses[id];
-            localStorage.setItem('cryptoAnalyses', JSON.stringify(savedAnalyses));
-            
-            displaySavedAnalyses();
-        }
-        
-        function checkForSharedAnalysis() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const data = urlParams.get('data');
-            
-            if (data) {
-                try {
-                    const decodedData = JSON.parse(atob(data));
-                    
-                    // Load shared analysis into the form
-                    if (decodedData.coin) {
-                        if (['BTC', 'ETH', 'BNB', 'XRP', 'SOL', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC'].includes(decodedData.coin)) {
-                            document.getElementById('coin-name').value = decodedData.coin;
-                        } else {
-                            document.getElementById('coin-name').value = 'CUSTOM';
-                            document.getElementById('custom-coin').value = decodedData.coin;
-                            document.getElementById('custom-coin').classList.remove('hidden');
-                        }
-                    }
-                    
-                    document.getElementById('timeframe').value = decodedData.timeframe || '1h';
-                    document.getElementById('current-price').value = decodedData.currentPrice || '';
-                    document.getElementById('historical-high').value = decodedData.historicalHigh || '';
-                    document.getElementById('rsi-state').value = decodedData.rsiState || 'neutral';
-                    document.getElementById('rsi-value').value = decodedData.rsiValue || '';
-                    document.getElementById('bollinger-state').value = decodedData.bollingerState || 'middle';
-                    document.getElementById('macd-state').value = decodedData.macdState || 'neutral';
-                    document.getElementById('ema-state').value = decodedData.emaState || 'neutral';
-                    document.getElementById('volume-state').value = decodedData.volumeState || 'average';
-                    document.getElementById('ichimoku-state').value = decodedData.ichimokuState || 'in-cloud';
-                    document.getElementById('obv-state').value = decodedData.obvState || 'neutral';
-                    document.getElementById('additional-notes').value = decodedData.additionalNotes || '';
-                    
-                    // Run analysis
-                    performAnalysis();
-                } catch (e) {
-                    console.error('Error loading shared analysis:', e);
-                }
-            }
-        }
-        // 차트 관련 함수들
-function initializeCharts(results) {
-    createSignalGaugeChart(results.overallSignal.value);
-    createIndicatorRadarChart(results.individualSignals);
-}
 
-function createSignalGaugeChart(value) {
-    const chartElement = document.getElementById('signal-gauge-chart');
-    if (!chartElement) return;
-    
-    const chartCtx = chartElement.getContext('2d');
-    
-    // 기존 차트 제거
-    if (window.signalGaugeChart) {
-        window.signalGaugeChart.destroy();
-    }
-    
-    // 게이지 차트 생성
-    window.signalGaugeChart = new Chart(chartCtx, {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [value + 5, 10 - (value + 5)],
-                backgroundColor: [
-                    value > 0 ? 'rgba(16, 185, 129, 0.8)' : 
-                    value < 0 ? 'rgba(244, 63, 94, 0.8)' : 
-                    'rgba(156, 163, 175, 0.8)',
-                    'rgba(26, 33, 59, 0)'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            circumference: 180,
-            rotation: 270,
-            cutout: '80%',
-            plugins: {
-                legend: {
-                    display: false
+            tbody.innerHTML = rows.map(r => `
+                <tr class="border-b border-slate-700/50 last:border-0 hover:bg-slate-800/30">
+                    <td class="px-4 py-3 font-bold text-slate-300">${r.name}</td>
+                    <td class="px-4 py-3 font-mono">${r.val}</td>
+                    <td class="px-4 py-3">${r.res}</td>
+                    <td class="px-4 py-3 text-right">
+                        <span class="inline-block w-3 h-3 rounded-full ${r.col === 'green' ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' : r.col === 'red' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : r.col === 'blue' ? 'bg-blue-500' : 'bg-slate-600'}"></span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderSummary() {
+            const p = state.scorePercent;
+            const box = document.getElementById('ai-summary-text');
+            const strat = document.getElementById('strategy-text');
+            
+            let summary = "";
+            let strategy = "";
+
+            if(p >= 80) {
+                summary = "<p>1. 모든 지표가 강력한 상승을 가리킵니다.</p><p>2. RSI와 이평선이 완벽한 매수 신호입니다.</p><p>3. 추가 상승 여력이 매우 높습니다.</p>";
+                strategy = "적극 매수 구간입니다. 추세가 꺾이기 전까지 홀딩하는 추세 추종 전략을 권장합니다.";
+            } else if(p >= 60) {
+                summary = "<p>1. 전반적으로 매수 우위 상태입니다.</p><p>2. 하락보다는 상승 확률이 높습니다.</p><p>3. 단기 조정 시 분할 매수가 유효합니다.</p>";
+                strategy = "눌림목 매수 전략이 유효합니다. 지지 라인 근처에서 분할로 진입하세요.";
+            } else if(p <= 20) {
+                summary = "<p>1. 위험 신호가 감지되었습니다.</p><p>2. 모든 지표가 하락을 경고합니다.</p><p>3. 과매도 상태지만 섣부른 진입은 위험합니다.</p>";
+                strategy = "절대 진입 금지. 보유자는 손절 라인을 지키고 현금 비중을 100%로 늘리세요.";
+            } else if(p <= 40) {
+                summary = "<p>1. 매도 압력이 더 강한 상태입니다.</p><p>2. 반등 시마다 매도 물량이 나옵니다.</p><p>3. 추세 반전을 기다려야 합니다.</p>";
+                strategy = "보수적 접근 필요. 바닥을 확인하는 패턴(쌍바닥 등)이 나올 때까지 관망하세요.";
+            } else {
+                summary = "<p>1. 방향성이 없는 횡보장입니다.</p><p>2. 지표들이 엇갈린 신호를 보냅니다.</p><p>3. 거래량이 터지는 쪽으로 방향이 잡힐 것입니다.</p>";
+                strategy = "관망이 최선입니다. 박스권 매매 외에는 추세가 결정될 때까지 기다리세요.";
+            }
+            
+            box.innerHTML = summary;
+            strat.innerText = strategy;
+        }
+
+        // === 차트 및 UI 유틸 ===
+        function updateStatus(msg, col) {
+            document.getElementById('status-text').innerText = msg;
+            document.getElementById('status-dot').className = `w-2 h-2 rounded-full animate-pulse bg-${col}-500`;
+        }
+        
+        function updatePriceUI(price, chg) {
+            document.getElementById('display-price').innerText = Math.floor(price).toLocaleString();
+            const el = document.getElementById('display-change');
+            el.innerText = (chg>0?'+':'') + chg.toFixed(2) + '%';
+            el.className = `text-xs font-bold ml-2 ${chg>0?'text-emerald-400':'text-red-400'}`;
+        }
+
+        let probChart = null;
+        function updateGaugeChart(percent) {
+            const ctx = document.getElementById('probabilityChart').getContext('2d');
+            const color = percent >= 60 ? '#10b981' : percent <= 40 ? '#ef4444' : '#94a3b8';
+            
+            document.getElementById('prob-percent').innerText = percent + '%';
+            document.getElementById('prob-percent').className = `text-6xl font-bold tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] ${percent>=60?'text-emerald-400':percent<=40?'text-red-500':'text-slate-300'}`;
+            
+            document.getElementById('prob-label').innerText = percent>=60?'매수 우위':percent<=40?'매도 우위':'중립/관망';
+            document.getElementById('prob-label').className = `text-sm font-bold mt-2 bg-slate-800 px-3 py-1 rounded-full border border-slate-700 ${percent>=60?'text-emerald-400':percent<=40?'text-red-400':'text-slate-400'}`;
+
+            if(probChart) probChart.destroy();
+
+            probChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [percent, 100-percent],
+                        backgroundColor: [color, 'rgba(255,255,255,0.05)'],
+                        borderWidth: 0,
+                        cutout: '85%',
+                        circumference: 180,
+                        rotation: 270,
+                        borderRadius: 20
+                    }]
                 },
-                tooltip: {
-                    enabled: false
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: { enabled: false } },
+                    animation: { animateScale: true }
                 }
-            }
+            });
         }
-    });
-    
-    // 값 표시
-    chartCtx.fillStyle = '#e2e8f0';
-    chartCtx.font = 'bold 18px Inter, Noto Sans KR, sans-serif';
-    chartCtx.textAlign = 'center';
-    chartCtx.fillText(getSignalLabel(value), chartElement.width / 2, chartElement.height - 30);
-    
-    chartCtx.font = '14px Inter, Noto Sans KR, sans-serif';
-    chartCtx.fillText(`(${value.toFixed(1)})`, chartElement.width / 2, chartElement.height - 10);
-}
-
-function createIndicatorRadarChart(indicators) {
-    const chartElement = document.getElementById('indicator-radar-chart');
-    if (!chartElement) return;
-    
-    const chartCtx = chartElement.getContext('2d');
-    
-    // 기존 차트 제거
-    if (window.indicatorRadarChart) {
-        window.indicatorRadarChart.destroy();
-    }
-    
-    // 레이더 차트 생성
-    window.indicatorRadarChart = new Chart(chartCtx, {
-        type: 'radar',
-        data: {
-            labels: ['RSI', 'MACD', 'EMA', '볼린저밴드', '거래량', '일목구름', 'OBV'],
-            datasets: [{
-                label: '지표 신호 강도',
-                data: [
-                    indicators.rsi.value,
-                    indicators.macd.value,
-                    indicators.ema.value,
-                    indicators.bollinger.value,
-                    indicators.volume.value,
-                    indicators.ichimoku.value,
-                    indicators.obv.value
-                ],
-                backgroundColor: 'rgba(79, 70, 229, 0.2)',
-                borderColor: 'rgba(79, 70, 229, 1)',
-                pointBackgroundColor: 'rgba(79, 70, 229, 1)',
-                pointRadius: 3
-            }]
-        },
-        options: {
-            scales: {
-                r: {
-                    min: -5,
-                    max: 5,
-                    ticks: {
-                        stepSize: 1,
-                        backdropColor: 'rgba(30, 33, 48, 0)',
-                        color: '#9CA3AF'
-                    },
-                    angleLines: {
-                        color: 'rgba(45, 55, 72, 0.5)'
-                    },
-                    grid: {
-                        color: 'rgba(45, 55, 72, 0.5)'
-                    },
-                    pointLabels: {
-                        color: '#e2e8f0'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-}
-
-function generateScenarioAnalysis(signals, state) {
-    let bullScenario = '';
-    let neutralScenario = '';
-    let bearScenario = '';
-    
-    const overallValue = calculateOverallValue(signals);
-    const currentPrice = parseFloat(state.currentPrice) || 1000;
-    
-    // 강세 시나리오
-    if (overallValue > 0) {
-        bullScenario = `현재의 포지티브 신호가 계속되면서 단기적으로 ${Math.round(currentPrice * 1.1)} USD까지 상승할 수 있습니다. 거래량 증가 시 ${Math.round(currentPrice * 1.15)} USD 돌파도 가능합니다.`;
-    } else {
-        bullScenario = `현재 하락세에서 반등이 발생하려면 RSI가 30 이하에서 반등하는 과매도 신호와 MACD 히스토그램의 하락 폭 감소가 선행되어야 합니다. 이 경우 ${Math.round(currentPrice * 1.05)} USD 수준까지 반등이 가능합니다.`;
-    }
-    
-    // 중립 시나리오
-    neutralScenario = `현재 지표들이 혼합된 신호를 보이고 있어, ${Math.round(currentPrice * 0.97)} USD에서 ${Math.round(currentPrice * 1.03)} USD 범위 내에서 횡보할 가능성이 높습니다. 추가적인 확실한 추세 신호가 나타날 때까지 이 범위 내에서 변동할 것으로 예상됩니다.`;
-    
-    // 약세 시나리오
-    if (overallValue < 0) {
-        bearScenario = `현재의 네거티브 신호가 계속된다면, 단기적으로 ${Math.round(currentPrice * 0.9)} USD까지 하락할 수 있습니다. 거래량이 증가한다면 ${Math.round(currentPrice * 0.85)} USD 수준까지도 가능합니다.`;
-    } else {
-        bearScenario = `현재 상승세에서 조정이 발생하려면 RSI가 70 이상에서 이탈하는 과매수 신호와 MACD 크로스오버가 발생해야 합니다. 이 경우 ${Math.round(currentPrice * 0.95)} USD 수준까지 조정이 가능합니다.`;
-    }
-    
-    return {
-        bullish: bullScenario,
-        neutral: neutralScenario,
-        bearish: bearScenario
-    };
-}
-
-// 시나리오 토글 함수
-function toggleScenario(id) {
-    const content = document.getElementById(id);
-    if (content) {
-        content.classList.toggle('active');
-    }
-}
-
-// 기존 displayResults 함수 수정
-const originalDisplayResults = displayResults;
-
-displayResults = function(results) {
-    originalDisplayResults(results);
-    
-    // 차트 초기화
-    initializeCharts(results);
-    
-    // 시나리오 분석
-    const state = gatherAnalysisState();
-    const signals = [
-        { signal: results.individualSignals.rsi, weight: 1.5 },
-        { signal: results.individualSignals.bollinger, weight: 1.0 },
-        { signal: results.individualSignals.macd, weight: 2.0 },
-        { signal: results.individualSignals.ema, weight: 1.5 },
-        { signal: results.individualSignals.volume, weight: 1.0 },
-        { signal: results.individualSignals.ichimoku, weight: 1.5 },
-        { signal: results.individualSignals.obv, weight: 1.5 }
-    ];
-    
-    const scenarios = generateScenarioAnalysis(signals, state);
-    document.getElementById('bull-scenario-text').textContent = scenarios.bullish;
-    document.getElementById('neutral-scenario-text').textContent = scenarios.neutral;
-    document.getElementById('bear-scenario-text').textContent = scenarios.bearish;
-    
-    // RSI 값 표시
-    const rsiValue = document.getElementById('rsi-value').value || '??';
-    document.getElementById('rsi-value-display').textContent = `값: ${rsiValue}`;
-};
-
-// DOMContentLoaded 이벤트에 시나리오 클릭 이벤트 추가
-document.addEventListener('DOMContentLoaded', function() {
-    const existingLoad = window.onload;
-    
-    window.onload = function() {
-        if (existingLoad) existingLoad();
- // 탭 전환 이벤트
-document.getElementById('tab-overview')?.addEventListener('click', function() {
-    switchTab('overview');
-});
-document.getElementById('tab-charts')?.addEventListener('click', function() {
-    switchTab('charts');
-});
-document.getElementById('tab-scenarios')?.addEventListener('click', function() {
-    switchTab('scenarios');
-});
-document.getElementById('tab-details')?.addEventListener('click', function() {
-    switchTab('details');
-});
-
-// 탭 전환 함수
-function switchTab(tabId) {
-    // 모든 탭 컨텐츠 숨기기
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.add('hidden');
-    });
-    
-    // 모든 탭 버튼 비활성화
-    document.querySelectorAll('[id^="tab-"]').forEach(button => {
-        button.classList.remove('border-indigo-500');
-        button.classList.add('text-gray-400');
-        button.classList.remove('text-white');
-    });
-    
-    // 선택한 탭만 표시
-    document.getElementById('content-' + tabId)?.classList.remove('hidden');
-    
-    // 선택한 탭 버튼 활성화
-    const activeTab = document.getElementById('tab-' + tabId);
-    if (activeTab) {
-        activeTab.classList.add('border-indigo-500');
-        activeTab.classList.remove('text-gray-400');
-        activeTab.classList.add('text-white');
-    }
-}
-       
-        // 시나리오 헤더 클릭 이벤트
-        document.getElementById('bullish-header')?.addEventListener('click', function() {
-            toggleScenario('bullish-content');
-        });
-        
-        document.getElementById('neutral-header')?.addEventListener('click', function() {
-            toggleScenario('neutral-content');
-        });
-        
-        document.getElementById('bearish-header')?.addEventListener('click', function() {
-            toggleScenario('bearish-content');
-        });
-    };
-});
-
-        // Global function definitions for HTML event handlers
-        window.loadSavedAnalysis = loadSavedAnalysis;
-        window.deleteSavedAnalysis = deleteSavedAnalysis;
     </script>
 </body>
 </html>
