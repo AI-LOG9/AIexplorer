@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라떼로또 ETF 큐레이터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        /* 스크롤바 디자인 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        
+        .etf-item:hover { background-color: rgba(59, 130, 246, 0.1); border-color: #3b82f6; }
+        .etf-item.active { background-color: rgba(59, 130, 246, 0.2); border-color: #3b82f6; border-left-width: 4px; }
+        
+        .tab-btn.active { color: #34d399; border-bottom: 2px solid #34d399; }
+        
+        /* 태그 스타일 */
+        .tag-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: auto; }
+        .tag-pop { background: #064e3b; color: #34d399; border: 1px solid #059669; } /* 인기/추천 */
+        .tag-div { background: #1e3a8a; color: #60a5fa; border: 1px solid #2563eb; } /* 배당 */
+        .tag-fee { background: #78350f; color: #fcd34d; border: 1px solid #d97706; } /* 가성비 */
+    </style>
+</head>
+<body class="bg-[#0f172a] text-slate-200 min-h-screen pb-20">
+
+    <div class="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0f172a] to-[#0f172a] -z-10"></div>
+    <div class="fixed top-0 left-0 w-[500px] h-[500px] bg-emerald-600/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+
+    <div class="container mx-auto px-4 py-8 max-w-[1200px]">
+        
+        <header class="mb-6 text-center md:text-left">
+            <h1 class="text-2xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
+                <i class="fa-solid fa-magnifying-glass-chart text-emerald-400"></i> ETF 뭐 살까? 큐레이터
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">라떼로또가 엄선한 분야별 핵심 ETF 30선</p>
+        </header>
+
+        <a href="https://blog.naver.com/gptblogger/223989204340" target="_blank" class="block w-full mb-8 group">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 p-4 rounded-2xl shadow-lg border border-blue-400/30 flex items-center justify-between transition-all transform hover:scale-[1.01]">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-inner">
+                        📱
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg group-hover:text-blue-100 transition-colors">토스증권으로 ETF 쉽게 사는 법</h3>
+                        <p class="text-sm text-blue-100/90">초보자 필독! 라떼로또의 친절한 가이드 보러가기</p>
+                    </div>
+                </div>
+                <div class="bg-white/10 px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2 group-hover:bg-white/20 transition-colors">
+                    블로그 이동 <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </div>
+            </div>
+        </a>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[750px]">
+            
+            <div class="lg:col-span-4 flex flex-col gap-4 h-full">
+                <div class="flex border-b border-slate-700 px-1 bg-slate-800/50 rounded-t-xl">
+                    <button class="tab-btn active flex-1 py-3 text-sm font-bold text-slate-500 hover:text-white transition-colors" onclick="filterList('index')">지수형</button>
+                    <button class="tab-btn flex-1 py-3 text-sm font-bold text-slate-500 hover:text-white transition-colors" onclick="filterList('div')">배당형</button>
+                    <button class="tab-btn flex-1 py-3 text-sm font-bold text-slate-500 hover:text-white transition-colors" onclick="filterList('tech')">성장형</button>
+                    <button class="tab-btn flex-1 py-3 text-sm font-bold text-slate-500 hover:text-white transition-colors" onclick="filterList('bond')">채권형</button>
+                </div>
+
+                <div class="glass-card rounded-b-2xl rounded-tr-2xl overflow-y-auto flex-1 p-2 space-y-2" id="etf-list-container">
+                    </div>
+            </div>
+
+            <div class="lg:col-span-8 h-full glass-card rounded-2xl p-8 relative flex flex-col justify-between border-t-4 border-emerald-500">
+                
+                <div>
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span id="card-tag" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-white mb-3 inline-block shadow-lg">미국 대표</span>
+                            <h2 class="text-5xl font-bold text-white tracking-tight mb-1 flex items-baseline gap-3">
+                                <span id="card-ticker">SPY</span>
+                                <span class="text-sm font-normal text-slate-500 bg-slate-800 px-2 py-1 rounded border border-slate-700">운용보수 <span id="card-fee" class="text-emerald-400 font-bold">0.09%</span></span>
+                            </h2>
+                            <p id="card-name" class="text-lg text-blue-300 font-medium mt-1">S&P 500 ETF Trust</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-slate-800/30 p-4 rounded-xl border border-slate-700/50">
+                        <p class="text-xs text-slate-500 font-bold uppercase mb-2"><i class="fa-solid fa-quote-left text-slate-600"></i> 한 줄 요약</p>
+                        <p id="card-desc" class="text-xl text-slate-200 leading-relaxed font-light">
+                            "미국 주식시장의 스탠다드. 500개 우량 기업을 한 번에 사는 효과가 있습니다."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 my-4">
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center hover:bg-slate-700 transition-colors group">
+                        <i class="fa-solid fa-sack-dollar text-2xl text-yellow-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                        <p class="text-xs text-slate-400">배당 수익률</p>
+                        <p id="card-yield" class="text-lg font-bold text-white">연 1.3%</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center hover:bg-slate-700 transition-colors group">
+                        <i class="fa-regular fa-clock text-2xl text-blue-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                        <p class="text-xs text-slate-400">배당 주기</p>
+                        <p id="card-period" class="text-lg font-bold text-white">분기배당</p>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center hover:bg-slate-700 transition-colors group">
+                        <i class="fa-solid fa-chart-line text-2xl text-emerald-400 mb-2 group-hover:scale-110 transition-transform"></i>
+                        <p class="text-xs text-slate-400">투자 성향</p>
+                        <p id="card-risk" class="text-lg font-bold text-white">안정추구</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-end mb-3">
+                        <p class="text-xs text-slate-500 font-bold uppercase">TOP 3 보유 종목</p>
+                    </div>
+                    <div id="card-holdings" class="flex gap-3 mb-6">
+                        </div>
+
+                    <div class="bg-gradient-to-r from-emerald-900/40 to-slate-800 border-l-4 border-emerald-500 p-4 rounded-r-xl">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-emerald-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded">LatteLotto Pick</span>
+                            <span class="text-xs font-bold text-emerald-400">이런 분께 추천해요</span>
+                        </div>
+                        <p id="card-comment" class="text-sm text-slate-300">
+                            가장 기본이 되는 ETF입니다. 장기투자의 정석을 원하신다면 무조건 1순위입니다.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === 1. 확장된 ETF 데이터베이스 (섹터별 8~10개) ===
+        const etfDB = {
+            index: [
+                { t: "SPY", n: "S&P 500", tag: "🏆 부동의 1위", tagType: "pop", fee: "0.09%", yield: "연 1.3%", period: "분기", risk: "안정형", holdings: ["MSFT", "AAPL", "NVDA"], desc: "미국 1등부터 500등 기업을 모두 담았습니다. 주식 투자의 정석입니다.", comment: "가장 거래량이 많고 안전합니다. 뭘 살지 모르면 이걸 사세요." },
+                { t: "QQQ", n: "Nasdaq 100", tag: "🚀 수익률 1위", tagType: "pop", fee: "0.20%", yield: "연 0.6%", period: "분기", risk: "성장형", holdings: ["AAPL", "MSFT", "AMZN"], desc: "기술주 중심의 나스닥 100 추종. 변동성은 크지만 장기 수익률이 압도적입니다.", comment: "기술의 발전을 믿는다면 SPY보다 QQQ가 낫습니다." },
+                { t: "DIA", n: "Dow Jones", tag: "💎 전통 우량주", tagType: "div", fee: "0.16%", yield: "연 1.8%", period: "월배당", risk: "보수적", holdings: ["UNH", "GS", "MSFT"], desc: "맥도날드, 코카콜라 등 전통적인 초우량 기업 30개만 모았습니다.", comment: "매달 배당을 주며, 하락장에서 방어력이 좋습니다." },
+                { t: "SPLG", n: "S&P 500 Mini", tag: "☕ 커피값 투자", tagType: "fee", fee: "0.02%", yield: "연 1.3%", period: "분기", risk: "안정형", holdings: ["MSFT", "AAPL", "NVDA"], desc: "SPY와 똑같은데 가격은 1/10, 수수료는 더 쌉니다.", comment: "소액으로 적립식 투자를 하려는 분들에게 최고의 선택입니다." },
+                { t: "IVV", n: "S&P 500 Core", tag: "📉 최저 수수료", tagType: "fee", fee: "0.03%", yield: "연 1.3%", period: "분기", risk: "안정형", holdings: ["MSFT", "AAPL", "NVDA"], desc: "블랙록에서 운용하는 SPY의 저렴한 버전입니다.", comment: "장기 보유 시 수수료 아끼기에 좋습니다." },
+                { t: "VTI", n: "Total Stock", tag: "🇺🇸 미국 전체", tagType: "pop", fee: "0.03%", yield: "연 1.4%", period: "분기", risk: "안정형", holdings: ["MSFT", "AAPL", "NVDA"], desc: "S&P500뿐 아니라 중소형주까지 미국 상장 기업 4,000개를 다 삽니다.", comment: "미국 시장 그 자체에 투자하고 싶다면 VTI입니다." },
+                { t: "RSP", n: "S&P 500 EW", tag: "⚖️ 동일 가중", tagType: "div", fee: "0.20%", yield: "연 1.5%", period: "분기", risk: "밸런스", holdings: ["All Equal"], desc: "애플도 0.2%, 이름 모를 기업도 0.2%. 모든 기업을 똑같이 삽니다.", comment: "빅테크 독주가 불안할 때 대안이 됩니다." },
+            ],
+            div: [
+                { t: "SCHD", n: "US Dividend", tag: "👑 배당킹", tagType: "pop", fee: "0.06%", yield: "연 3.4%", period: "분기", risk: "성장+배당", holdings: ["AVGO", "PEP", "MRK"], desc: "배당도 주고 주가도 오르는 '배당성장' ETF의 끝판왕입니다.", comment: "직장인들의 은퇴 준비 1순위 종목입니다." },
+                { t: "JEPI", n: "Equity Premium", tag: "💰 월급 7%", tagType: "div", fee: "0.35%", yield: "연 7~8%", period: "월배당", risk: "현금흐름", holdings: ["AMZN", "MSFT", "ELN"], desc: "주가 상승은 제한적이지만, 매달 높은 현금을 꽂아줍니다.", comment: "당장 쓸 생활비가 필요한 은퇴자에게 적합합니다." },
+                { t: "O", n: "Realty Income", tag: "🏢 건물주", tagType: "div", fee: "-", yield: "연 5.2%", period: "월배당", risk: "부동산", holdings: ["부동산"], desc: "미국 전역의 편의점, 약국 등에서 월세를 받아 나눠줍니다.", comment: "미국 월배당 리츠의 대명사입니다." },
+                { t: "VNQ", n: "Real Estate", tag: "🏠 부동산 전체", tagType: "div", fee: "0.12%", yield: "연 4.0%", period: "분기", risk: "부동산", holdings: ["PLD", "AMT", "EQIX"], desc: "미국 부동산 시장 전체에 분산 투자합니다.", comment: "부동산 경기가 좋아질 것 같을 때 담으세요." },
+                { t: "DGRO", n: "Div Growth", tag: "📈 배당성장", tagType: "pop", fee: "0.08%", yield: "연 2.3%", period: "분기", risk: "성장형", holdings: ["MSFT", "AAPL", "JPM"], desc: "배당률은 낮아도 배당금이 빠르게 늘어나는 기업을 샀습니다.", comment: "SCHD보다 기술주 비중이 높아 성장성이 좋습니다." },
+                { t: "VIG", n: "Div Appreciation", tag: "🎩 배당귀족", tagType: "fee", fee: "0.06%", yield: "연 1.8%", period: "분기", risk: "안정형", holdings: ["MSFT", "AAPL", "V"], desc: "10년 이상 배당을 늘려온 튼튼한 기업만 골랐습니다.", comment: "가장 방어적이고 안전한 배당 투자입니다." },
+                { t: "TLT", n: "20+ Year Bond", tag: "📉 금리인하", tagType: "div", fee: "0.15%", yield: "연 4.5%", period: "월배당", risk: "채권", holdings: ["미국채"], desc: "미국 장기채에 투자합니다. 금리가 내리면 가격이 급등합니다.", comment: "경제 위기를 대비하는 보험 같은 자산입니다." },
+            ],
+            tech: [
+                { t: "SOXX", n: "Semiconductor", tag: "💾 반도체 대장", tagType: "pop", fee: "0.35%", yield: "연 0.6%", period: "분기", risk: "공격형", holdings: ["NVDA", "AVGO", "AMD"], desc: "AI 시대의 핵심, 미국 상장 반도체 기업을 모두 담았습니다.", comment: "반도체 슈퍼사이클을 믿는다면 필수입니다." },
+                { t: "XLK", n: "Technology", tag: "🍏 애플+마소", tagType: "pop", fee: "0.10%", yield: "연 0.7%", period: "분기", risk: "공격형", holdings: ["MSFT", "AAPL", "NVDA"], desc: "S&P 500 중 IT 기업만 골라 담았습니다.", comment: "빅테크 집중 투자를 원할 때 QQQ보다 강력합니다." },
+                { t: "SMH", n: "Semi 25", tag: "🤖 엔비디아 집중", tagType: "pop", fee: "0.35%", yield: "연 0.5%", period: "분기", risk: "초공격형", holdings: ["NVDA", "TSM", "AVGO"], desc: "SOXX보다 1등 기업(엔비디아 등) 비중을 더 많이 담습니다.", comment: "가장 공격적인 반도체 투자를 원한다면 이것." },
+                { t: "TQQQ", n: "UltraPro QQQ", tag: "🔥 야수의 심장", tagType: "fee", fee: "0.95%", yield: "-", period: "-", risk: "초고위험", holdings: ["QQQ x3"], desc: "나스닥 하루 등락폭의 3배를 추종합니다. (장기보유 위험)", comment: "단기 승부사들을 위한 레버리지 상품입니다." },
+                { t: "SOXL", n: "Semi 3x Bull", tag: "🎢 반도체 3배", tagType: "fee", fee: "0.95%", yield: "-", period: "-", risk: "초고위험", holdings: ["SOXX x3"], desc: "반도체 지수의 3배입니다. 하루에 20%도 왔다갔다 합니다.", comment: "변동성을 견딜 수 있는 야수분들만 보세요." },
+                { t: "ARKK", n: "Innovation", tag: "💡 혁신기업", tagType: "div", fee: "0.75%", yield: "-", period: "-", risk: "공격형", holdings: ["TSLA", "COIN", "ROKU"], desc: "파괴적 혁신 기업(테슬라 등)에 투자하는 액티브 ETF입니다.", comment: "미래 기술에 베팅하고 싶다면." },
+                { t: "BOTZ", n: "Robotics & AI", tag: "🤖 로봇/AI", tagType: "pop", fee: "0.68%", yield: "연 0.2%", period: "연간", risk: "테마형", holdings: ["NVDA", "ABB", "ISR"], desc: "전 세계 로봇 및 인공지능 관련 기업에 투자합니다.", comment: "로봇 시대의 도래를 준비하는 테마 ETF입니다." },
+            ],
+            bond: [
+                { t: "AGG", n: "Core Bond", tag: "🛡️ 채권 기본", tagType: "fee", fee: "0.03%", yield: "연 4.5%", period: "월배당", risk: "안정형", holdings: ["국채", "회사채"], desc: "미국 전체 채권 시장에 투자하여 이자를 받습니다.", comment: "주식과 섞어서 자산 배분하기 좋습니다." },
+                { t: "SGOV", n: "0-3 Month", tag: "💵 파킹통장", tagType: "fee", fee: "0.07%", yield: "연 5.2%", period: "월배당", risk: "초안정", holdings: ["초단기채"], desc: "3개월 미만 초단기 채권. 현금처럼 안전한데 이자를 줍니다.", comment: "달러를 그냥 놀리기 아까울 때 넣어두세요." },
+                { t: "TLT", n: "20+ Year", tag: "📉 금리방어", tagType: "pop", fee: "0.15%", yield: "연 4.5%", period: "월배당", risk: "중위험", holdings: ["장기채"], desc: "20년 이상 장기채. 경제 위기나 금리 인하 시 수익이 납니다.", comment: "주식 폭락 시 계좌를 지켜줄 방패입니다." },
+                { t: "LQD", n: "Corp Bond", tag: "🏢 회사채", tagType: "div", fee: "0.14%", yield: "연 5.2%", period: "월배당", risk: "중위험", holdings: ["우량 회사채"], desc: "애플, 마소 같은 우량 기업이 발행한 채권에 투자합니다.", comment: "국채보다 높은 이자를 원할 때 좋습니다." },
+                { t: "HYG", n: "High Yield", tag: "🍖 고수익 채권", tagType: "div", fee: "0.49%", yield: "연 7.5%", period: "월배당", risk: "고위험", holdings: ["투기등급채"], desc: "신용등급이 낮은 회사의 채권. 위험한 만큼 이자가 셉니다.", comment: "주식과 채권 사이의 수익률을 원한다면." },
+                { t: "GLD", n: "Gold Trust", tag: "🥇 금 투자", tagType: "pop", fee: "0.40%", yield: "-", period: "-", risk: "안정형", holdings: ["실물 금"], desc: "국제 금 시세를 그대로 따라갑니다. 인플레이션 헷지용.", comment: "전쟁이나 위기 상황에 빛나는 자산입니다." },
+            ]
+        };
+
+        // === 2. 초기화 ===
+        document.addEventListener('DOMContentLoaded', () => {
+            filterList('index'); 
+        });
+
+        // === 3. 리스트 생성 로직 ===
+        function filterList(category) {
+            // 탭 스타일
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-emerald-400', 'border-b-2', 'border-emerald-400'));
+            event.target.classList.add('active', 'text-emerald-400', 'border-b-2', 'border-emerald-400');
+            event.target.classList.remove('text-slate-500');
+
+            const container = document.getElementById('etf-list-container');
+            container.innerHTML = ""; 
+
+            const list = etfDB[category];
+            list.forEach((item, index) => {
+                const el = document.createElement('div');
+                // 리스트 아이템 디자인
+                el.className = `etf-item p-3 border border-slate-700 rounded-xl cursor-pointer transition-all flex items-center gap-3 ${index === 0 ? 'active' : ''}`;
+                el.onclick = () => showDetail(el, item);
+                
+                // 태그 스타일 결정
+                let tagClass = "tag-pop";
+                if(item.tagType === 'div') tagClass = "tag-div";
+                if(item.tagType === 'fee') tagClass = "tag-fee";
+
+                el.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white text-xs border border-slate-600 shrink-0">
+                        ${item.t.substring(0,1)}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-white truncate">${item.t}</span>
+                            <span class="${tagClass} tag-badge">${item.tag}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate">${item.n}</p>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            if(list.length > 0) showDetail(container.firstChild, list[0]);
+        }
+
+        // === 4. 상세 정보 표시 ===
+        function showDetail(element, data) {
+            document.querySelectorAll('.etf-item').forEach(e => e.classList.remove('active', 'bg-slate-800'));
+            if(element) {
+                element.classList.add('active');
+            }
+
+            // 데이터 바인딩
+            document.getElementById('card-ticker').innerText = data.t;
+            document.getElementById('card-name').innerText = data.n;
+            document.getElementById('card-fee').innerText = data.fee;
+            document.getElementById('card-desc').innerText = `"${data.desc}"`;
+            document.getElementById('card-yield').innerText = data.yield;
+            document.getElementById('card-period').innerText = data.period;
+            document.getElementById('card-risk').innerText = data.risk;
+            document.getElementById('card-comment').innerText = data.comment;
+            document.getElementById('card-tag').innerText = data.tag; // 상단 태그도 동기화
+
+            // 홀딩스
+            const holdingsBox = document.getElementById('card-holdings');
+            holdingsBox.innerHTML = data.holdings.map(h => `
+                <span class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700 text-sm font-bold text-slate-300">
+                    ${h}
+                </span>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
