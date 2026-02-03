@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미국 유학 면접 치트시트</title>
+    <title>2026 미국 유학 전략</title>
     <style>
         :root {
             --bg-color: #f7f6f3;
             --card-bg: #ffffff;
-            --text-main: #37352f;
-            --text-sub: #787774;
+            --text-main: #333;
+            --text-sub: #666;
             --accent: #2e86de;
             --border: #e0e0e0;
             --tag-bg: #e8f5e9;
@@ -29,7 +29,7 @@
         .app-container {
             width: 100%;
             max-width: 600px;
-            min-height: 80vh;
+            min-height: 90vh;
         }
 
         /* 헤더 */
@@ -38,268 +38,337 @@
             align-items: center;
             margin-bottom: 20px;
             height: 50px;
-            position: sticky;
-            top: 0;
-            background: var(--bg-color);
-            z-index: 10;
-            padding-top: 10px;
         }
 
         .back-btn {
             background: white;
             border: 1px solid #ccc;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            padding: 5px 12px;
+            padding: 6px 12px;
             margin-right: 15px;
             border-radius: 6px;
-            display: none; /* 메인에서는 숨김 */
+            display: none;
         }
 
         .page-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            flex-grow: 1;
+            color: #222;
         }
 
-        /* 그리드 레이아웃 */
+        /* 공통 그리드 */
         .grid-layout {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
-            padding-bottom: 50px;
+            gap: 12px;
+            padding-bottom: 40px;
         }
 
-        /* 메인/지역 카드 */
+        /* 메인 네비게이션 카드 */
         .nav-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 20px;
             cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.1s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .nav-card:active {
-            transform: scale(0.98);
-            background: #fafafa;
+        .nav-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: #bbb;
         }
 
-        .card-icon { font-size: 2rem; margin-bottom: 10px; }
-        .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 5px; }
-        .card-desc { font-size: 0.9rem; color: var(--text-sub); line-height: 1.4; }
+        .nav-content { flex-grow: 1; }
+        .nav-icon { font-size: 1.8rem; margin-right: 15px; }
+        .nav-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+        .nav-desc { font-size: 0.9rem; color: var(--text-sub); }
+        .arrow-icon { color: #ccc; font-weight: bold; }
 
-        /* 학교 상세 리스트 */
-        .section-header {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            color: #888;
-            margin: 30px 0 10px 5px;
+        /* --- 아코디언 스타일 (입시 가이드) --- */
+        .guide-section-title {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1rem;
             font-weight: 700;
-            border-bottom: 2px solid #ddd;
+            color: #d35400;
+            border-bottom: 2px solid #edcdc2;
             padding-bottom: 5px;
+            display: inline-block;
         }
 
-        .school-item {
-            background: var(--card-bg);
-            border-left: 5px solid #ccc;
+        .accordion-item {
+            background: white;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+            overflow: hidden;
         }
 
-        /* 지역별 색상 구분 */
-        .east .school-item { border-left-color: #e74c3c; }
-        .west .school-item { border-left-color: #3498db; }
-        .mid .school-item { border-left-color: #2ecc71; }
-
-        .school-name {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #222;
-            margin-bottom: 6px;
+        .accordion-header {
+            padding: 16px;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #fff;
+            font-weight: 700;
+            font-size: 1rem;
         }
 
-        .school-desc {
+        .accordion-header:hover { background: #f9f9f9; }
+
+        .accordion-content {
+            display: none; /* 기본 숨김 */
+            padding: 0 16px 16px 16px;
+            border-top: 1px solid #f0f0f0;
+            background: #fafafa;
             font-size: 0.95rem;
             color: #444;
-            margin-bottom: 8px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .killer-tag {
-            display: inline-block;
+        .accordion-content ul {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .accordion-content li { margin-bottom: 6px; }
+
+        /* --- 학교 상세 리스트 스타일 --- */
+        .section-header {
             font-size: 0.85rem;
-            padding: 4px 8px;
-            background-color: var(--tag-bg);
+            color: #888;
+            margin: 25px 0 10px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .school-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-left: 4px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .east .school-card { border-left-color: #e74c3c; }
+        .west .school-card { border-left-color: #3498db; }
+        .mid .school-card { border-left-color: #2ecc71; }
+
+        .school-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #222;
+        }
+
+        .school-desc { font-size: 0.95rem; color: #555; margin-bottom: 8px; }
+        
+        .tag-badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            background: var(--tag-bg);
             color: var(--tag-text);
             border-radius: 4px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
-        /* 애니메이션 */
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        /* 유틸 */
+        .show { display: block !important; }
+        .rotate { transform: rotate(180deg); }
+        .toggle-icon { transition: transform 0.2s; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <button id="backBtn" class="back-btn">⬅ 뒤로</button>
-            <div id="pageTitle" class="page-title">🇺🇸 미국 유학 지도</div>
+            <button id="backBtn" class="back-btn">← 뒤로</button>
+            <div id="pageTitle" class="page-title">미국 유학 전략 지도</div>
         </div>
 
-        <div id="contentArea" class="grid-layout">
-            </div>
+        <div id="contentArea"></div>
     </div>
 
     <script>
         // ==========================================
-        // 📌 데이터베이스 (수정된 최종본)
+        // 📌 데이터베이스 (DB)
         // ==========================================
         const db = {
             "main": [
-                { id: "east", icon: "🏛️", title: "동부 (East Coast)", desc: "전통, 아이비리그, 좁은 지역에 명문 밀집." },
-                { id: "west", icon: "🌴", title: "서부 (West Coast)", desc: "혁신, 테크(실리콘밸리), 날씨와 삶의 질." },
-                { id: "mid", icon: "🌽", title: "중부 (Midwest)", desc: "가성비, 공학 중심, 한국인이 놓치기 쉬운 알짜." }
+                { id: "east", icon: "🏛️", title: "동부 (East)", desc: "전통, 아이비리그, 명문 밀집" },
+                { id: "west", icon: "🌴", title: "서부 (West)", desc: "혁신, 테크, 날씨와 삶의 질" },
+                { id: "mid", icon: "🌽", title: "중부 (Midwest)", desc: "가성비, 공학, 실속있는 유학" }
             ],
-            // --- 동부 지역 ---
+            // 🔥 [아코디언용] 입시 가이드 데이터
+            "guides": [
+                { 
+                    id: "g1", 
+                    icon: "⏰", 
+                    title: "입시 타임라인 (Timeline)", 
+                    type: "timeline",
+                    items: [
+                        "<strong>Summer (6~8월):</strong> 에세이 소재 발굴 & 인터뷰 스토리텔링 구상",
+                        "<strong>9월 ~ 1월:</strong> 학교별 인터뷰 투어 & 원서 접수 시작",
+                        "<strong>10월 ~ 12월:</strong> SSAT / 공인어학성적(TOEFL/Duolingo) 확보 완료",
+                        "<strong>1월 15일:</strong> 📌 원서 마감 (Deadline) *일부 학교 2월"
+                    ]
+                },
+                { 
+                    id: "g2", 
+                    icon: "📝", 
+                    title: "필수 시험 & 서류 (Checklist)", 
+                    type: "list",
+                    items: [
+                        "지원서 (Application Form)",
+                        "원서 에세이 (학생 / 학부모 각각 작성)",
+                        "<strong>공인시험:</strong> SSAT (상위권 필수)",
+                        "<strong>어학시험:</strong> TOEFL 또는 Duolingo (최근 듀오링고 선호↑)",
+                        "학교 성적표 (최근 2~3년)",
+                        "추천서 (영어, 수학, 교장/카운셀러 등 평균 3~5개)",
+                        "비교과 활동 증빙 (포트폴리오, 영상 등)"
+                    ]
+                },
+                { 
+                    id: "g3", 
+                    icon: "💡", 
+                    title: "합격 핵심 전략 (Strategy)", 
+                    type: "list",
+                    items: [
+                        "<strong>인터뷰:</strong> '똑똑함'보다 '인성'과 '기여도'를 봅니다.",
+                        "<strong>에세이:</strong> 스펙 나열 금지. 나만의 가치관을 담은 스토리텔링 필수.",
+                        "<strong>비교과(EC):</strong> '이기적인 천재'는 불합격. 공동체(Community)에 기여한 경험을 강조하세요."
+                    ]
+                }
+            ],
+            
+            // --- 지역별 데이터 ---
             "east": {
-                title: "동부: 주(State) 선택",
+                title: "동부 지역 선택",
                 regionClass: "east",
                 locations: [
-                    { id: "boston", icon: "🎓", title: "매사추세츠 (MA)", desc: "교육의 심장. 하버드/MIT + 명문 보딩." },
-                    { id: "nh", icon: "🌲", title: "뉴햄프셔 (NH)", desc: "숲속의 은둔 고수. 공부만 파는 환경." },
-                    { id: "ct", icon: "💎", title: "코네티컷 (CT)", desc: "뉴욕 위 부촌. 예일대와 귀족적 보딩." },
-                    { id: "nynj", icon: "🗽", title: "뉴욕 / 뉴저지", desc: "도심과 금융. NYU와 프린스턴." }
+                    { id: "boston", icon: "🎓", title: "매사추세츠 (MA)", desc: "교육의 심장. 하버드/MIT" },
+                    { id: "nh", icon: "🌲", title: "뉴햄프셔 (NH)", desc: "숲속의 은둔 고수" },
+                    { id: "ct", icon: "💎", title: "코네티컷 (CT)", desc: "부촌과 명문 보딩" },
+                    { id: "nynj", icon: "🗽", title: "뉴욕 / 뉴저지", desc: "도심과 금융 인프라" }
                 ]
             },
-            // --- 서부 지역 ---
             "west": {
-                title: "서부: 지역 선택",
+                title: "서부 지역 선택",
                 regionClass: "west",
                 locations: [
-                    { id: "norcal", icon: "💻", title: "북부 (실리콘밸리)", desc: "스탠퍼드/버클리. 창업과 혁신의 산실." },
-                    { id: "socal", icon: "🎬", title: "남부 (LA/산타바바라)", desc: "USC/UCLA. 헐리우드, 인맥, 따뜻함." }
+                    { id: "norcal", icon: "💻", title: "북부 (실리콘밸리)", desc: "스탠퍼드, 창업, 혁신" },
+                    { id: "socal", icon: "🎬", title: "남부 (LA/산타바바라)", desc: "헐리우드, 인맥, 따뜻함" }
                 ]
             },
-            // --- 중부 지역 ---
             "mid": {
-                title: "중부: 지역 선택",
+                title: "중부 지역 선택",
                 regionClass: "mid",
                 locations: [
-                    { id: "il", icon: "🌬️", title: "일리노이 (Chicago)", desc: "시카고대/UIUC. 학문과 가성비 공존." },
-                    { id: "mi", icon: "〽️", title: "미시간 (Ann Arbor)", desc: "공립의 하버드. 자동차와 스포츠." }
+                    { id: "il", icon: "🌬️", title: "일리노이 (Chicago)", desc: "학문과 가성비 공존" },
+                    { id: "mi", icon: "〽️", title: "미시간 (Ann Arbor)", desc: "공립 최강, 자동차/스포츠" }
                 ]
             },
 
-            // ==========================================
-            // 📌 상세 학교 데이터 (면접용 멘트 장착)
-            // ==========================================
-            
-            // [동부] 매사추세츠
+            // --- 학교 상세 데이터 ---
             "boston": {
                 title: "매사추세츠 (MA)",
                 uni: [
-                    { name: "하버드 / MIT", desc: "설명이 필요 없는 세계 1위. 보스턴의 중심.", tag: "Need-blind (전액지원)" },
-                    { name: "BU (보스턴대)", desc: "도심형 대학. 하버드와 교류 활발. 바이오 강세.", tag: "성장형 글로벌 리더" }
+                    { name: "하버드 / MIT", desc: "세계 1위. 보스턴의 중심.", tag: "Need-blind" },
+                    { name: "BU (보스턴대)", desc: "도심형 대학. 바이오 강세.", tag: "성장형 리더" }
                 ],
                 boarding: [
-                    { name: "필립스 앤도버", desc: "거대한 규모. 부시 대통령 배출. 다양한 프로그램.", tag: "스케일 큰 리더" },
-                    { name: "디어필드", desc: "정장 식사(Sit-down)와 규율. 라크로스 등 팀 스포츠.", tag: "전통의 신사" },
-                    { name: "그로튼", desc: "루즈벨트 배출. 귀족적이고 가족적인 분위기.", tag: "소수 정예 귀족" }
+                    { name: "필립스 앤도버", desc: "탑 보딩스쿨, 압도적 커리큘럼.", tag: "스케일 큰 리더" },
+                    { name: "디어필드", desc: "정장 식사와 규율. 전통적 가치.", tag: "전통의 신사" },
+                    { name: "노블 앤 그리너프", desc: "보스턴 인근 주중 보딩,거주지 필수", tag: "학구열 최상" },
+                  { name: "그로튼", desc: "루즈벨트 배출. 소규모 학생.", tag: "소수 정예 귀족" }
+                  
                 ]
             },
-            // [동부] 뉴햄프셔
             "nh": {
                 title: "뉴햄프셔 (NH)",
-                uni: [
-                    { name: "다트머스", desc: "아이비리그 중 가장 시골. 학부 교육 중심.", tag: "끈끈한 동문 결속" }
-                ],
+                uni: [ { name: "다트머스", desc: "아이비리그 중 가장 시골. 끈끈한 유대.", tag: "학부 중심" } ],
                 boarding: [
-                    { name: "필립스 엑시터", desc: "원탁 토론(하크니스). 논쟁 즐기는 천재형.", tag: "지적 전투력 (Gladiator)" },
-                    { name: "세인트 폴", desc: "100% 전교생 기숙사. 24시간 밀착 케어.", tag: "완벽한 이너 서클" }
+                    { name: "필립스 엑시터", desc: "원탁 토론중심, 종합2위,자기관리 능력,책임감.", tag: "지적 전투력" },
+                    { name: "세인트 폴", desc: "100% 전교생 기숙사. 밀착 케어.", tag: "완벽한 이너 서클" }
                 ]
             },
-            // [동부] 코네티컷 (추가됨)
             "ct": {
                 title: "코네티컷 (CT)",
-                uni: [
-                    { name: "예일 (Yale)", desc: "인문/법학/예술의 성지. 뉴헤이븐.", tag: "레지덴셜 칼리지" }
-                ],
+                uni: [ { name: "예일 (Yale)", desc: "인문/법학/예술의 성지.", tag: "레지덴셜 칼리지" } ],
                 boarding: [
-                    { name: "초트 (Choate)", desc: "케네디/홍정욱 배출. 공부+예술 융합 자유로움.", tag: "끼 넘치는 엔터테이너" },
-                    { name: "하치키스", desc: "예일대 진학 파이프라인. 학업 강도 높음.", tag: "예일대 짝꿍" }
+                    { name: "초트 로즈메리 홀 (Choate Rosemary Hall)", desc: "케네디 배출, 이재용 딸, 공부+예술 융합.자율성 존중", tag: "엔터테이너" },
+                    { name: "하치키스", desc: "예일대 진학 파이프라인, 학업,예술,스포츠 공동체", tag: "학업 강도 높음" }
                 ]
             },
-            // [동부] 뉴욕/뉴저지
             "nynj": {
                 title: "뉴욕 / 뉴저지",
                 uni: [
-                    { name: "NYU (뉴욕대)", desc: "맨해튼이 캠퍼스. 월스트리트 인턴십 최강.", tag: "맨해튼 실전 인재" },
-                    { name: "프린스턴 (NJ)", desc: "US뉴스 1위. 학부 교육에 올인하는 대학.", tag: "학구파 선비" },
-                    { name: "컬럼비아", desc: "코어 커리큘럼(고전 독서). 맨해튼 북부.", tag: "지적 훈련" }
+                    { name: "NYU", desc: "맨해튼 실전파. 월스트리트 인턴십.", tag: "도시형 인재" },
+                    { name: "프린스턴", desc: "학부 교육 전미 1위.", tag: "학구파 선비" },
+                    { name: "컬럼비아", desc: "코어 커리큘럼(고전 독서).", tag: "지적 훈련" }
                 ],
                 boarding: [
-                    { name: "로렌스빌 (NJ)", desc: "프린스턴 앞마당. 하우스(기숙사) 시스템.", tag: "팀워크/공동체" }
+                    { name: "로렌스빌 (NJ)", desc: "프린스턴 10분거리. 하크니스 시스템.", tag: "팀워크" }
                 ]
             },
-            
-            // [서부] 북부
             "norcal": {
                 title: "북부 캘리포니아 (SF)",
                 uni: [
-                    { name: "스탠퍼드", desc: "창업 생태계 심장. 입학이 곧 성공.", tag: "세계 1위 창업률" },
-                    { name: "UC 버클리", desc: "공립 1위. *주의: CS 등 인기전공 입학시 결정 필수*.", tag: "진보/혁신/연구" }
+                    { name: "스탠퍼드", desc: "창업 생태계 심장.", tag: "세계 1위 창업률" },
+                    { name: "UC 버클리", desc: "공립 1위. *CS 입학시 확정 필수*.", tag: "진보/혁신" }
                 ],
                 boarding: [
-                    { name: "스티븐슨", desc: "페블비치 골프장 내 위치. 골프 유학 성지.", tag: "럭셔리/골프" }
+                    { name: "스티븐슨", desc: "페블비치 골프장 내 위치.", tag: "럭셔리/골프" }
                 ]
             },
-            // [서부] 남부
             "socal": {
                 title: "남부 캘리포니아 (LA)",
                 uni: [
-                    { name: "USC (남가주대)", desc: "트로잔(Trojan) 동문회. 실리콘밸리 취업 깡패.", tag: "인맥/취업 최강" },
-                    { name: "UCLA", desc: "지원자 수 전미 1위. 테크+엔터 융합 강세.", tag: "최고의 날씨/인기" },
-                    { name: "칼텍", desc: "MIT 라이벌. 소수 정예 공학 천재.", tag: "과학 괴물" }
+                    { name: "USC", desc: "트로잔 동문회. 취업 최강.", tag: "인맥 깡패" },
+                    { name: "UCLA", desc: "지원자 수 1위. 테크+엔터.", tag: "최고의 인기" }
                 ],
                 boarding: [
-                    { name: "싸처 (Thacher)", desc: "1년간 말(Horse) 관리 의무. 겸손과 인성 함양.", tag: "말똥 치우는 리더" },
-                    { name: "케이트 (Cate)", desc: "태평양 뷰(The Mesa). 호텔급 시설의 학업 낙원.", tag: "오션뷰/세련됨" }
+                    { name: "싸처 (Thacher)", desc: "1년간 말 관리 의무. 인성 함양.", tag: "겸손한 리더" },
+                    { name: "케이트 (Cate)", desc: "태평양 뷰. 호텔급 시설.", tag: "오션뷰/세련됨" }
                 ]
             },
-            
-            // [중부] 일리노이
             "il": {
                 title: "일리노이 (Chicago)",
                 uni: [
-                    { name: "시카고대", desc: "노벨상 공장. 'The Core' 커리큘럼(사고력).", tag: "지적 호기심 끝판왕" },
-                    { name: "노스웨스턴", desc: "저널리즘/경영/공학 융합. 취업 잘되는 부촌 사립.", tag: "취업 사관학교" },
-                    { name: "UIUC", desc: "CS Tier 1. 실리콘밸리 채용 타겟. 학비 저렴.", tag: "가성비 제왕" }
+                    { name: "시카고대", desc: "노벨상 산실. 사고력 교육.", tag: "지적 호기심" },
+                    { name: "노스웨스턴", desc: "저널리즘/경영. 취업 잘되는 부촌 사립.", tag: "실용주의" },
+                    { name: "UIUC", desc: "CS Tier 1. 실리콘밸리 타겟.", tag: "가성비 제왕" }
                 ],
-                boarding: [] 
+                boarding: [
+                    { name: "레이크 포레스트", desc: "시카고 부촌. '미니 UN' 다양성.", tag: "글로벌 미드웨스트" }
+                ]
             },
-            // [중부] 미시간
             "mi": {
-                title: "미시간 (Detroit)",
-                uni: [
-                    { name: "미시간 앤 아버", desc: "공립의 하버드. 경영/공대/의대 올라운드 Top 10.", tag: "엄친아/동문파워" }
-                ],
+                title: "미시간",
+                uni: [ { name: "미시간 앤 아버", desc: "경영/공대/의대 올라운드 Top 10.", tag: "엄친아" } ],
                 boarding: []
             }
         };
 
         // ==========================================
-        // 📌 로직 (렌더링)
+        // 📌 렌더링 로직
         // ==========================================
         let historyStack = [];
         const contentArea = document.getElementById('contentArea');
@@ -309,115 +378,162 @@
         // 초기 실행
         renderMain();
 
-        // 뒤로가기 버튼 리스너
+        // 뒤로가기
         backBtn.addEventListener('click', () => {
             if (historyStack.length > 0) {
-                historyStack.pop(); // 현재 뷰 제거
-                const prev = historyStack[historyStack.length - 1]; // 이전 뷰 확인
-                
-                if (!prev) {
-                    renderMain(false);
-                } else if (prev.type === 'sub') {
-                    renderSub(prev.id, false);
-                }
+                historyStack.pop();
+                const prev = historyStack[historyStack.length - 1];
+                if (!prev) renderMain(false);
+                else if (prev.type === 'sub') renderSub(prev.id, false);
             }
         });
 
         // 1. 메인 화면
         function renderMain(pushToStack = true) {
             if (pushToStack) historyStack = [];
-            
             backBtn.style.display = 'none';
-            pageTitle.innerText = "🇺🇸 미국 유학 지도";
+            pageTitle.innerText = "미국 유학 전략 지도";
             contentArea.innerHTML = "";
-            contentArea.className = "grid-layout"; // 그리드 복구
+            contentArea.className = ""; // 클래스 초기화
 
+            // (1) 지도 네비게이션
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'grid-layout fade-in';
+            
             db.main.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'nav-card fade-in';
-                card.innerHTML = `
-                    <div class="card-icon">${item.icon}</div>
-                    <div class="card-title">${item.title}</div>
-                    <div class="card-desc">${item.desc}</div>
-                `;
+                card.className = 'nav-card';
                 card.onclick = () => renderSub(item.id);
-                contentArea.appendChild(card);
+                card.innerHTML = `
+                    <div style="display:flex; align-items:center;">
+                        <span class="nav-icon">${item.icon}</span>
+                        <div>
+                            <div class="nav-title">${item.title}</div>
+                            <div class="nav-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">›</span>
+                `;
+                gridDiv.appendChild(card);
             });
+            contentArea.appendChild(gridDiv);
+
+            // (2) 아코디언 입시 가이드
+            const guideTitle = document.createElement('div');
+            guideTitle.className = 'guide-section-title fade-in';
+            guideTitle.innerText = "📌 2027 입시 필수 가이드";
+            contentArea.appendChild(guideTitle);
+
+            const accordionContainer = document.createElement('div');
+            accordionContainer.className = 'fade-in';
+
+            db.guides.forEach(g => {
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+                
+                // Header
+                const header = document.createElement('div');
+                header.className = 'accordion-header';
+                header.innerHTML = `
+                    <span>${g.icon} ${g.title}</span>
+                    <span class="toggle-icon">▼</span>
+                `;
+                
+                // Content
+                const content = document.createElement('div');
+                content.className = 'accordion-content';
+                let listHtml = '<ul>';
+                g.items.forEach(li => {
+                    listHtml += `<li>${li}</li>`;
+                });
+                listHtml += '</ul>';
+                content.innerHTML = listHtml;
+
+                // Click Event
+                header.onclick = () => {
+                    const isVisible = content.classList.contains('show');
+                    // 다른거 다 닫기 (선택사항)
+                    document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('show'));
+                    document.querySelectorAll('.toggle-icon').forEach(i => i.classList.remove('rotate'));
+
+                    if (!isVisible) {
+                        content.classList.add('show');
+                        header.querySelector('.toggle-icon').classList.add('rotate');
+                    }
+                };
+
+                item.appendChild(header);
+                item.appendChild(content);
+                accordionContainer.appendChild(item);
+            });
+            contentArea.appendChild(accordionContainer);
         }
 
-        // 2. 지역 선택 화면 (Sub)
+        // 2. 서브(지역) 화면
         function renderSub(regionId, pushToStack = true) {
             if (pushToStack) historyStack.push({type: 'sub', id: regionId});
-
+            
             backBtn.style.display = 'block';
             const data = db[regionId];
             pageTitle.innerText = data.title;
             contentArea.innerHTML = "";
-            contentArea.className = "grid-layout";
+            
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'grid-layout fade-in';
 
             data.locations.forEach(loc => {
                 const card = document.createElement('div');
-                card.className = 'nav-card fade-in';
-                card.innerHTML = `
-                    <div class="card-icon">${loc.icon}</div>
-                    <div class="card-title">${loc.title}</div>
-                    <div class="card-desc">${loc.desc}</div>
-                `;
+                card.className = 'nav-card';
                 card.onclick = () => renderDetail(loc.id, data.regionClass);
-                contentArea.appendChild(card);
+                card.innerHTML = `
+                    <div style="display:flex; align-items:center;">
+                        <span class="nav-icon">${loc.icon}</span>
+                        <div>
+                            <div class="nav-title">${loc.title}</div>
+                            <div class="nav-desc">${loc.desc}</div>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">›</span>
+                `;
+                gridDiv.appendChild(card);
             });
+            contentArea.appendChild(gridDiv);
         }
 
-        // 3. 학교 상세 화면 (Detail)
+        // 3. 디테일(학교) 화면
         function renderDetail(locId, regionClass) {
             historyStack.push({type: 'detail', id: locId});
-            
             const data = db[locId];
             pageTitle.innerText = data.title;
             contentArea.innerHTML = "";
-            contentArea.className = `fade-in ${regionClass}`; // 지역 색상 클래스 추가
+            
+            const container = document.createElement('div');
+            container.className = `fade-in ${regionClass}`;
 
-            // 대학 렌더링
-            if (data.uni && data.uni.length > 0) {
+            // 대학 렌더링 함수
+            const renderSection = (title, list) => {
+                if (!list || list.length === 0) return;
                 const h = document.createElement('div');
                 h.className = 'section-header';
-                h.innerText = "🎓 대학 (University)";
-                contentArea.appendChild(h);
+                h.innerText = title;
+                container.appendChild(h);
 
-                data.uni.forEach(school => {
-                    const div = document.createElement('div');
-                    div.className = 'school-item';
-                    div.innerHTML = `
-                        <div class="school-name">
-                            ${school.name}
-                        </div>
+                list.forEach(school => {
+                    const card = document.createElement('div');
+                    card.className = 'school-card';
+                    card.innerHTML = `
+                        <div class="school-name">${school.name}</div>
                         <div class="school-desc">${school.desc}</div>
-                        <div class="killer-tag">💡 ${school.tag}</div>
+                        <div class="tag-badge">${school.tag}</div>
                     `;
-                    contentArea.appendChild(div);
+                    container.appendChild(card);
                 });
-            }
+            };
 
-            // 보딩 렌더링
-            if (data.boarding && data.boarding.length > 0) {
-                const h = document.createElement('div');
-                h.className = 'section-header';
-                h.innerText = "🏫 보딩스쿨 (Boarding School)";
-                contentArea.appendChild(h);
-
-                data.boarding.forEach(school => {
-                    const div = document.createElement('div');
-                    div.className = 'school-item';
-                    div.innerHTML = `
-                        <div class="school-name">
-                            ${school.name}
-                        </div>
-                        <div class="school-desc">${school.desc}</div>
-                        <div class="killer-tag">💡 ${school.tag}</div>
-                    `;
-                    contentArea.appendChild(div);
-                });
-            }
+            renderSection("🎓 대학 (University)", data.uni);
+            renderSection("🏫 보딩스쿨 (Boarding School)", data.boarding);
+            
+            contentArea.appendChild(container);
         }
     </script>
 </body>
